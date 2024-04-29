@@ -11,7 +11,7 @@ import ru.urfu.squadactivityrating.security.auth.dto.RegisterRequest;
 import ru.urfu.squadactivityrating.security.configurations.JwtService;
 import ru.urfu.squadactivityrating.security.securityUser.entities.SecurityUser;
 import ru.urfu.squadactivityrating.security.securityUser.enums.UserRole;
-import ru.urfu.squadactivityrating.security.securityUser.repositories.SecurityUserRepository;
+import ru.urfu.squadactivityrating.security.securityUser.services.SecurityUserService;
 
 import java.util.Set;
 
@@ -19,19 +19,18 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final SecurityUserRepository repository;
+    private final SecurityUserService securityUserService;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
 
     /**
      * Регистрирует нового пользователя на основе данных из запроса.
      * Создает нового пользователя, сохраняет его в репозитории и генерирует JWT токен.
      *
      * @param request объект запроса с данными нового пользователя
-     * @return объект ответа со сгенерированным JWT токеном
      */
-    public AuthenticationResponse register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         // Создание нового пользователя на основе данных из запроса
         SecurityUser securityUser = SecurityUser.builder()
                 .firstname(request.getFirstname())
@@ -41,16 +40,7 @@ public class AuthenticationService {
                 .roles(Set.of(UserRole.USER))
                 .build();
 
-        // Сохранение нового пользователя в репозитории
-        SecurityUser savedSecurityUser = repository.save(securityUser);
-
-        // Генерация JWT токена для пользователя
-        String jwtToken = jwtService.generateToken(securityUser);
-
-        // Возвращение объекта ответа со сгенерированным JWT токеном
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        securityUserService.saveUser(securityUser);
     }
 
     /**
@@ -72,8 +62,7 @@ public class AuthenticationService {
         );
 
         // Поиск пользователя по email в репозитории
-        SecurityUser securityUser = repository.findByEmail(request.getEmail())
-                .orElseThrow();
+        SecurityUser securityUser = securityUserService.getUserByEmail(request.getEmail());
 
         // Генерация JWT токена для пользователя
         String jwtToken = jwtService.generateToken(securityUser);

@@ -23,7 +23,7 @@ public class AuthenticationController {
     @GetMapping("/signup")
     public String registration(Model model) {
         model.addAttribute("registrationForm", new RegisterRequest());
-        return "signup_page";
+        return "security/signup_page";
     }
 
     @PostMapping("/register")
@@ -34,9 +34,9 @@ public class AuthenticationController {
     }
 
     @GetMapping("/login")
-    public String getLoginPage(HttpServletResponse httpServletResponse, Model model) {
+    public String getLoginPage(Model model) {
         model.addAttribute("authenticationRequest", new AuthenticationRequest());
-        return "login_page";
+        return "security/login_page";
     }
 
     @PostMapping("/authenticate")
