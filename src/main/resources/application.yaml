@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: SquadActivityRating
+  datasource:
+    url: jdbc:postgresql://localhost:5432/squad_rating
+    username: postgres
+    password: 123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    # автоматическое создание схем таблиц на основе @Entity-классов
+    # Отключение гарантирует, что инициализация на основе скрипто
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: true
+    # Это гарантирует, что после создания схемы гибернации будет
+    # выполнено дополнительное чтение schema.sql для любых дополнительных
+    # изменений схемы и выполнения data.sql для заполнения базы данных
+  sql:
+    init:
+      data-locations: classpath:data.sql
+      mode: always
+# Нужно использовать, чтобы всегда инициализировать базу данных
+# с помощью скриптов, т.к. инициализация на основе скриптов выполняется
+# по умолчанию только для встроенных баз данных
+
+server:
+  port: 8088
