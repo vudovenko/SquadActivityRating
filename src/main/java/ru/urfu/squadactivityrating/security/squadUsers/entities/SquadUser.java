@@ -49,6 +49,6 @@ public class SquadUser {
     private List<Squad> applicationsForMembershipInSquads;
 
     public String getFullName() {
-        return firstname + " " + lastname + " " + patronymic;
+        return lastname + " " + firstname + " " + patronymic;
     }
 }
