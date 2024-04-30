@@ -9,9 +9,11 @@ import ru.urfu.squadactivityrating.security.auth.dto.AuthenticationRequest;
 import ru.urfu.squadactivityrating.security.auth.dto.AuthenticationResponse;
 import ru.urfu.squadactivityrating.security.auth.dto.RegisterRequest;
 import ru.urfu.squadactivityrating.security.configurations.JwtService;
-import ru.urfu.squadactivityrating.security.securityUser.entities.SecurityUser;
-import ru.urfu.squadactivityrating.security.securityUser.enums.UserRole;
-import ru.urfu.squadactivityrating.security.securityUser.services.SecurityUserService;
+import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
+import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
+import ru.urfu.squadactivityrating.security.securityUsers.services.SecurityUserService;
+import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.security.squadUsers.services.SquadUserService;
 
 import java.util.Set;
 
@@ -31,14 +33,21 @@ public class AuthenticationService {
      * @param request объект запроса с данными нового пользователя
      */
     public void register(RegisterRequest request) {
-        // Создание нового пользователя на основе данных из запроса
+        // Создание SecurityUser и связанного с ним SquadUser
+        // на основе данных из запроса
         SecurityUser securityUser = SecurityUser.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
+                .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Set.of(UserRole.USER))
                 .build();
+        SquadUser squadUser = SquadUser.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .patronymic(request.getPatronymic())
+                .email(request.getEmail())
+                .build();
+        squadUser.setSecurityUser(securityUser);
+        securityUser.setSquadUser(squadUser);
 
         securityUserService.saveUser(securityUser);
     }
@@ -56,13 +65,13 @@ public class AuthenticationService {
          * В случае, если имя пользователя или пароль неверны, будет выброшено исключение.*/
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getLogin(),
                         request.getPassword()
                 )
         );
 
-        // Поиск пользователя по email в репозитории
-        SecurityUser securityUser = securityUserService.getUserByEmail(request.getEmail());
+        // Поиск пользователя по login в репозитории
+        SecurityUser securityUser = securityUserService.getUserByLogin(request.getLogin());
 
         // Генерация JWT токена для пользователя
         String jwtToken = jwtService.generateToken(securityUser);

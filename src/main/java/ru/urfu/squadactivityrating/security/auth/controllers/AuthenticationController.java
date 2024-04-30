@@ -18,7 +18,7 @@ import ru.urfu.squadactivityrating.security.auth.services.AuthenticationService;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationService service;
+    private final AuthenticationService authenticationService;
 
     @GetMapping("/signup")
     public String registration(Model model) {
@@ -28,7 +28,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public String registration(RegisterRequest request, Model model) {
-        service.register(request);
+        authenticationService.register(request);
         model.addAttribute("authenticationRequest", new AuthenticationRequest());
         return "redirect:/auth/login";
     }
@@ -43,7 +43,7 @@ public class AuthenticationController {
     public String authenticate(
             AuthenticationRequest request,
             HttpServletResponse httpServletResponse) {
-        AuthenticationResponse authenticationResponse = service.authenticate(request);
+        AuthenticationResponse authenticationResponse = authenticationService.authenticate(request);
         Cookie cookie = new Cookie("token", authenticationResponse.getToken());
         cookie.setPath("/");
         httpServletResponse.addCookie(cookie);

@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.urfu.squadactivityrating.security.securityUser.services.SecurityUserService;
+import ru.urfu.squadactivityrating.security.securityUsers.services.SecurityUserService;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return securityUserService::getUserByEmail;
+        return securityUserService::getUserByLogin;
     }
 
     @Bean

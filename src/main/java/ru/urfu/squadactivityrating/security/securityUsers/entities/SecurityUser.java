@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.security.securityUser.entities;
+package ru.urfu.squadactivityrating.security.securityUsers.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.urfu.squadactivityrating.security.securityUser.enums.UserRole;
+import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
+import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
 
 import java.util.Collection;
 import java.util.Set;
@@ -25,10 +26,12 @@ public class SecurityUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String firstname;
-    private String lastname;
-    private String email;
+    private String login;
     private String password;
+
+    @OneToOne(mappedBy = "securityUser",
+            cascade = CascadeType.ALL)
+    private SquadUser squadUser;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -44,7 +47,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return login;
     }
 
     @Override

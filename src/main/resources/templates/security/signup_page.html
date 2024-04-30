@@ -1,20 +1,46 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Spring Security</title>
+  <meta charset="UTF-8">
+  <title>Spring Security</title>
 </head>
 <body>
 <form th:action="@{/auth/register}" method="post" th:object="${registrationForm}">
-    <div><label> Имя: <input type="text" name="имя"
-                                th:field="*{firstname}"/> </label></div>
-    <div><label> Фамилия: <input type="text" name="фамилия"
-                                 th:field="*{lastname}"/> </label></div>
-    <div><label> Почта: <input type="text" name="почта"
-                               th:field="*{email}"/> </label></div>
-    <div><label> Пароль: <input type="password" name="пароль"
-                                th:field="*{password}"/> </label></div>
-    <div><input type="submit" value="Зарегистрироваться"/></div>
+
+  <div>
+    <label for="login">Логин:</label>
+    <input type="text" id="login" name="login" placeholder="igor329"
+           th:field="*{login}" required/>
+  </div>
+  <div>
+    <label for="pass">Пароль:</label>
+    <input type="password" id="pass" name="pass" placeholder="pas123"
+           th:field="*{password}" required/>
+  </div>
+  <div>
+    <label for="fName">Имя:</label>
+    <input type="text" id="fName" name="fName" placeholder="Игорь"
+           th:field="*{firstname}" required/>
+  </div>
+  <div>
+    <label for="lName">Фамилия:</label>
+    <input type="text" id="lName" name="lName" placeholder="Печкин"
+           th:field="*{lastname}" required/>
+  </div>
+  <div>
+    <label for="patr">Отчество:</label>
+    <input type="text" id="patr" name="patr" placeholder="Иванович"
+           th:field="*{patronymic}" required/>
+  </div>
+  <div>
+    <label for="mail">Почта:</label>
+    <input type="email" id="mail" name="mail" placeholder="pechkin@yandex.ru"
+           th:field="*{email}" required/>
+  </div>
+  <div>
+    <input type="reset">
+  </div>
+  <div><input type="submit" value="Зарегистрироваться"/></div>
 </form>
 <a th:href="@{/auth/login}">Вернуться на страницу входа</a>
 </body>
