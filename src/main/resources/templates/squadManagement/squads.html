@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
@@ -10,14 +10,20 @@
   <table>
     <thead>
     <tr>
-
+      <th>Название</th>
+      <th>Количество бойцов</th>
+      <th>Командир</th>
     </tr>
     </thead>
     <tbody>
-
+    <tr th:each="squad : ${squads}">
+      <td th:text="${squad.name}"></td>
+      <td th:text="${squad.users.size()}"></td>
+      <td th:text="${squad.commander.getFullName()}"></td>
+    </tr>
     </tbody>
   </table>
 </form>
-
+<a th:href="@{/}">Вернуться на главную страницу.</a>
 </body>
 </html>

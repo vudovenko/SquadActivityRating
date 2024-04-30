@@ -47,4 +47,8 @@ public class SquadUser {
             inverseJoinColumns = @JoinColumn(name = "squad_id")
     )
     private List<Squad> applicationsForMembershipInSquads;
+
+    public String getFullName() {
+        return firstname + " " + lastname + " " + patronymic;
+    }
 }
