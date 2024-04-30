@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
-import ru.urfu.squadactivityrating.squadManagement.entity.Squad;
+import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -18,7 +20,7 @@ public class SquadUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String firstname;
     private String lastname;
     private String patronymic;
@@ -31,5 +33,18 @@ public class SquadUser {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "squad_id")
-    private Squad squadId;
+    private Squad squad;
+
+    @OneToOne(mappedBy = "commander",
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+                    CascadeType.REFRESH, CascadeType.MERGE})
+    private Squad subordinateSquad;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "membership_applications",
+            joinColumns = @JoinColumn(name = "squad_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "squad_id")
+    )
+    private List<Squad> applicationsForMembershipInSquads;
 }

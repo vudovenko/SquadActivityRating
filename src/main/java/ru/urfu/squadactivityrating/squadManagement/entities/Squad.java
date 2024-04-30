@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.squadManagement.entity;
+package ru.urfu.squadactivityrating.squadManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,9 +18,19 @@ public class Squad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String description;
 
-    @OneToMany(mappedBy = "squadId",
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+            CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "commander_id")
+    private SquadUser commander;
+
+    @OneToMany(mappedBy = "squad",
             cascade = {CascadeType.PERSIST, CascadeType.DETACH,
                     CascadeType.REFRESH, CascadeType.MERGE})
     private List<SquadUser> users;
+
+    @ManyToMany(mappedBy = "applicationsForMembershipInSquads",
+            cascade = CascadeType.ALL)
+    private List<SquadUser> membershipApplications;
 }
