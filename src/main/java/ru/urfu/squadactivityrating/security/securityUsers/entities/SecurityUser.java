@@ -28,6 +28,7 @@ public class SecurityUser implements UserDetails {
     private Long id;
     private String login;
     private String password;
+    private Boolean active;
 
     @OneToOne(mappedBy = "securityUser",
             cascade = CascadeType.ALL)
@@ -57,7 +58,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return active;
     }
 
     @Override
