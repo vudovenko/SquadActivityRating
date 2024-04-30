@@ -29,5 +29,9 @@ spring:
 # с помощью скриптов, т.к. инициализация на основе скриптов выполняется
 # по умолчанию только для встроенных баз данных
 
+auth.secret: "K38WZTfWhc8GA9scUTOmuhTUewpgdgMD9usj8Qk81ItmBRSTYGt6iFApr8E/zFvH"
 server:
-  port: 8088
+  port: 8085
+  servlet:
+    session:
+      tracking-modes: cookie

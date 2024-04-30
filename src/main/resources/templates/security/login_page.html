@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Spring Security</title>
+</head>
+<body>
+<form th:action="@{/auth/authenticate}" method="post" th:object="${authenticationRequest}">
+  <div>
+    <label for="login">Логин:</label>
+    <input type="text" id="login" name="login" placeholder="igor329"
+           th:field="*{login}" required/>
+  </div>
+  <div>
+    <label for="pass">Пароль:</label>
+    <input type="password" id="pass" name="pass" placeholder="pas123"
+           th:field="*{password}" required/>
+  </div>
+  <div>
+    <input type="reset">
+  </div>
+  <div><input type="submit" value="Войти"/></div>
+</form>
+<a th:href="@{/auth/signup}">Вернуться на страницу регистрации</a>
+</body>
+</html>
