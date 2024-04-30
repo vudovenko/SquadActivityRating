@@ -5,7 +5,7 @@ import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 
 import java.util.Optional;
 
-public interface SecurityUserRepository extends JpaRepository<SecurityUser, Integer> {
+public interface SecurityUserRepository extends JpaRepository<SecurityUser, Long> {
 
     Optional<SecurityUser> findByLogin(String login);
 }

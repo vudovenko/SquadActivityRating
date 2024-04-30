@@ -1,6 +1,6 @@
 package ru.urfu.squadactivityrating.security.securityUsers.services.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
@@ -8,7 +8,7 @@ import ru.urfu.squadactivityrating.security.securityUsers.repositories.SecurityU
 import ru.urfu.squadactivityrating.security.securityUsers.services.SecurityUserService;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityUserServiceImpl implements SecurityUserService {
 
     private final SecurityUserRepository securityUserRepository;

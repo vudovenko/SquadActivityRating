@@ -14,8 +14,8 @@ import ru.urfu.squadactivityrating.security.auth.dto.RegisterRequest;
 import ru.urfu.squadactivityrating.security.auth.services.AuthenticationService;
 
 @Controller
-@RequestMapping("/auth")
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
