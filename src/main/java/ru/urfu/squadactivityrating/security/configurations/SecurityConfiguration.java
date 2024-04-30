@@ -35,10 +35,8 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests()
-                .requestMatchers("/", "/auth/**", "/api/v1/greeting-controller/**", "/api/v1/demo-controller/")
+                .requestMatchers("/", "/auth/**")
                 .permitAll()
-                .requestMatchers("/api/v1/demo-controller/with-auth", "/api/v1/index-controller/**")
-                .hasAnyAuthority("USER")
                 .and().formLogin(form -> form
                         .loginPage("/auth/login")
                         .failureUrl("/auth/login"))
