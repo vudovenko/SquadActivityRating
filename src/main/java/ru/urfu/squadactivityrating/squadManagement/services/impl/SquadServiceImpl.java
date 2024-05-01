@@ -2,6 +2,7 @@ package ru.urfu.squadactivityrating.squadManagement.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.repositories.SquadRepository;
 import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
@@ -22,15 +23,15 @@ public class SquadServiceImpl implements SquadService {
 
     @Override()
     public void deleteSquad(Long squadId) {
-//        squadRepository.deleteById(squadId);
         Optional<Squad> squadOptional = squadRepository.findById(squadId);
 
         if (squadOptional.isPresent()) {
             Squad squadEntity = squadOptional.get();
-            if (squadEntity.getCommander() != null) {
-                squadEntity.setCommander(null);
+            SquadUser commander = squadEntity.getCommander();
+            if (commander != null) {
+                commander.setSubordinateSquad(null);
             }
-//            squadEntity.getUsers().forEach(user -> user.setSquad(null));
+            squadEntity.getUsers().forEach(user -> user.setSquad(null));
             squadRepository.delete(squadEntity);
         } else {
             throw new IllegalArgumentException("Squad not found");

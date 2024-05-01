@@ -33,7 +33,6 @@ public class Squad {
     private List<SquadUser> users;
 
     @ManyToMany(mappedBy = "applicationsForMembershipInSquads",
-            cascade = {CascadeType.PERSIST, CascadeType.DETACH,
-                    CascadeType.REFRESH, CascadeType.MERGE})
+            cascade = CascadeType.ALL)
     private List<SquadUser> membershipApplications;
 }

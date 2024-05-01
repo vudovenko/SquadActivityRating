@@ -39,8 +39,7 @@ public class SquadUser {
                     CascadeType.REFRESH, CascadeType.MERGE})
     private Squad subordinateSquad;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
-            CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "membership_applications",
             joinColumns = @JoinColumn(name = "squad_user_id"),
