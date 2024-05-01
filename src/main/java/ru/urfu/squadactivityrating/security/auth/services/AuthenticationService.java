@@ -37,7 +37,7 @@ public class AuthenticationService {
         SecurityUser securityUser = SecurityUser.builder()
                 .login(request.getLogin())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(Set.of(UserRole.USER))
+                .roles(Set.of(UserRole.COMMANDER))
                 .build();
         SquadUser squadUser = SquadUser.builder()
                 .firstname(request.getFirstname())

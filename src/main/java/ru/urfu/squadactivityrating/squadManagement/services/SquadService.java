@@ -9,4 +9,6 @@ public interface SquadService {
     List<Squad> getAllSquads();
 
     void deleteSquad(Long squadId);
+
+    void createSquad(Squad squad);
 }

@@ -37,4 +37,9 @@ public class SquadServiceImpl implements SquadService {
             throw new IllegalArgumentException("Squad not found");
         }
     }
+
+    @Override
+    public void createSquad(Squad squad) {
+        squadRepository.save(squad);
+    }
 }
