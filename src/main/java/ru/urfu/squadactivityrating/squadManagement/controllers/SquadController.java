@@ -55,8 +55,8 @@ public class SquadController {
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteSquad(@PathVariable String id) { //todo поменять на Long
-        squadService.deleteSquad(Long.valueOf(id));
+    public String deleteSquad(@PathVariable Long id) {
+        squadService.deleteSquad(id);
 
         return "redirect:/squads";
     }
