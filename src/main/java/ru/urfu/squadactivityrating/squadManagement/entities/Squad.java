@@ -6,7 +6,9 @@ import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"commander", "users", "membershipApplications"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +33,7 @@ public class Squad {
     private List<SquadUser> users;
 
     @ManyToMany(mappedBy = "applicationsForMembershipInSquads",
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+                    CascadeType.REFRESH, CascadeType.MERGE})
     private List<SquadUser> membershipApplications;
 }

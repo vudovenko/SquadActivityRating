@@ -7,4 +7,6 @@ import java.util.List;
 public interface SquadService {
 
     List<Squad> getAllSquads();
+
+    void deleteSquad(Long squadId);
 }

@@ -19,7 +19,12 @@
     <tr th:each="squad : ${squads}">
       <td th:text="${squad.name}"></td>
       <td th:text="${squad.users.size()}"></td>
-      <td th:text="${squad.commander.getFullName()}"></td>
+      <td th:text="${squad.commander != null
+                   ? squad.commander.getFullName()
+                   : 'Командира нет'}"></td>
+      <td><a th:href="@{/squads/{id}/delete(id=${squad.id})}">
+        Удалить
+      </a></td>
     </tr>
     </tbody>
   </table>

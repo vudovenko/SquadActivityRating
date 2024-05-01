@@ -28,6 +28,11 @@ spring:
 # Нужно использовать, чтобы всегда инициализировать базу данных
 # с помощью скриптов, т.к. инициализация на основе скриптов выполняется
 # по умолчанию только для встроенных баз данных
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
 
 auth.secret: "K38WZTfWhc8GA9scUTOmuhTUewpgdgMD9usj8Qk81ItmBRSTYGt6iFApr8E/zFvH"
 server:

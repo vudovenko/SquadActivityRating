@@ -1,16 +1,15 @@
 package ru.urfu.squadactivityrating.security.squadUsers.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"applicationsForMembershipInSquads"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,7 +31,7 @@ public class SquadUser {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "squad_id")
+    @JoinColumn(name = "squad_id", nullable = true)
     private Squad squad;
 
     @OneToOne(mappedBy = "commander",
@@ -40,7 +39,8 @@ public class SquadUser {
                     CascadeType.REFRESH, CascadeType.MERGE})
     private Squad subordinateSquad;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+            CascadeType.REFRESH, CascadeType.MERGE})
     @JoinTable(
             name = "membership_applications",
             joinColumns = @JoinColumn(name = "squad_user_id"),
