@@ -2,10 +2,10 @@ package ru.urfu.squadactivityrating.squadManagement.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.repositories.SquadRepository;
 import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.util.List;
 import java.util.Optional;

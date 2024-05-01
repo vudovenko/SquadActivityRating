@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
-import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.util.Collection;
 import java.util.Set;

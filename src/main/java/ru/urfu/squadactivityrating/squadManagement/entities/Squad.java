@@ -2,7 +2,7 @@ package ru.urfu.squadactivityrating.squadManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.util.List;
 

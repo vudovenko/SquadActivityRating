@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.security.squadUsers.entities;
+package ru.urfu.squadactivityrating.squadManagement.squadUsers.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

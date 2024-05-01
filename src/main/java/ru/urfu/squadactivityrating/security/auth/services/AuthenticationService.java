@@ -12,8 +12,7 @@ import ru.urfu.squadactivityrating.security.configurations.JwtService;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
 import ru.urfu.squadactivityrating.security.securityUsers.services.SecurityUserService;
-import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
-import ru.urfu.squadactivityrating.security.squadUsers.services.SquadUserService;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.util.Set;
 

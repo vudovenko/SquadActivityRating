@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 @Data
 @Entity

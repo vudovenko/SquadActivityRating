@@ -1,10 +1,10 @@
-package ru.urfu.squadactivityrating.security.squadUsers.services.impl;
+package ru.urfu.squadactivityrating.squadManagement.squadUsers.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.urfu.squadactivityrating.security.squadUsers.entities.SquadUser;
-import ru.urfu.squadactivityrating.security.squadUsers.repositories.SquadUserRepository;
-import ru.urfu.squadactivityrating.security.squadUsers.services.SquadUserService;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.repositories.SquadUserRepository;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
 @Service
 @AllArgsConstructor
