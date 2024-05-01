@@ -24,4 +24,14 @@ public class SquadUserServiceImpl implements SquadUserService {
     public List<SquadUser> getFreeCommanders() {
         return squadUserRepository.getNonCommanders(UserRole.COMMANDER);
     }
+
+    @Override
+    public List<SquadUser> getFighters() {
+        return squadUserRepository.findByRole(UserRole.FIGHTER);
+    }
+
+    @Override
+    public List<SquadUser> getUsersByIds(Long[] ids) {
+        return squadUserRepository.findByIds(ids);
+    }
 }

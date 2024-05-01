@@ -3,32 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
 <a th:href="@{/squads}">Назад</a>
-<form th:action="@{/squads}" method="post" th:object="${squad}">
+<form th:action="@{/squads}" method="post" th:object="${squadAndUsers}">
   <div>
     <label for="sName">Название отряда:</label>
     <input type="text" id="sName" name="sName" placeholder="Трудовой отряд"
-           th:field="*{name}" required/>
+           th:field="*{squad.name}" required/>
   </div>
   <div>
     <label for="sDescr">Описание отряда:</label>
     <input type="text" id="sDescr" name="sDescr" placeholder="Тут любят трудиться!"
-           th:field="*{description}"/>
+           th:field="*{squad.description}"/>
   </div>
   <div>
     <label for="commSelect">Выбрать командира:</label>
-    <select id="commSelect" th:field="*{commander}" name="commSelect">
-      <option th:value="${squad.commander.id}" th:if="${squad.commander != null}"
-              th:text="${squad.commander.getFullName()}"></option>
+    <select id="commSelect" th:field="*{squad.commander}" name="commSelect">
+      <option th:value="${squadAndUsers.squad.commander.id}" th:if="${squadAndUsers.squad.commander != null}"
+              th:text="${squadAndUsers.squad.commander.getFullName()}"></option>
       <option value="">Выберите командира</option>
       <option th:each="commander : ${commanders}" th:value="${commander.id}"
-              th:if="${squad.getCommander() == null
-                    || (squad.getCommander() != null
-                    && squad.getCommander().id != commander.id)}"
+              th:if="${squadAndUsers.squad.getCommander() == null
+                    || (squadAndUsers.squad.getCommander() != null
+                    && squadAndUsers.squad.getCommander().id != commander.id)}"
               th:text="${commander.getFullName()}"></option>
     </select>
+  </div>
+  <div>
+    <label for="fightTable">Выбрать бойцов:</label>
+    <div class="table-container">
+      <table id="fightTable">
+        <tbody th:field="${squadAndUsers.usersMap}">
+        <tr th:each="entry, stat : ${squadAndUsers.usersMap}">
+          <td>
+            <input th:id="'fightCheckBox' + ${stat.index}" type="checkbox" th:value="${entry.key.id}"
+                   name="selectedFightersIds" th:checked="${entry.value}"/>
+          </td>
+          <td><label th:for="${'fightCheckBox' + stat.index}" th:text="${entry.key.getFullName()}"></label></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div>
     <input type="reset">

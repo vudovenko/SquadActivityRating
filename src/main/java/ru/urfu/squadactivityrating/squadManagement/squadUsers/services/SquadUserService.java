@@ -9,4 +9,8 @@ public interface SquadUserService {
     SquadUser saveUser(SquadUser squadUser);
 
     List<SquadUser> getFreeCommanders();
+
+    List<SquadUser> getFighters();
+
+    List<SquadUser> getUsersByIds(Long[] ids);
 }

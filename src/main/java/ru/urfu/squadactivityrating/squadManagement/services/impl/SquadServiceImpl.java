@@ -39,7 +39,7 @@ public class SquadServiceImpl implements SquadService {
     }
 
     @Override
-    public void createSquad(Squad squad) {
-        squadRepository.save(squad);
+    public Squad saveSquad(Squad squad) {
+        return squadRepository.save(squad);
     }
 }

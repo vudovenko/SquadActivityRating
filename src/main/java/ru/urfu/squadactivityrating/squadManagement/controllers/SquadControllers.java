@@ -6,7 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.dto.SquadDto;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,7 +33,12 @@ public class SquadControllers {
 
     @GetMapping("/create")
     public String getCreateSquadPage(Model model) {
-        model.addAttribute("squad", new Squad());
+        List<SquadUser> fighters = squadUserService.getFighters(); // todo вынести в сервис
+        Map<SquadUser, Boolean> fightersMap = fighters
+                .stream()
+                .filter(f -> f.getSquad() == null)
+                .collect(Collectors.toMap(Function.identity(), f -> false));
+        model.addAttribute("squadAndUsers", new SquadDto(new Squad(), fightersMap));
         model.addAttribute("commanders",
                 squadUserService.getFreeCommanders());
 
@@ -33,8 +46,11 @@ public class SquadControllers {
     }
 
     @PostMapping
-    public String createSquad(Squad squad) {
-        squadService.createSquad(squad);
+    public String createSquad(SquadDto squadDto, Long... selectedFightersIds) {
+        List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
+        Squad squad = squadDto.getSquad();
+        selectedFighters.forEach(f -> f.setSquad(squad));
+        squadService.saveSquad(squad);
 
         return "redirect:/squads"; // todo потом сменить путь на карточку отряда
     }

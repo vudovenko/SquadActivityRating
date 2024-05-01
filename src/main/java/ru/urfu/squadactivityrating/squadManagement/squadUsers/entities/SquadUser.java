@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(exclude = {"applicationsForMembershipInSquads"})
+@EqualsAndHashCode(exclude = {"id", "securityUser", "squad", "subordinateSquad", "applicationsForMembershipInSquads"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

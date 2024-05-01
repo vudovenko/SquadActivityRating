@@ -1,0 +1,28 @@
+.table-container {
+    max-height: 100px;
+    overflow-y: scroll;
+    scrollbar-width: thin; /* Для Firefox */
+    scrollbar-color: transparent transparent; /* Цвет ползунка и заднего фона */
+}
+
+.table-container::-webkit-scrollbar {
+    width: 6px; /* Ширина ползунка в WebKit-браузерах (Chrome, Safari) */
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Цвет ползунка в WebKit-браузерах */
+}
+
+.table-container::-webkit-scrollbar-track {
+    background-color: transparent; /* Цвет заднего фона в WebKit-браузехрах */
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+}
+
+td, th {
+    padding: 8px;
+}

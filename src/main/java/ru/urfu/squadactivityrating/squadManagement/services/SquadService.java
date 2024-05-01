@@ -10,5 +10,5 @@ public interface SquadService {
 
     void deleteSquad(Long squadId);
 
-    void createSquad(Squad squad);
+    Squad saveSquad(Squad squad);
 }
