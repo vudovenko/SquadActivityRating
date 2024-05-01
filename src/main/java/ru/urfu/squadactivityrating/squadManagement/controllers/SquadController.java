@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/squads")
-public class SquadControllers {
+public class SquadController {
 
     private final SquadService squadService;
     private final SquadUserService squadUserService;
@@ -27,7 +27,6 @@ public class SquadControllers {
     @GetMapping
     public String getSquadListPage(Model model) {
         model.addAttribute("squads", squadService.getAllSquads());
-
         return "squadManagement/squads";
     }
 
@@ -56,9 +55,15 @@ public class SquadControllers {
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteSquad(@PathVariable String id) {
+    public String deleteSquad(@PathVariable String id) { //todo поменять на Long
         squadService.deleteSquad(Long.valueOf(id));
 
         return "redirect:/squads";
+    }
+
+    @GetMapping("/squad-card/{id}")
+    public String getSquadCard(@PathVariable Long id, Model model) {
+        model.addAttribute("squad", squadService.getSquadById(id));
+        return "squadManagement/squad_card";
     }
 }

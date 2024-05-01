@@ -17,7 +17,7 @@
     </thead>
     <tbody>
     <tr th:each="squad : ${squads}">
-      <td th:text="${squad.name}"></td>
+      <td><a th:text="${squad.name}" th:href="@{/squads/squad-card/{id}(id=${squad.id})}"></a></td>
       <td th:text="${squad.users.size()}"></td>
       <td th:text="${squad.commander != null
                    ? squad.commander.getFullName()

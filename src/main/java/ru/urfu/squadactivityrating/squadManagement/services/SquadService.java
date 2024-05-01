@@ -10,5 +10,7 @@ public interface SquadService {
 
     void deleteSquad(Long squadId);
 
+    Squad getSquadById(Long squadId);
+
     Squad saveSquad(Squad squad);
 }
