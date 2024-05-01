@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<a th:href="@{/squads}">Назад</a>
+<form th:action="@{/squads}" method="post" th:object="${squad}">
+  <div>
+    <label for="sName">Название отряда:</label>
+    <input type="text" id="sName" name="sName" placeholder="Трудовой отряд"
+           th:field="*{name}" required/>
+  </div>
+  <div>
+    <label for="sDescr">Описание отряда:</label>
+    <input type="text" id="sDescr" name="sDescr" placeholder="Тут любят трудиться!"
+           th:field="*{description}"/>
+  </div>
+  <div>
+    <label for="commSelect">Выбрать командира:</label>
+    <select id="commSelect" th:field="*{commander}" name="commSelect">
+      <option th:value="${squad.commander.id}" th:if="${squad.commander != null}"
+              th:text="${squad.commander.getFullName()}"></option>
+      <option value="">Выберите командира</option>
+      <option th:each="commander : ${commanders}" th:value="${commander.id}"
+              th:if="${squad.getCommander() == null
+                    || (squad.getCommander() != null
+                    && squad.getCommander().id != commander.id)}"
+              th:text="${commander.getFullName()}"></option>
+    </select>
+  </div>
+  <div>
+    <input type="reset">
+  </div>
+  <div><input type="submit" value="Создать отряд"/></div>
+</form>
+</body>
+</html>
