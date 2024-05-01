@@ -21,4 +21,15 @@ public interface SquadUserRepository extends JpaRepository<SquadUser, Long> {
                               on squ1 = s1.commander)
             """)
     List<SquadUser> getNonCommanders(@Param("role") UserRole role);
+
+    @Query("""
+            from SquadUser squ
+            join SecurityUser su
+            on squ.securityUser = su
+            where :role member of su.roles
+            """)
+    List<SquadUser> findByRole(@Param("role") UserRole role);
+
+    @Query("from SquadUser squ where squ.id in (:ids)")
+    List<SquadUser> findByIds(Long[] ids);
 }
