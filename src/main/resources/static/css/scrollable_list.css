@@ -1,5 +1,5 @@
 .table-container {
-    max-height: 100px;
+    max-height: 120px;
     overflow-y: scroll;
     scrollbar-width: thin; /* Для Firefox */
     scrollbar-color: transparent transparent; /* Цвет ползунка и заднего фона */
