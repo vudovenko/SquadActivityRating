@@ -53,7 +53,7 @@ VALUES (3, null, 'commander3@ru', 'Александра', 'Печеркина', 
        (13, null, 'fighter10@ru', 'Людмила', 'Морозова', 'Михайловна'),
        (14, null, 'fighter11@ru', 'Михаил', 'Васильев', 'Александрович');
 
--- insert into membership_applications (squad_id, squad_user_id)
--- VALUES (1, 3),
---        (2, 7),
---        (2, 8);
+insert into membership_applications (squad_id, squad_user_id)
+VALUES (1, 12),
+       (2, 13),
+       (2, 14);

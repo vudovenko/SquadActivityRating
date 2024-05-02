@@ -12,5 +12,7 @@ public interface SquadUserService {
 
     List<SquadUser> getFighters();
 
+    SquadUser getUserById(Long id);
+
     List<SquadUser> getUsersByIds(Long[] ids);
 }

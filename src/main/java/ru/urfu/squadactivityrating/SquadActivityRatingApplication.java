@@ -11,3 +11,7 @@ public class SquadActivityRatingApplication {
     }
 
 }
+/* todo
+    1) начать писать джава доки
+    2) Выделить фрагменты, где возможно
+ */

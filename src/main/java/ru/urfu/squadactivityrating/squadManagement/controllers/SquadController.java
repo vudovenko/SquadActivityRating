@@ -12,7 +12,6 @@ import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUser
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -61,7 +60,7 @@ public class SquadController {
         return "redirect:/squads";
     }
 
-    @GetMapping("/squad-card/{id}")
+    @GetMapping("/{id}")
     public String getSquadCard(@PathVariable Long id, Model model) {
         model.addAttribute("squad", squadService.getSquadById(id));
         return "squadManagement/squad_card";

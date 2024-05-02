@@ -47,6 +47,6 @@ public class SquadServiceImpl implements SquadService {
     public Squad getSquadById(Long id) {
         return squadRepository
                 .findById(id)
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Squad not found"));
     }
 }

@@ -31,6 +31,12 @@ public class SquadUserServiceImpl implements SquadUserService {
     }
 
     @Override
+    public SquadUser getUserById(Long id) {
+        return squadUserRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    @Override
     public List<SquadUser> getUsersByIds(Long[] ids) {
         return squadUserRepository.findByIds(ids);
     }

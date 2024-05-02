@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<a th:href="@{/squads/{squadId}(squadId=${squadId})}">Назад</a>
+<table>
+  <thead>
+  <tr>
+    <th>Имя бойца</th>
+    <th>Принять</th>
+    <th>Отклонить</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="fighter : ${fightersWishingToJoin}">
+    <td><a th:text="${fighter.getFullName()}"></a></td>
+    <td>
+      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">
+        Одобрить
+      </a>
+    </td>
+    <td>
+      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">
+        Отказать
+      </a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<a th:href="@{/}">Вернуться на главную страницу.</a>
+</body>
+</html>
