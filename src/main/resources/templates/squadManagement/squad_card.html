@@ -8,7 +8,7 @@
 <body>
 <div class="card-header">
   <a th:href="@{/squads}">Назад</a>
-  <a th:href="@{/}">Редактировать профиль</a>
+  <a th:href="@{/squads/{id}/edit(id=${squad.id})}">Редактировать профиль отряда</a>
   <a th:href="@{/}">Вступить</a>
   <a th:href="@{/}">Управление отрядом</a>
   <a th:href="@{/squads/{id}/delete(id=${squad.id})}">

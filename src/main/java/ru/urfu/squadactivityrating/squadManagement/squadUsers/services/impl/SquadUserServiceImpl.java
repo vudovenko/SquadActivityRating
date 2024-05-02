@@ -40,4 +40,16 @@ public class SquadUserServiceImpl implements SquadUserService {
     public List<SquadUser> getUsersByIds(Long[] ids) {
         return squadUserRepository.findByIds(ids);
     }
+
+    @Override
+    public List<SquadUser> getSquadFighters(Long squadId) {
+        return squadUserRepository.findBySquadIdAndRole(squadId, UserRole.FIGHTER);
+    }
+
+
+
+    @Override
+    public List<SquadUser> getFreeFighters() {
+        return squadUserRepository.findBySquadIdNull();
+    }
 }

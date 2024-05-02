@@ -32,4 +32,15 @@ public interface SquadUserRepository extends JpaRepository<SquadUser, Long> {
 
     @Query("from SquadUser squ where squ.id in (:ids)")
     List<SquadUser> findByIds(Long[] ids);
+
+    @Query("""
+            from SquadUser squ
+            join SecurityUser su
+            on squ.securityUser = su
+            where :role member of su.roles
+            and squ.squad.id = :squadId
+            """)
+    List<SquadUser> findBySquadIdAndRole(Long squadId, UserRole role);
+
+    List<SquadUser> findBySquadIdNull();
 }

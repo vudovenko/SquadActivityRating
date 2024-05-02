@@ -1,6 +1,7 @@
 package ru.urfu.squadactivityrating.squadManagement.services;
 
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.dto.SquadDto;
 
 import java.util.List;
 
@@ -13,4 +14,8 @@ public interface SquadService {
     Squad saveSquad(Squad squad);
 
     Squad getSquadById(Long squadId);
+
+    void saveOrUpdateSquad(Long squadId,
+                           Squad squadDto,
+                           Long[] selectedFightersIds);
 }
