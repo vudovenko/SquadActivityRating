@@ -46,10 +46,8 @@ public class SquadUserServiceImpl implements SquadUserService {
         return squadUserRepository.findBySquadIdAndRole(squadId, UserRole.FIGHTER);
     }
 
-
-
     @Override
     public List<SquadUser> getFreeFighters() {
-        return squadUserRepository.findBySquadIdNull();
+        return squadUserRepository.findBySquadIdNullAndRole(UserRole.FIGHTER);
     }
 }

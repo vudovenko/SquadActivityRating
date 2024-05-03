@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.repositories.SquadRepository;
 import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
-import ru.urfu.squadactivityrating.squadManagement.squadUsers.dto.SquadDto;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
@@ -54,36 +53,25 @@ public class SquadServiceImpl implements SquadService {
     }
 
     @Override
-    public void saveOrUpdateSquad(Long squadId,
-                                  Squad squadDto,
-                                  Long[] selectedFightersIds) {
-        List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
+    public void updateSquad(Long squadId,
+                            Squad squad,
+                            Long[] selectedFightersIds) {
         List<SquadUser> oldFighters = squadUserService.getSquadFighters(squadId);
         oldFighters.forEach(f -> {
             f.setSquad(null);
+            squadUserService.saveUser(f);
         });
-//        selectedFighters.forEach(f -> f.setSquad(squadDto));
-//        squadRepository.save(squadDto);
-
-
-//        if (squadId != null) {
-//            Optional<Squad> squadOptional = squadRepository.findById(Long.parseLong(squadId));
-//            if (squadOptional.isPresent()) {
-//                Squad squad = squadOptional.get();
-//
-//
-//                squad.getUsers().forEach(f -> f.setSquad(null));
-//                selectedFighters.forEach(f -> f.setSquad(squad));
-//                squad.setName(squadDto.getName());
-//                squad.setDescription(squadDto.getDescription());
-//                squad.setCommander(squadDto.getCommander());
-//                squadDto.setName("!!!");
-//                squadRepository.save(squadDto);
-//            } else {
-//                throw new IllegalArgumentException("Squad not found");
-//            }
-//        } else {
-//            throw new IllegalArgumentException("Squad not found");
-//        }
+        SquadUser commander = squad.getCommander();
+        squad.setId(squadId);
+        squad.setCommander(null);
+        squad.setUsers(null);
+        Squad updatedSquad = squadRepository.save(squad);
+        List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
+        selectedFighters.forEach(f -> {
+            f.setSquad(updatedSquad);
+            squadUserService.saveUser(f);
+        });
+        updatedSquad.setCommander(commander);
+        squadRepository.save(updatedSquad);
     }
 }
