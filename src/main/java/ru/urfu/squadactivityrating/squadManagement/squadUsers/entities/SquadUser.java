@@ -2,6 +2,7 @@ package ru.urfu.squadactivityrating.squadManagement.squadUsers.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 
@@ -47,6 +48,14 @@ public class SquadUser {
             inverseJoinColumns = @JoinColumn(name = "squad_id")
     )
     private List<Squad> applicationsForMembershipInSquads;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "event_to_squad_user",
+            joinColumns = @JoinColumn(name = "squad_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> events;
 
     public String getFullName() {
         return lastname + " " + firstname + " " + patronymic;

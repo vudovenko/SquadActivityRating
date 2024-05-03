@@ -57,3 +57,16 @@ insert into membership_applications (squad_id, squad_user_id)
 VALUES (1, 12),
        (2, 13),
        (2, 14);
+
+insert into events (name, description, location, date, duration)
+values ('Хакатон', 'Хакатон для рыбаков', 'Москва', '2022-06-01 10:00:00', '00:07:00'),
+       ('Субботник', 'Субботник', 'Москва', '2022-06-02 10:00:00', '00:02:00');
+
+insert into event_type (event_id, roles)
+VALUES (1, 'PRODUCTION_WORK'), (2, 'PARTICIPATION_IN_EVENTS_URFU');
+
+
+-- insert into event_to_squad_user (event_id, squad_user_id)
+-- VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7),
+--        (1, 8), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (1, 14),
+--        (2, 4), (2, 5), (2, 9), (2, 13), (2, 14);
