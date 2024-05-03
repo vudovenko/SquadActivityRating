@@ -23,16 +23,22 @@
   <table>
     <tr>
       <td>
-        <div th:text="'Командир отряда: '"></div>
-        <div th:text="${squad.commander != null
-              ? squad.commander.getFullName()
-              : 'Командира нет'}"></div>
+        <div th:text="'Название отряда: '"></div>
+        <div th:text="${squad.name}"></div>
       </td>
     </tr>
     <tr>
       <td>
         <div th:text="'Описание: '"></div>
         <div th:text="${squad.description}"></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div th:text="'Командир отряда: '"></div>
+        <div th:text="${squad.commander != null
+              ? squad.commander.getFullName()
+              : 'Командира нет'}"></div>
       </td>
     </tr>
   </table>

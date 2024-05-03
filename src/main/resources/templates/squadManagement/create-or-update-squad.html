@@ -51,7 +51,8 @@
   <div>
     <input type="reset">
   </div>
-  <div><input type="submit" value="Создать отряд"/></div>
+  <div><input type="submit"
+              th:value="${squad.id == null ? 'Создать отряд' : 'Обновить отряд'}"/></div>
 </form>
 </body>
 </html>
