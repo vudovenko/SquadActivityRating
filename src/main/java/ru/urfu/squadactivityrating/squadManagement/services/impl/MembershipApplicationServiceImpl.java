@@ -32,6 +32,19 @@ public class MembershipApplicationServiceImpl implements MembershipApplicationSe
     }
 
     @Override
+    public void submitApplication(Long squadId, Long userId) {
+        MembershipApplication membershipApplication = MembershipApplication
+                .builder()
+                .squad(squadService.getSquadById(squadId))
+                .squadUser(squadUserService.getUserById(userId))
+                .build();
+        if (membershipApplicationRepository
+                .findBySquadIdAndSquadUserId(squadId, userId).isEmpty()) {
+            membershipApplicationRepository.save(membershipApplication);
+        }
+    }
+
+    @Override
     public void approveFighter(Long squadId, Long userId) {
         Optional<MembershipApplication> membershipApplicationOptional =
                 membershipApplicationRepository.findBySquadIdAndSquadUserId(squadId, userId);

@@ -1,18 +1,18 @@
 insert into security_users (login, password, active)
 VALUES ('commander1', '$2a$10$s7ECzeXM9/ztbWtY2wQxzeGTBKqe4z3GcQCzb3Q5k8wi.qUe9PTBi', true),
        ('commander2', '$2a$10$5WtlEFrB3IeMSiGXynMlLuKwaPOHydAWYCv2myPz2RjDkriVfayHS', true),
-       ('commander3', '$2a$10$5WtlEFrB3IeMSiGXynMlLuKwaPOHydAWYCv2myPz2RjDkriVfayHS', true),
-       ('fighter1', '$2a$10$w3AaLOJdXj2jnm9w.tMizO0CfmyA6awCKmgJXSc.v/Uu/s8I.ENQS', true),
-       ('fighter2', '$2a$10$ZeJ/.C5zDZOxrZwq28cZMeG.N0DtlBSna0o50y7hT3JD63V79Y7y2', true),
-       ('fighter3', '$2a$10$BXuCcTZmPCSWtmxTdQbcG.G.axV0i72uZKZWsJJyaG9XbVJ5rQ1Wq', true),
-       ('fighter4', '$2a$10$bauhh4OLWtLBwblLWvFYrOWq8QQ/dMFj/6brNbc5vQtof9kk9JLpS', true),
-       ('fighter5', '$2a$10$PtC1hMP2VZHY9hlTjdLQSeYfJjgacLnhsOry6zhHfOZWT.QiD47Vu', true),
-       ('fighter6', '$2a$10$AKROflPrgfgvqckpnKBR8uIeKHZHwFTjalxnn9SXBaI.Bo4CUHipG', true),
-       ('fighter7', '$2a$10$XVpQWnLXe1aXbQ0iEYqG3eX9XU8b6bY4bJ5bIiZn4wI4bIiZn4wIi', true),
-       ('fighter8', '$2a$10$XVpQWnLXe1aXbQ0iEYqG3eX9XU8b6bY4bJ5bIiZn4wI4bIiZn4wIi', true),
-       ('fighter9', '$2a$10$XVpQWnLXe1aXbQ0iEYqG3eX9XU8b6bY4bJ5bIiZn4wI4bIiZn4wIi', true),
-       ('fighter10', '$2a$10$XVpQWnLXe1aXbQ0iEYqG3eX9XU8b6bY4bJ5bIiZn4wI4bIiZn4wIi', true),
-       ('fighter11', '$2a$10$XVpQWnLXe1aXbQ0iEYqG3eX9XU8b6bY4bJ5bIiZn4wI4bIiZn4wIi', true);
+       ('commander3', '$2a$10$8Ptjbpe0.6BLsOk9dqgQA.Ye.SQpGD5xD.xi0t3bk9wggnChHTcTe', true),
+       ('fighter1', '$2a$10$muWfb/PtVF3E8j.kJXDZRufATwed6JE2HNXP8c6d1uiVCOKgwrPZG', true),
+       ('fighter2', '$2a$10$8hynLBRgAOU9OAnLFK6Q9OfH4zjztiSD6bsFK7i85LSKb1PKhF8Ru', true),
+       ('fighter3', '$2a$10$R/iW/MViuD5.vEN88xLpL.kQ8cWw.eBMSO0e89cVDkIn4VqIiiHiu', true),
+       ('fighter4', '$2a$10$GUBsdxiTVDRD/v0tzaOkFuHdupscULGejCqLbgJKGJMGMAzGTtIYi', true),
+       ('fighter5', '$2a$10$ZibNoERw5HksGwiu1zxHMOndH2EzY0SRg7TJ4BUfVkLCJPGc2NU1S', true),
+       ('fighter6', '$2a$10$JoMEgNH1Hka2sZthwhkRu.QtbwBbeFRP56E5DUTiM7/K0190y9UNm', true),
+       ('fighter7', '$2a$10$tIsfeLi7iPDUxP2C9n3CfebA3diJ1R42vRvs5NSgVv7Ky9KTm.l7i', true),
+       ('fighter8', '$2a$10$VW56a6ey.ilowYi3w3SfxuePGgKXUwFu8sz848Bkz2kciIY6qH8J6', true),
+       ('fighter9', '$2a$10$OkEzgXG7dG0AbKCWtEnpsunDisF9HAKJ3fcXE23CONI6ulE80BE8i', true),
+       ('fighter10', '$2a$10$gHiN4BEi8v8EW/42H7w3w.qiLKQ9WKhrp/0RScSbESSvXiYf7HAAm', true),
+       ('fighter11', '$2a$10$eu2mo7AHG7U.Ey53XevYhuZNuY9kOsFnf/ZtoGC3UM.MWZweMXzw.', true);
 
 insert into user_role (user_id, roles)
 VALUES (1, 'COMMANDER'),

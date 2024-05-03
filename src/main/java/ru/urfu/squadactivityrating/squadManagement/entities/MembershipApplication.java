@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
+/**
+ * Сущность заявки на вступление в отряд
+ */
 @Data
 @Entity
 @Builder
