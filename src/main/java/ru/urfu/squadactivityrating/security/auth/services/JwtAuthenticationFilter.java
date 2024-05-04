@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.security.configurations;
+package ru.urfu.squadactivityrating.security.auth.services;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

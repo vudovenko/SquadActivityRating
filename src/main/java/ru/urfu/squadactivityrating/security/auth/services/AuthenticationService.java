@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ru.urfu.squadactivityrating.security.auth.dto.AuthenticationRequest;
 import ru.urfu.squadactivityrating.security.auth.dto.AuthenticationResponse;
 import ru.urfu.squadactivityrating.security.auth.dto.RegisterRequest;
-import ru.urfu.squadactivityrating.security.configurations.JwtService;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
 import ru.urfu.squadactivityrating.security.securityUsers.services.SecurityUserService;
