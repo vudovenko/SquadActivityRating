@@ -47,4 +47,6 @@ public interface MembershipApplicationService {
      * @param userId  идентификатор пользователя, подавшего заявку
      */
     void refuseFighter(Long squadId, Long userId);
+
+    void deleteAllMembershipApplications(List<MembershipApplication> membershipApplications);
 }

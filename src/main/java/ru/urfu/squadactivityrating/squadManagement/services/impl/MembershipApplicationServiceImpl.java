@@ -75,4 +75,9 @@ public class MembershipApplicationServiceImpl implements MembershipApplicationSe
             throw new IllegalArgumentException("Membership application not found");
         }
     }
+
+    @Override
+    public void deleteAllMembershipApplications(List<MembershipApplication> membershipApplications) {
+        membershipApplicationRepository.deleteAll(membershipApplications);
+    }
 }

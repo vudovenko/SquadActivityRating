@@ -1,9 +1,12 @@
 package ru.urfu.squadactivityrating.squadManagement.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import ru.urfu.squadactivityrating.squadManagement.entities.MembershipApplication;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.repositories.SquadRepository;
+import ru.urfu.squadactivityrating.squadManagement.services.MembershipApplicationService;
 import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
@@ -12,11 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class SquadServiceImpl implements SquadService {
 
     private final SquadRepository squadRepository;
     private final SquadUserService squadUserService;
+    private final MembershipApplicationService membershipApplicationService;
 
     @Override
     public List<Squad> getAllSquads() {
@@ -34,6 +38,9 @@ public class SquadServiceImpl implements SquadService {
                 commander.setSubordinateSquad(null);
             }
             squadEntity.getUsers().forEach(user -> user.setSquad(null));
+            List<MembershipApplication> membershipApplications
+                    = membershipApplicationService.getBySquadId(squadId);
+            membershipApplicationService.deleteAllMembershipApplications(membershipApplications);
             squadRepository.delete(squadEntity);
         } else {
             throw new IllegalArgumentException("Squad not found");
