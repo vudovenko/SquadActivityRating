@@ -2,13 +2,11 @@ package ru.urfu.squadactivityrating.eventManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -37,8 +35,8 @@ public class Event {
             cascade = CascadeType.ALL)
     private List<SquadUser> participants;
 
-    @ElementCollection(targetClass = EventType.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "event_type", joinColumns = @JoinColumn(name = "event_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<EventType> roles;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+            CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "type_id")
+    private EventTypeEntity eventType;
 }
