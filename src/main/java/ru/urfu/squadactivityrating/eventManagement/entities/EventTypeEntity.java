@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +25,9 @@ public class EventTypeEntity {
             cascade = {CascadeType.PERSIST, CascadeType.DETACH,
                     CascadeType.REFRESH, CascadeType.MERGE})
     private List<Event> events;
+
+    @Override
+    public String toString() {
+        return eventType.toString();
+    }
 }

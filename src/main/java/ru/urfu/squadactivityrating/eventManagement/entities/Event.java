@@ -2,15 +2,18 @@ package ru.urfu.squadactivityrating.eventManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.urfu.squadactivityrating.eventManagement.converters.DurationAttributeConverter;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "participants")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,8 +31,8 @@ public class Event {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime date;
 
-    @Column(columnDefinition = "TIME")
-    private LocalTime duration;
+    @Convert(converter = DurationAttributeConverter.class)
+    private Duration duration;
 
     @ManyToMany(mappedBy = "events",
             cascade = CascadeType.ALL)
@@ -39,4 +42,24 @@ public class Event {
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "type_id")
     private EventTypeEntity eventType;
+
+    public String getFormattedDate() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        return dateTimeFormatter.format(date);
+    }
+
+    public String getFormattedDuration() {
+        StringJoiner joiner = new StringJoiner(" ");
+        if (duration.toHoursPart() > 0) {
+            joiner.add(String.format("%d час.", duration.toHoursPart()));
+        }
+        if (duration.toMinutesPart() > 0) {
+            joiner.add(String.format("%d мин.", duration.toMinutesPart()));
+        }
+        if (duration.toSecondsPart() > 0) {
+            joiner.add(String.format("%d сек.", duration.toSecondsPart()));
+        }
+
+        return joiner.toString();
+    }
 }
