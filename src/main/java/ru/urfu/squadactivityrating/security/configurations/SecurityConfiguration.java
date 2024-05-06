@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .requestMatchers("/", "/auth/**")
                 .permitAll()
-                .requestMatchers("/squads/**")
+                .requestMatchers("/squads/**", "/events/**")
                 .hasAnyAuthority("FIGHTER", "COMMANDER")
                 .and().formLogin(form -> form
                         .loginPage("/auth/login")

@@ -8,11 +8,6 @@ import java.time.Duration;
 @Converter(autoApply = true)
 public class DurationAttributeConverter implements AttributeConverter<Duration, String> {
 
-    public static String getFormattedTimeWork(Duration timeWork) {
-        return timeWork.getSeconds() / 3600 + "Ч: "
-                + timeWork.getSeconds() % 3600 / 60 + "М";
-    }
-
     @Override
     public String convertToDatabaseColumn(Duration duration) {
         if (duration == null) {
@@ -20,13 +15,13 @@ public class DurationAttributeConverter implements AttributeConverter<Duration, 
         }
         long seconds = duration.getSeconds();
         long nanos = duration.getNano();
-        boolean negative = duration.isNegative();
+        boolean isNegative = duration.isNegative();
 
         long absSeconds = Math.abs(seconds);
         int hours = (int) (absSeconds / 3600);
         int minutes = (int) ((absSeconds % 3600) / 60);
 
-        String result = String.format("%s%d:%02d", negative ? "-" : "", hours, minutes);
+        String result = String.format("%s%d:%02d", isNegative ? "-" : "", hours, minutes);
         if (nanos > 0) {
             result += String.format(".%09d", nanos);
         }
@@ -39,8 +34,8 @@ public class DurationAttributeConverter implements AttributeConverter<Duration, 
             return null;
         }
 
-        boolean negative = dbData.startsWith("-");
-        if (negative) {
+        boolean isNegative = dbData.startsWith("-");
+        if (isNegative) {
             dbData = dbData.substring(1);
         }
 
@@ -62,6 +57,6 @@ public class DurationAttributeConverter implements AttributeConverter<Duration, 
             }
         }
 
-        return Duration.ofSeconds(negative ? -totalSeconds : totalSeconds, nanos);
+        return Duration.ofSeconds(isNegative ? -totalSeconds : totalSeconds, nanos);
     }
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<a th:href="@{/}">Вернуться на главную страницу.</a>
+<br>
+<br>
+<a th:href="@{/events(type='sport')}">Спорт</a>
+<a th:href="@{/events(type='creative_work')}">Творческая работа</a>
+<a th:href="@{/events(type='social_work')}">Социальная работа</a>
+<a th:href="@{/events(type='production_work')}">Производственная работа</a>
+<a th:href="@{/events(type='participation_in_events')}">Участие в мероприятиях</a>
+<a th:href="@{/events(type='participation_in_events_URFU')}">Участие в мероприятиях Штаба СО УрФУ</a>
+<a th:href="@{/events(type='agitsektor')}">Агитсектор</a>
+<a th:href="@{/events(type='discipline')}">Дисциплина</a>
+<form>
+  <table>
+    <thead>
+    <tr>
+      <th>Название мероприятия</th>
+      <th>Описание</th>
+      <th>Локация</th>
+      <th>Дата и время</th>
+      <th>Длительность</th>
+      <th>Тип события</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="event : ${events}">
+      <td th:text="${event.name}"></td>
+      <td th:text="${event.description}"></td>
+      <td th:text="${event.location}"></td>
+      <td th:text="${event.getFormattedDate()}"></td>
+      <td th:text="${event.getFormattedDuration()}"></td>
+      <td th:text="${event.eventType}"></td>
+    </tr>
+    </tbody>
+  </table>
+</form>
+</body>
+</html>
