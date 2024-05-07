@@ -2,7 +2,6 @@ package ru.urfu.squadactivityrating.eventManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType;
 
 import java.util.List;
 
@@ -13,13 +12,13 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "event_type")
-public class EventTypeEntity {
+public class EventType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    private ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType eventType;
 
     @OneToMany(mappedBy = "eventType",
             cascade = {CascadeType.PERSIST, CascadeType.DETACH,

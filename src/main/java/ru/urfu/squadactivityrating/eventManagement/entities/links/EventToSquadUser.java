@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
+import ru.urfu.squadactivityrating.eventManagement.feedback.Feedback;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 /**
@@ -32,4 +33,8 @@ public class EventToSquadUser {
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @OneToOne(mappedBy = "event",
+            cascade = CascadeType.ALL)
+    private Feedback feedback;
 }

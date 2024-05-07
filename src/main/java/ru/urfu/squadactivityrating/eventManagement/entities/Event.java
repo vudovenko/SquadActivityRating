@@ -40,7 +40,7 @@ public class Event {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "type_id")
-    private EventTypeEntity eventType;
+    private EventType eventType;
 
     @ManyToMany(mappedBy = "events",
             cascade = {CascadeType.PERSIST, CascadeType.DETACH,
