@@ -23,4 +23,13 @@ public interface EventToSquadUserService {
      * @param eventsToSquadUsers посещения для удаления
      */
     void deleteAllEventsToSquadUsers(List<EventToSquadUser> eventsToSquadUsers);
+
+    /**
+     * Метод поиска посещения по id события и id участника
+     *
+     * @param eventId     идентификатор события
+     * @param squadUserId идентификатор участника
+     * @return посещение
+     */
+    EventToSquadUser getEventToSquadUserByEventIdAndSquadUserId(Long eventId, Long squadUserId);
 }

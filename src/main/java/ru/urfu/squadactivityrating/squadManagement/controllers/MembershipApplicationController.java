@@ -41,14 +41,14 @@ public class MembershipApplicationController {
     /**
      * Метод для отправки заявки на вступление в отряд
      *
-     * @param user    текущий авторизованный пользователь
-     * @param squadId идентификатор отряда, в который подается заявка
+     * @param squadId     идентификатор отряда, в который подается заявка
+     * @param currentUser текущий авторизованный пользователь
      * @return страница с карточкой отряда
      */
     @GetMapping("/submit-application")
-    public String submitApplication(@AuthenticationPrincipal SecurityUser user,
-                                    @PathVariable Long squadId) {
-        membershipApplicationService.submitApplication(squadId, user.getId());
+    public String submitApplication(@PathVariable Long squadId,
+                                    @AuthenticationPrincipal SecurityUser currentUser) {
+        membershipApplicationService.submitApplication(squadId, currentUser.getId());
         return "redirect:/squads/" + squadId;
     }
 

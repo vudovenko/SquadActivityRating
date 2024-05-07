@@ -1,10 +1,7 @@
 package ru.urfu.squadactivityrating.eventManagement.entities.links;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.feedbacks.entities.Feedback;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
@@ -12,7 +9,8 @@ import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser
 /**
  * Сущность посещения событий участниками
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,4 +35,14 @@ public class EventToSquadUser {
     @OneToOne(mappedBy = "eventToSquadUser",
             cascade = CascadeType.ALL)
     private Feedback feedback;
+
+    @Override
+    public String toString() {
+        return "EventToSquadUser{" +
+                "id=" + id +
+                ", squadUser=" + squadUser.getFullName() +
+                ", event=" + event +
+                ", feedback=" + feedback.getRating() + "/" + feedback.getComment() +
+                '}';
+    }
 }

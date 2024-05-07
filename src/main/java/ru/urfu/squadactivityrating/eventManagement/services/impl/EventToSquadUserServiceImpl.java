@@ -23,4 +23,14 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
     public void deleteAllEventsToSquadUsers(List<EventToSquadUser> eventsToSquadUsers) {
         eventToSquadUserRepository.deleteAll(eventsToSquadUsers);
     }
+
+    @Override
+    public EventToSquadUser getEventToSquadUserByEventIdAndSquadUserId(Long eventId,
+                                                                       Long squadUserId) {
+        return eventToSquadUserRepository
+                .findByEventIdAndSquadUserId(eventId, squadUserId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("EventToSquadUser with eventId " + eventId
+                                + " and squadUserId " + squadUserId + " not found"));
+    }
 }

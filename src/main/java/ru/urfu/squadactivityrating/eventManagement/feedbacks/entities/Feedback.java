@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 
+/**
+ * Сущность отзыва
+ */
 @Getter
 @Setter
 @ToString
