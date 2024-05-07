@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.eventManagement.feedback.entities;
+package ru.urfu.squadactivityrating.eventManagement.feedbacks.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,5 +22,5 @@ public class Feedback {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "event_to_squad_user_id")
-    private EventToSquadUser event;
+    private EventToSquadUser eventToSquadUser;
 }
