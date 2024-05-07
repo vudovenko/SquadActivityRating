@@ -6,6 +6,9 @@ import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser
 
 import java.util.List;
 
+/**
+ * Сущность отряда
+ */
 @Getter
 @Setter
 @ToString(exclude = {"commander", "users", "membershipApplications"})

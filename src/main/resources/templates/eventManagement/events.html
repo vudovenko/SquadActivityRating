@@ -30,7 +30,7 @@
     </thead>
     <tbody>
     <tr th:each="event : ${events}">
-      <td th:text="${event.name}"></td>
+      <td><a th:text="${event.name}" th:href="@{/events/{id}(id=${event.id})}"></a></td>
       <td th:text="${event.description}"></td>
       <td th:text="${event.location}"></td>
       <td th:text="${event.getFormattedDate()}"></td>

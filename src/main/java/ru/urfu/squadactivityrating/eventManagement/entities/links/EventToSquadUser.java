@@ -8,11 +8,14 @@ import lombok.NoArgsConstructor;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
+/**
+ * Сущность посещения событий участниками
+ */
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "event_to_squad_user")
 public class EventToSquadUser {
 

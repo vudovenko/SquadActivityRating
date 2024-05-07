@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Репоситорий для работы с заявками {@link MembershipApplication}
+ * Репозиторий для работы с заявками {@link MembershipApplication}
  */
 public interface MembershipApplicationRepository extends JpaRepository<MembershipApplication, Long> {
 

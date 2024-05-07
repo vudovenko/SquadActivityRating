@@ -11,9 +11,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.StringJoiner;
 
+/**
+ * Сущность события
+ */
 @Getter
 @Setter
-@ToString(exclude = "participants")
+@ToString(exclude = {"participants"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,14 +37,15 @@ public class Event {
     @Convert(converter = DurationAttributeConverter.class)
     private Duration duration;
 
-    @ManyToMany(mappedBy = "events",
-            cascade = CascadeType.ALL)
-    private List<SquadUser> participants;
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "type_id")
     private EventTypeEntity eventType;
+
+    @ManyToMany(mappedBy = "events",
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+                    CascadeType.REFRESH, CascadeType.MERGE})
+    private List<SquadUser> participants;
 
     public String getFormattedDate() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");

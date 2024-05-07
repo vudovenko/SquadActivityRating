@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div>
+  <a th:href="@{/events}">Назад</a>
+  <a th:href="@{/events/{id}/delete(id=${event.id})}">
+    Удалить
+  </a>
+</div>
+
+<div>
+  <div th:text="'Название мероприятия: ' + ${event.name}"></div>
+  <div th:text="'Описание мероприятия: ' + ${event.description}"></div>
+  <div th:text="'Место проведения: ' + ${event.location}"></div>
+  <div th:text="'Дата проведения: ' + ${event.getFormattedDate()}"></div>
+  <div th:text="'Продолжительность: ' + ${event.getFormattedDuration()}"></div>
+  <div th:text="'Тип мероприятия: ' + ${event.eventType}"></div>
+</div>
+<div>
+  <div th:text="'Участники мероприятия:'"></div>
+  <div th:each="user, stat : ${event.participants}"
+       th:text="${stat.count} + ') '
+       + ${user.getFullName()}"></div>
+</div>
+</body>
+</html>
