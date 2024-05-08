@@ -32,4 +32,6 @@ public interface EventToSquadUserService {
      * @return посещение
      */
     EventToSquadUser getEventToSquadUserByEventIdAndSquadUserId(Long eventId, Long squadUserId);
+
+    EventToSquadUser save(EventToSquadUser eventToSquadUser);
 }

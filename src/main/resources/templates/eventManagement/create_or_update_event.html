@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
-<a th:href="@{/events}">Назад</a>
+<a th:href="@{/events/{id}(id=${event.getId()})}">Назад</a>
 <form th:attr="action=${event.id == null
       ? '/events' : '/events/' + event.id + '/update'}"
       method="post" th:object="${event}">
@@ -71,10 +71,10 @@
         <div th:each="entry, stat : ${fighters}">
           <tr th:each="fighter, fStat : ${entry.value}">
             <td>
-              <input th:id="'fightCheckBox' + ${fStat.index}" type="checkbox" th:value="${fighter.id}"
+              <input th:id="'fightCheckBox' + ${stat.index} + ${fStat.index}" type="checkbox" th:value="${fighter.id}"
                      name="selectedFightersIds" th:checked="${entry.key}"/>
             </td>
-            <td><label th:for="${'fightCheckBox' + fStat.index}"
+            <td><label th:for="${'fightCheckBox' + stat.index + fStat.index}"
                        th:text="${fighter.getFullName()}"></label></td>
           </tr>
         </div>

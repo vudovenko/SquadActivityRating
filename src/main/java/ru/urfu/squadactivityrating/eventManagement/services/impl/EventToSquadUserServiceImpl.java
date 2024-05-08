@@ -33,4 +33,9 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
                         () -> new IllegalArgumentException("EventToSquadUser with eventId " + eventId
                                 + " and squadUserId " + squadUserId + " not found"));
     }
+
+    @Override
+    public EventToSquadUser save(EventToSquadUser eventToSquadUser) {
+        return eventToSquadUserRepository.save(eventToSquadUser);
+    }
 }
