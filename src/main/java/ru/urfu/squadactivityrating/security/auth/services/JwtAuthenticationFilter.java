@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final Cookie[] cookies = request.getCookies();
         String jwt = null;
         String userEmail = null;
-
+        // todo проверка, что истекло время жизни токена
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {

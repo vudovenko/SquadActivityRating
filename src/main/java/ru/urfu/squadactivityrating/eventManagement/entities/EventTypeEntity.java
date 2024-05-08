@@ -12,11 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "event_type")
-public class EventType {
+public class EventTypeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Enumerated(EnumType.STRING)
     private ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType eventType;
 

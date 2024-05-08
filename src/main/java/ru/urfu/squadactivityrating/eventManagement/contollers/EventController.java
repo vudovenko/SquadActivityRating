@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.urfu.squadactivityrating.eventManagement.entities.Event;
+import ru.urfu.squadactivityrating.eventManagement.entities.EventTypeEntity;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Контроллер для работы с событиями
@@ -35,6 +41,29 @@ public class EventController {
                         ? EventType.SPORT
                         : EventType.valueOf(type.toUpperCase())));
         return "eventManagement/events";
+    }
+
+    @GetMapping("/create")
+    public String getCreateEventPage(Model model) {
+        Event event = new Event();
+        event.setName("Новое мероприятие329");
+        event.setDate(LocalDateTime.now());
+        Duration duration = Duration.ofHours(37).plusMinutes(59);
+        event.setHoursDuration((int) duration.toHours());
+        event.setMinutesDuration((int) duration.toMinutes() % 60);
+        EventTypeEntity eventType = new EventTypeEntity();
+        eventType.setEventType(EventType.SOCIAL_WORK);
+        event.setEventType(eventType);
+
+        // Форматирование даты и времени
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        String formattedDate = event.getDate().format(formatter);
+
+        model.addAttribute("formattedDate", formattedDate);
+
+        model.addAttribute("event", event);
+
+        return "eventManagement/create_or_update_event";
     }
 
     /**

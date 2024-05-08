@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="/css/scrollable_list.css">
+</head>
+<body>
+<a th:href="@{/events}">Назад</a>
+<form th:attr="action=${event.id == null
+      ? '/events' : '/events/' + event.id + '/update'}"
+      method="post" th:object="${event}">
+  <div>
+    <label for="eName">Название мероприятия:</label>
+    <input type="text" id="eName" name="eName" placeholder="Организация праздника"
+           th:field="*{name}" required/>
+  </div>
+  <div>
+    <label for="eDescr">Описание мероприятия:</label>
+    <input type="text" id="eDescr" name="eDescr" placeholder="Нужно организовать праздник"
+           th:field="*{description}"/>
+  </div>
+  <div>
+    <label for="eLocat">Место проведения мероприятия:</label>
+    <input type="text" id="eLocat" name="eLocat" placeholder="Екатеринбург, ул. Мира, 32"
+           th:field="*{location}"/>
+  </div>
+  <div>
+    <label for="eDateold">Прошлая дата и время проведения мероприятия:</label>
+    <input type="datetime-local" id="eDateold" name="eDateold" placeholder="2024-06-23 10:50:00"
+           th:value="${formattedDate}"/>
+  </div>
+  <div>
+    <label for="eDateNew">Новая дата и время проведения мероприятия:</label>
+    <input type="datetime-local" id="eDateNew" name="eDateNew" placeholder="2024-07-19 11:00:00"
+           th:field="*{date}"/>
+  </div>
+  <div>
+    <label for="eHours">Длительность мероприятия:</label>
+    <table>
+      <tbody>
+      <tr>
+        <td>
+          <input type="number" id="eHours" name="eDuration"
+                 placeholder="07" th:field="*{hoursDuration}"/>
+        </td>
+        <td>
+          <input type="number" id="eMinutes" name="eDuration"
+                 placeholder="37" th:field="*{minutesDuration}"/>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <label for="eType">Тип мероприятия:</label>
+    <select id="eType" name="eType" th:field="*{eventType.eventType}">
+      <option th:value="${event.eventType}" th:if="${event.eventType.eventType != null}"
+              th:text="${event.eventType.getEventType().getTypeName()}"></option>
+      <option  th:each="eType : ${T(ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType).values()}"
+              th:value="${eType}" th:if="${event.eventType.eventType == null
+            || (event.eventType.eventType != null
+            && event.eventType.getEventType().getTypeName() != eType.getTypeName())}"
+              th:text="${eType.getTypeName()}"></option>
+    </select>
+  </div>
+  <div>
+    <input type="reset">
+  </div>
+  <div><input type="submit"
+              value="Создать мероприятие"/></div>
+  <!--              th:value="${squad.id == null ? 'Создать отряд' : 'Обновить отряд'}"/></div>-->
+</form>
+</body>
+</html>
