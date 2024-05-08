@@ -8,6 +8,7 @@
 <body>
 <div>
   <a th:href="@{/events}">Назад</a>
+  <a th:href="@{/events/{id}/update(id=${event.id})}">Редактировать информацию о мероприятии</a>
   <a th:href="@{/events/{id}/delete(id=${event.id})}">
     Удалить
   </a>

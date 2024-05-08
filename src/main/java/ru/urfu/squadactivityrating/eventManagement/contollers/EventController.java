@@ -8,12 +8,13 @@ import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.EventType;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
+import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
+import java.util.*;
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +27,7 @@ public class EventController {
 
     private final EventService eventService;
     private final SquadUserService squadUserService;
+    private final EventToSquadUserService eventToSquadUserService;
 
     /**
      * Метод для отображения страницы списка событий
@@ -57,7 +59,22 @@ public class EventController {
 
         model.addAttribute("fighters", fightersMap);
         model.addAttribute("event", event);
-        // todo выделить во фрагмент это view
+        // todo выделить во фрагмент этот view
+        return "eventManagement/create_or_update_event";
+    }
+
+    @GetMapping("/{eventId}/update")
+    public String getUpdateEventPage(@PathVariable Long eventId, Model model) {
+        Event event = eventService.getEventById(eventId);
+        List<SquadUser> fighters = squadUserService.getFighters();
+        Map<Boolean, List<SquadUser>> fightersMap = fighters
+                .stream()
+                .collect(Collectors.groupingBy((SquadUser f) -> f.getEvents().contains(event),
+                        () -> new TreeMap<>(Comparator.reverseOrder()),
+                        Collectors.toList()));
+        model.addAttribute("event", event);
+        model.addAttribute("fighters", fightersMap);
+        // todo выделить во фрагмент этот view
         return "eventManagement/create_or_update_event";
     }
 
