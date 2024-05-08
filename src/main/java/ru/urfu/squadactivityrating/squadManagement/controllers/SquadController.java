@@ -119,7 +119,9 @@ public class SquadController {
      * @return страница с карточкой созданного отряда
      */
     @PostMapping
-    public String createSquad(Squad squad, Long... selectedFightersIds) {
+    public String createSquad(Squad squad,
+                              @RequestParam(name = "selectedFightersIds", required = false)
+                              Long... selectedFightersIds) {
         List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
         selectedFighters.forEach(f -> f.setSquad(squad));
         Squad squadEntity = squadService.saveSquad(squad);

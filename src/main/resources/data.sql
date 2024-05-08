@@ -58,7 +58,7 @@ VALUES (1, 12),
        (2, 13),
        (2, 14);
 
-insert into event_type (event_type)
+insert into event_type (event_type_value)
 values ('SPORT'),
        ('CREATIVE_WORK'),
        ('SOCIAL_WORK'),

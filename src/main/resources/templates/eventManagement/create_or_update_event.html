@@ -27,8 +27,7 @@
   </div>
   <div>
     <label for="eDateold">Прошлая дата и время проведения мероприятия:</label>
-    <input type="datetime-local" id="eDateold" name="eDateold" placeholder="2024-06-23 10:50:00"
-           th:value="${formattedDate}"/>
+    <a id="eDateold" th:if="${event.date != null}" th:text="${event.formattedDate}"></a>
   </div>
   <div>
     <label for="eDateNew">Новая дата и время проведения мероприятия:</label>
@@ -41,36 +40,53 @@
       <tbody>
       <tr>
         <td>
-          <input type="number" id="eHours" name="eDuration"
-                 placeholder="07" th:field="*{hoursDuration}"/>
+          <input type="number" id="eHours" name="hoursDuration"
+                 placeholder="07"/>
         </td>
         <td>
-          <input type="number" id="eMinutes" name="eDuration"
-                 placeholder="37" th:field="*{minutesDuration}"/>
+          <input type="number" id="eMinutes" name="minutesDuration"
+                 placeholder="37"/>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
-
   <div>
     <label for="eType">Тип мероприятия:</label>
-    <select id="eType" name="eType" th:field="*{eventType.eventType}">
-      <option th:value="${event.eventType}" th:if="${event.eventType.eventType != null}"
-              th:text="${event.eventType.getEventType().getTypeName()}"></option>
-      <option  th:each="eType : ${T(ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType).values()}"
-              th:value="${eType}" th:if="${event.eventType.eventType == null
-            || (event.eventType.eventType != null
-            && event.eventType.getEventType().getTypeName() != eType.getTypeName())}"
+    <select id="eType" name="eventTypeValue">
+      <option th:value="${event.eventType.eventTypeValue.name()}" th:if="${event.eventType.getEventTypeValue != null}"
+              th:text="${event.eventType.eventTypeValue.typeName}"></option>
+      <option th:each="eType : ${T(ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes).values()}"
+              th:value="${eType.name()}" th:if="${event.eventType.eventTypeValue == null
+            || (event.eventType.eventTypeValue != null
+            && event.eventType.eventTypeValue.getTypeName() != eType.getTypeName())}"
               th:text="${eType.getTypeName()}"></option>
     </select>
+  </div>
+  <div>
+    <label for="fightTable">Выбрать бойцов:</label>
+    <div class="table-container">
+      <table id="fightTable">
+        <tbody>
+        <div th:each="entry, stat : ${fighters}">
+          <tr th:each="fighter, fStat : ${entry.value}">
+            <td>
+              <input th:id="'fightCheckBox' + ${fStat.index}" type="checkbox" th:value="${fighter.id}"
+                     name="selectedFightersIds" th:checked="${entry.key}"/>
+            </td>
+            <td><label th:for="${'fightCheckBox' + fStat.index}"
+                       th:text="${fighter.getFullName()}"></label></td>
+          </tr>
+        </div>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div>
     <input type="reset">
   </div>
   <div><input type="submit"
-              value="Создать мероприятие"/></div>
-  <!--              th:value="${squad.id == null ? 'Создать отряд' : 'Обновить отряд'}"/></div>-->
+              th:value="${event.id == null ? 'Создать мероприятие' : 'Обновить мероприятие'}"/></div>
 </form>
 </body>
 </html>

@@ -1,7 +1,7 @@
 package ru.urfu.squadactivityrating.eventManagement.services;
 
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
-import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType;
+import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ public interface EventService {
     /**
      * Метод получения всех событий по типу события
      *
-     * @param eventType тип события
+     * @param eventTypes тип события
      * @return список событий
      */
-    List<Event> getEventsByType(EventType eventType);
+    List<Event> getEventsByType(EventTypes eventTypes);
 
     /**
      * Метод получения события по идентификатору
@@ -32,4 +32,6 @@ public interface EventService {
      * @param squadId идентификатор
      */
     void deleteEvent(Long squadId);
+
+    Event saveEvent(Event event);
 }

@@ -3,18 +3,18 @@ package ru.urfu.squadactivityrating.eventManagement.contollers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
-import ru.urfu.squadactivityrating.eventManagement.entities.EventTypeEntity;
-import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventType;
+import ru.urfu.squadactivityrating.eventManagement.entities.EventType;
+import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для работы с событиями
@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 public class EventController {
 
     private final EventService eventService;
+    private final SquadUserService squadUserService;
 
     /**
      * Метод для отображения страницы списка событий
@@ -38,32 +39,49 @@ public class EventController {
                                    Model model) {
         model.addAttribute("events",
                 eventService.getEventsByType(type == null
-                        ? EventType.SPORT
-                        : EventType.valueOf(type.toUpperCase())));
+                        ? EventTypes.SPORT
+                        : EventTypes.valueOf(type.toUpperCase())));
         return "eventManagement/events";
     }
 
     @GetMapping("/create")
     public String getCreateEventPage(Model model) {
         Event event = new Event();
-        event.setName("Новое мероприятие329");
-        event.setDate(LocalDateTime.now());
-        Duration duration = Duration.ofHours(37).plusMinutes(59);
-        event.setHoursDuration((int) duration.toHours());
-        event.setMinutesDuration((int) duration.toMinutes() % 60);
-        EventTypeEntity eventType = new EventTypeEntity();
-        eventType.setEventType(EventType.SOCIAL_WORK);
+        EventType eventType = new EventType();
+        eventType.setEventTypeValue(EventTypes.SPORT);
         event.setEventType(eventType);
+        List<SquadUser> fighters = squadUserService.getFighters();
+        Map<Boolean, List<SquadUser>> fightersMap = fighters
+                .stream()
+                .collect(Collectors.groupingBy(f -> false));
 
-        // Форматирование даты и времени
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        String formattedDate = event.getDate().format(formatter);
-
-        model.addAttribute("formattedDate", formattedDate);
-
+        model.addAttribute("fighters", fightersMap);
         model.addAttribute("event", event);
-
+        // todo выделить во фрагмент это view
         return "eventManagement/create_or_update_event";
+    }
+
+    @PostMapping
+    public String createEvent(Event event,
+                              @RequestParam("hoursDuration")
+                              Integer hoursDuration, // todo указать дефолтные значения
+                              @RequestParam("minutesDuration")
+                              Integer minutesDuration,
+                              @RequestParam("eventTypeValue")
+                              String eventType,
+                              @RequestParam(name = "selectedFightersIds", required = false)
+                              Long... selectedFightersIds) {
+        event.setDuration(Duration.ofHours(hoursDuration).plusMinutes(minutesDuration));
+        EventType eventTypeObj = new EventType();
+        EventTypes eventTypes = EventTypes.valueOf(eventType);
+        eventTypeObj.setEventTypeValue(eventTypes);
+        event.setEventType(eventTypeObj);
+        List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
+        event.setParticipants(selectedFighters);
+
+        Event eventEntity = eventService.saveEvent(event);
+
+        return "redirect:/events/" + eventEntity.getId();
     }
 
     /**

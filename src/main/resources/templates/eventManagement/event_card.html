@@ -22,7 +22,7 @@
   <div th:text="'Место проведения: ' + ${event.location}"></div>
   <div th:text="'Дата проведения: ' + ${event.getFormattedDate()}"></div>
   <div th:text="'Продолжительность: ' + ${event.getFormattedDuration()}"></div>
-  <div th:text="'Тип мероприятия: ' + ${event.eventType}"></div>
+  <div th:text="'Тип мероприятия: ' + ${event.eventType.eventTypeValue}"></div>
 </div>
 <div>
   <div th:text="'Участники мероприятия:'"></div>

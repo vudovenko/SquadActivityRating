@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum EventType {
+public enum EventTypes {
 
     SPORT("Спорт"),
     CREATIVE_WORK("Творческая работа"),
