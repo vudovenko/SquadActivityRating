@@ -20,6 +20,7 @@ public class SquadServiceImpl implements SquadService {
 
     private final SquadRepository squadRepository;
     private final SquadUserService squadUserService;
+    @Lazy
     private final MembershipApplicationService membershipApplicationService;
 
     @Override
