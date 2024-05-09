@@ -1,6 +1,7 @@
 package ru.urfu.squadactivityrating.eventManagement.services;
 
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
+import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 
 import java.util.List;
 
@@ -36,4 +37,8 @@ public interface EventToSquadUserService {
     EventToSquadUser getEventToSquadUserByEventIdAndSquadUserId(Long eventId, Long squadUserId);
 
     EventToSquadUser save(EventToSquadUser eventToSquadUser);
+
+    void subscribeForEvent(SecurityUser securityUser, Long eventId);
+
+    void unsubscribeFromEvent(SecurityUser securityUser, Long eventId);
 }

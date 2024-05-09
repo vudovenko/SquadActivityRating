@@ -34,4 +34,8 @@ public interface EventService {
     void deleteEvent(Long squadId);
 
     Event saveEvent(Event event);
+
+    Event saveEvent(Event event, Integer hoursDuration,
+                    Integer minutesDuration, String eventType,
+                    Long[] selectedFightersIds);
 }

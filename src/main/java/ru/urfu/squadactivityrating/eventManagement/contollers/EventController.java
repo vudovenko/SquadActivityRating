@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.EventType;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
-import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
@@ -16,7 +15,6 @@ import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
 import java.util.*;
-import java.time.Duration;
 import java.util.stream.Collectors;
 
 /**
@@ -90,7 +88,7 @@ public class EventController {
                               String eventType,
                               @RequestParam(name = "selectedFightersIds", required = false)
                               Long... selectedFightersIds) {
-        Event eventEntity = saveEvent(
+        Event eventEntity = eventService.saveEvent(
                 event,
                 hoursDuration,
                 minutesDuration,
@@ -117,7 +115,7 @@ public class EventController {
                         .getByEventId(eventId));
         event.setId(eventId);
 
-        Event eventEntity = saveEvent(
+        Event eventEntity = eventService.saveEvent(
                 event,
                 hoursDuration,
                 minutesDuration,
@@ -126,25 +124,6 @@ public class EventController {
         );
 
         return "redirect:/events/" + eventEntity.getId();
-    }
-
-    private Event saveEvent(Event event, Integer hoursDuration, Integer minutesDuration, String eventType, Long[] selectedFightersIds) {
-        event.setDuration(Duration.ofHours(hoursDuration).plusMinutes(minutesDuration));
-        EventType eventTypeObj = new EventType();
-        EventTypes eventTypes = EventTypes.valueOf(eventType);
-        eventTypeObj.setEventTypeValue(eventTypes);
-        event.setEventType(eventTypeObj);
-        List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
-
-        Event eventEntity = eventService.saveEvent(event);
-        selectedFighters.forEach(f -> {
-            EventToSquadUser eventToSquadUser = new EventToSquadUser();
-            eventToSquadUser.setEvent(eventEntity);
-            eventToSquadUser.setSquadUser(f);
-            eventToSquadUserService.save(eventToSquadUser);
-        });
-
-        return eventEntity;
     }
 
     /**
@@ -177,17 +156,9 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}/subscribe")
-    public String signupForEvent(@AuthenticationPrincipal SecurityUser securityUser,
-                                 @PathVariable Long eventId) {
-        Event event = eventService.getEventById(eventId);
-        if (!event.getParticipants().contains(securityUser.getSquadUser())) {
-            EventToSquadUser eventToSquadUser = new EventToSquadUser();
-            eventToSquadUser.setEvent(event);
-            SquadUser squadUser = squadUserService
-                    .getUserById(securityUser.getSquadUser().getId());
-            eventToSquadUser.setSquadUser(squadUser);
-            eventToSquadUserService.save(eventToSquadUser);
-        }
+    public String subscribeForEvent(@AuthenticationPrincipal SecurityUser securityUser,
+                                    @PathVariable Long eventId) {
+        eventToSquadUserService.subscribeForEvent(securityUser, eventId);
 
         return "redirect:/events/" + eventId;
     }
@@ -195,18 +166,7 @@ public class EventController {
     @GetMapping("/{eventId}/unsubscribe")
     public String unsubscribeFromEvent(@AuthenticationPrincipal SecurityUser securityUser,
                                        @PathVariable Long eventId) {
-        Event event = eventService.getEventById(eventId);
-        if (event.getParticipants().contains(securityUser.getSquadUser())) {
-            SquadUser squadUser = securityUser.getSquadUser();
-            List<EventToSquadUser> eventToSquadUsers = eventToSquadUserService.getByEventId(eventId);
-            eventToSquadUsers.forEach(e -> {
-                if (e.getSquadUser().equals(squadUser)) {
-                    EventToSquadUser eventToSquadUser = eventToSquadUserService
-                            .getEventToSquadUserByEventIdAndSquadUserId(eventId, squadUser.getId());
-                    eventToSquadUserService.deleteEventToSquadUser(eventToSquadUser);
-                }
-            });
-        }
+        eventToSquadUserService.unsubscribeFromEvent(securityUser, eventId);
 
         return "redirect:/events/" + eventId;
     }
