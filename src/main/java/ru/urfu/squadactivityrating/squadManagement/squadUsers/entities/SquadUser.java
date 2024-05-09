@@ -10,8 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString(exclude = {"applicationsForMembershipInSquads"})
-@EqualsAndHashCode(exclude = {"id", "securityUser", "squad", "subordinateSquad", "applicationsForMembershipInSquads"})
+@ToString(exclude = {"applicationsForMembershipInSquads", "events"})
+@EqualsAndHashCode(exclude = {"id", "securityUser", "squad", "subordinateSquad", "applicationsForMembershipInSquads", "events"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +33,7 @@ public class SquadUser {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "squad_id", nullable = true)
+    @JoinColumn(name = "squad_id")
     private Squad squad;
 
     @OneToOne(mappedBy = "commander",

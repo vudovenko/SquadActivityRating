@@ -41,7 +41,7 @@ public class EventServiceImpl implements EventService {
             eventToSquadUserService.deleteAllEventsToSquadUsers(eventToSquadUsers);
             eventRepository.delete(eventEntity);
         } else {
-            throw new IllegalArgumentException("Squad not found");
+            throw new IllegalArgumentException("Event with id " + eventId + " not found");
         }
     }
 

@@ -42,7 +42,10 @@ public class EventToSquadUser {
                 "id=" + id +
                 ", squadUser=" + squadUser.getFullName() +
                 ", event=" + event +
-                ", feedback=" + feedback.getRating() + "/" + feedback.getComment() +
+                ", feedback="
+                + (feedback != null ?
+                feedback.getRating() + "/" + feedback.getComment()
+                : "no feedback") +
                 '}';
     }
 }

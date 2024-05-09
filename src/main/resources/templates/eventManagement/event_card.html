@@ -15,6 +15,11 @@
   <br>
   <a th:href="@{/events/{id}/feedbacks(id=${event.id})}">Отзывы о мероприятии</a>
   <a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}">Оставить отзыв</a>
+  <br>
+  <a href="/events/"
+     th:attrappend="href=${event.id + (isParticipant
+       ? '/unsubscribe' : '/subscribe')}"
+     th:text="${isParticipant ? 'Отписаться от мероприятия' : 'Записаться на мероприятие'}"></a>
 </div>
 
 <div>

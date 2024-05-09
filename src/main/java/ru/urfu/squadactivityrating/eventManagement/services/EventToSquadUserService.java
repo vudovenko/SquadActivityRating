@@ -24,6 +24,8 @@ public interface EventToSquadUserService {
      */
     void deleteAllEventsToSquadUsers(List<EventToSquadUser> eventsToSquadUsers);
 
+    void deleteEventToSquadUser(EventToSquadUser eventToSquadUser);
+
     /**
      * Метод поиска посещения по id события и id участника
      *

@@ -25,6 +25,11 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
     }
 
     @Override
+    public void deleteEventToSquadUser(EventToSquadUser eventToSquadUser) {
+        eventToSquadUserRepository.delete(eventToSquadUser);
+    }
+
+    @Override
     public EventToSquadUser getEventToSquadUserByEventIdAndSquadUserId(Long eventId,
                                                                        Long squadUserId) {
         return eventToSquadUserRepository

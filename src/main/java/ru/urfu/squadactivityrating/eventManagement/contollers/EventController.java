@@ -1,6 +1,7 @@
 package ru.urfu.squadactivityrating.eventManagement.contollers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
+import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
@@ -153,8 +155,11 @@ public class EventController {
      * @return страница с карточкой события
      */
     @GetMapping("/{id}")
-    public String getEventCard(@PathVariable Long id, Model model) {
-        model.addAttribute("event", eventService.getEventById(id));
+    public String getEventCard(@AuthenticationPrincipal SecurityUser securityUser,
+                               @PathVariable Long id, Model model) {
+        Event event = eventService.getEventById(id);
+        model.addAttribute("event", event);
+        model.addAttribute("isParticipant", event.getParticipants().contains(securityUser.getSquadUser()));
         return "eventManagement/event_card";
     }
 
@@ -169,5 +174,40 @@ public class EventController {
         eventService.deleteEvent(id);
 
         return "redirect:/events";
+    }
+
+    @GetMapping("/{eventId}/subscribe")
+    public String signupForEvent(@AuthenticationPrincipal SecurityUser securityUser,
+                                 @PathVariable Long eventId) {
+        Event event = eventService.getEventById(eventId);
+        if (!event.getParticipants().contains(securityUser.getSquadUser())) {
+            EventToSquadUser eventToSquadUser = new EventToSquadUser();
+            eventToSquadUser.setEvent(event);
+            SquadUser squadUser = squadUserService
+                    .getUserById(securityUser.getSquadUser().getId());
+            eventToSquadUser.setSquadUser(squadUser);
+            eventToSquadUserService.save(eventToSquadUser);
+        }
+
+        return "redirect:/events/" + eventId;
+    }
+
+    @GetMapping("/{eventId}/unsubscribe")
+    public String unsubscribeFromEvent(@AuthenticationPrincipal SecurityUser securityUser,
+                                       @PathVariable Long eventId) {
+        Event event = eventService.getEventById(eventId);
+        if (event.getParticipants().contains(securityUser.getSquadUser())) {
+            SquadUser squadUser = securityUser.getSquadUser();
+            List<EventToSquadUser> eventToSquadUsers = eventToSquadUserService.getByEventId(eventId);
+            eventToSquadUsers.forEach(e -> {
+                if (e.getSquadUser().equals(squadUser)) {
+                    EventToSquadUser eventToSquadUser = eventToSquadUserService
+                            .getEventToSquadUserByEventIdAndSquadUserId(eventId, squadUser.getId());
+                    eventToSquadUserService.deleteEventToSquadUser(eventToSquadUser);
+                }
+            });
+        }
+
+        return "redirect:/events/" + eventId;
     }
 }
