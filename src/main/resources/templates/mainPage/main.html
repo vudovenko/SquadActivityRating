@@ -1,12 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
+  <!-- Подключение стилей Bootstrap -->
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
+  <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
-<a th:href="@{/squads}">Управление отрядами</a>
-<a th:href="@{/events}">Управление событиями</a>
-<a th:href="@{/logout}">Выход</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <div class="d-flex ml-auto">
+      <!-- Показывать кнопку "Выход" только для авторизованного пользователя -->
+      <div sec:authorize="isAuthenticated()">
+        <a class="btn btn-outline-light" th:href="@{/logout}">Выход</a>
+      </div>
+      <!-- Показывать кнопку "Войти" только для неавторизованного пользователя -->
+      <div sec:authorize="!isAuthenticated()">
+        <a class="btn btn-outline-light" th:href="@{/auth/login}">Войти</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<nav class="nav flex-column bg-dark text-white"
+     style="position: fixed; top: 0; left: 0; height: 100vh; width: 250px;">
+  <h4 class="nav-link" style="text-align: center;">УрФУ</h4>
+  <a class="nav-link btn btn-outline-light" th:href="@{/squads}">Управление отрядами</a>
+  <a class="nav-link btn btn-outline-light" th:href="@{/events}">Управление событиями</a>
+</nav>
+
 </body>
 </html>
