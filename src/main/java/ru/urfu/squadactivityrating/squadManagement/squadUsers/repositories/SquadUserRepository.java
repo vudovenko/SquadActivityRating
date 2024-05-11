@@ -7,7 +7,7 @@ import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser
 
 import java.util.List;
 
-import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
+import ru.urfu.squadactivityrating.security.securityUsers.entities.enums.UserRole;
 
 public interface SquadUserRepository extends JpaRepository<SquadUser, Long> {
 

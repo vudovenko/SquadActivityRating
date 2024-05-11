@@ -25,6 +25,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void leaveFeedback(Long eventId, Long squadUserId, String comment, int rating) {
+        // todo пропадают отзывы после редактирования события
         EventToSquadUser eventToSquadUser = eventToSquadUserService.
                 getEventToSquadUserByEventIdAndSquadUserId(eventId, squadUserId);
         Optional<Feedback> feedbackOptional =

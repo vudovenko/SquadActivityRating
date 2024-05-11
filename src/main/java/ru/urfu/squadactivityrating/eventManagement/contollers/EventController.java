@@ -39,6 +39,7 @@ public class EventController {
     @GetMapping
     public String getEventListPage(@RequestParam(name = "type", required = false) String type,
                                    Model model) {
+        // todo если event.id == null, то кидает ошибку
         model.addAttribute("events",
                 eventService.getEventsByType(type == null
                         ? EventTypes.SPORT
@@ -46,6 +47,12 @@ public class EventController {
         return "eventManagement/events";
     }
 
+    /**
+     * Метод для отображения страницы создания события
+     *
+     * @param model модель
+     * @return страница создания события
+     */
     @GetMapping("/create")
     public String getCreateEventPage(Model model) {
         Event event = new Event();
@@ -63,6 +70,13 @@ public class EventController {
         return "eventManagement/create_or_update_event";
     }
 
+    /**
+     * Метод для отображения страницы редактирования события
+     *
+     * @param eventId идентификатор события
+     * @param model   модель
+     * @return страница редактирования события
+     */
     @GetMapping("/{eventId}/update")
     public String getUpdateEventPage(@PathVariable Long eventId, Model model) {
         Event event = eventService.getEventById(eventId);
@@ -78,6 +92,16 @@ public class EventController {
         return "eventManagement/create_or_update_event";
     }
 
+    /**
+     * Метод для создания события
+     *
+     * @param event               объект с данными создаваемого события
+     * @param hoursDuration       длительность события в часах
+     * @param minutesDuration     длительность события в минутах
+     * @param eventType           тип события
+     * @param selectedFightersIds идентификаторы выбранных для участия бойцов
+     * @return страница карточки события
+     */
     @PostMapping
     public String createEvent(Event event,
                               @RequestParam("hoursDuration")
@@ -99,6 +123,17 @@ public class EventController {
         return "redirect:/events/" + eventEntity.getId();
     }
 
+    /**
+     * Метод для обновления события
+     *
+     * @param eventId             идентификатор события
+     * @param event               объект с данными обновляемого события
+     * @param hoursDuration       длительность события в часах
+     * @param minutesDuration     длительность события в минутах
+     * @param eventType           тип события
+     * @param selectedFightersIds идентификаторы выбранных для участия бойцов
+     * @return страница карточки события
+     */
     @PostMapping("/{eventId}/update")
     public String updateEvent(@PathVariable Long eventId,
                               Event event,
@@ -155,6 +190,13 @@ public class EventController {
         return "redirect:/events";
     }
 
+    /**
+     * Метод для подписки на участие в событии
+     *
+     * @param securityUser текущий пользователь
+     * @param eventId      идентификатор события
+     * @return страница с карточкой события
+     */
     @GetMapping("/{eventId}/subscribe")
     public String subscribeForEvent(@AuthenticationPrincipal SecurityUser securityUser,
                                     @PathVariable Long eventId) {
@@ -163,6 +205,13 @@ public class EventController {
         return "redirect:/events/" + eventId;
     }
 
+    /**
+     * Метод для отписки от участия в событии
+     *
+     * @param securityUser текущий пользователь
+     * @param eventId      идентификатор события
+     * @return страница с карточкой события
+     */
     @GetMapping("/{eventId}/unsubscribe")
     public String unsubscribeFromEvent(@AuthenticationPrincipal SecurityUser securityUser,
                                        @PathVariable Long eventId) {

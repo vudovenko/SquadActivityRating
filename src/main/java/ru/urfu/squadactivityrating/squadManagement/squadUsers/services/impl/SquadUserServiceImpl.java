@@ -2,7 +2,7 @@ package ru.urfu.squadactivityrating.squadManagement.squadUsers.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.urfu.squadactivityrating.security.securityUsers.enums.UserRole;
+import ru.urfu.squadactivityrating.security.securityUsers.entities.enums.UserRole;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.repositories.SquadUserRepository;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
