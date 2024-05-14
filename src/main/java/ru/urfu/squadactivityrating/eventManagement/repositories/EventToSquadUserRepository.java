@@ -27,4 +27,6 @@ public interface EventToSquadUserRepository extends JpaRepository<EventToSquadUs
      * @return посещение
      */
     Optional<EventToSquadUser> findByEventIdAndSquadUserId(Long eventId, Long squadUserId);
+
+    boolean existsByEventIdAndSquadUserId(Long eventId, Long squadUserId);
 }

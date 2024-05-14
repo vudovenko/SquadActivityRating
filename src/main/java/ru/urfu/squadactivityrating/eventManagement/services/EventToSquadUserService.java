@@ -18,6 +18,8 @@ public interface EventToSquadUserService {
      */
     List<EventToSquadUser> getByEventId(Long id);
 
+    boolean isEventToSquadUserExists(Long eventId, Long squadUserId);
+
     /**
      * Метод удаления всех переданных посещений
      *

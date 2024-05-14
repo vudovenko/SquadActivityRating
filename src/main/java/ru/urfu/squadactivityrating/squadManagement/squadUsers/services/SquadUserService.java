@@ -11,6 +11,7 @@ public interface SquadUserService {
     List<SquadUser> getFreeCommanders();
 
     List<SquadUser> getFighters();
+    List<SquadUser> getAllUsers();
 
     SquadUser getUserById(Long id);
 

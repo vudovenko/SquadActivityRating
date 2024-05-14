@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.EventType;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
+import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
@@ -58,7 +59,7 @@ public class EventController {
         EventType eventType = new EventType();
         eventType.setEventTypeValue(EventTypes.SPORT);
         event.setEventType(eventType);
-        List<SquadUser> fighters = squadUserService.getFighters();
+        List<SquadUser> fighters = squadUserService.getAllUsers();
         Map<Boolean, List<SquadUser>> fightersMap = fighters
                 .stream()
                 .collect(Collectors.groupingBy(f -> false));
@@ -79,7 +80,7 @@ public class EventController {
     @GetMapping("/{eventId}/update")
     public String getUpdateEventPage(@PathVariable Long eventId, Model model) {
         Event event = eventService.getEventById(eventId);
-        List<SquadUser> fighters = squadUserService.getFighters();
+        List<SquadUser> fighters = squadUserService.getAllUsers();
         Map<Boolean, List<SquadUser>> fightersMap = fighters
                 .stream()
                 .collect(Collectors.groupingBy((SquadUser f) -> f.getEvents().contains(event),
@@ -144,12 +145,9 @@ public class EventController {
                               String eventType,
                               @RequestParam(name = "selectedFightersIds", required = false)
                               Long... selectedFightersIds) {
-        eventToSquadUserService
-                .deleteAllEventsToSquadUsers(eventToSquadUserService
-                        .getByEventId(eventId));
         event.setId(eventId);
 
-        Event eventEntity = eventService.saveEvent(
+        Event eventEntity = eventService.updateEvent(
                 event,
                 hoursDuration,
                 minutesDuration,

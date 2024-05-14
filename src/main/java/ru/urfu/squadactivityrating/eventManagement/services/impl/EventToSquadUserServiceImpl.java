@@ -29,6 +29,11 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
     }
 
     @Override
+    public boolean isEventToSquadUserExists(Long eventId, Long squadUserId) {
+        return eventToSquadUserRepository.existsByEventIdAndSquadUserId(eventId, squadUserId);
+    }
+
+    @Override
     public void deleteAllEventsToSquadUsers(List<EventToSquadUser> eventsToSquadUsers) {
         eventToSquadUserRepository.deleteAll(eventsToSquadUsers);
     }

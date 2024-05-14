@@ -33,7 +33,8 @@ public class EventToSquadUser {
     private Event event;
 
     @OneToOne(mappedBy = "eventToSquadUser",
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+                    CascadeType.REFRESH, CascadeType.MERGE})
     private Feedback feedback;
 
     @Override

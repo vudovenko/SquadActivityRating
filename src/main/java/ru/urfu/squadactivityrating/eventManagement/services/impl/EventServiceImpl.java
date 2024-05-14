@@ -13,6 +13,7 @@ import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,5 +76,36 @@ public class EventServiceImpl implements EventService {
         });
 
         return eventEntity;
+    }
+
+    @Override
+    public Event updateEvent(Event event, Integer hoursDuration,
+                             Integer minutesDuration, String eventType,
+                             Long[] selectedFightersIds) {
+        List<Long> selectedFighterIds = Arrays.asList(selectedFightersIds);
+
+        List<EventToSquadUser> eventToSquadUsersToRemove = eventToSquadUserService
+                .getByEventId(event.getId())
+                .stream()
+                .filter(eventToSquadUser -> !selectedFighterIds
+                        .contains(eventToSquadUser.getSquadUser().getId()))
+                .toList();
+        eventToSquadUserService
+                .deleteAllEventsToSquadUsers(eventToSquadUsersToRemove);
+
+        Long[] eventToSquadUsersToSave =
+                selectedFighterIds
+                        .stream()
+                        .filter(fId -> !eventToSquadUserService
+                                .isEventToSquadUserExists(event.getId(), fId))
+                        .toArray(Long[]::new);
+
+        return saveEvent(
+                event,
+                hoursDuration,
+                minutesDuration,
+                eventType,
+                eventToSquadUsersToSave
+        );
     }
 }

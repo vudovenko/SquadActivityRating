@@ -38,4 +38,8 @@ public interface EventService {
     Event saveEvent(Event event, Integer hoursDuration,
                     Integer minutesDuration, String eventType,
                     Long[] selectedFightersIds);
+
+    Event updateEvent(Event event, Integer hoursDuration,
+                      Integer minutesDuration, String eventType,
+                      Long[] selectedFightersIds);
 }
