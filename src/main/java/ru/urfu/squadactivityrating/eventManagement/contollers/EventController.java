@@ -39,7 +39,6 @@ public class EventController {
     @GetMapping
     public String getEventListPage(@RequestParam(name = "type", required = false) String type,
                                    Model model) {
-        // todo если event.id == null, то кидает ошибку
         model.addAttribute("events",
                 eventService.getEventsByType(type == null
                         ? EventTypes.SPORT

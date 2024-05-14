@@ -10,7 +10,10 @@
   <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
-<a th:href="@{/events/{id}(id=${event.getId()})}">Назад</a>
+<a href="/events"
+   th:attrappend="href=${event.id == null
+      ? '' : '/' + event.id}"
+>Назад</a>
 <form th:attr="action=${event.id == null
       ? '/events' : '/events/' + event.id + '/update'}"
       method="post" th:object="${event}">
