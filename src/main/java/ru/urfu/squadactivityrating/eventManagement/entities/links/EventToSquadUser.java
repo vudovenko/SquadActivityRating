@@ -5,6 +5,7 @@ import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.feedbacks.entities.Feedback;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 
 /**
  * Сущность посещения событий участниками
@@ -35,6 +36,11 @@ public class EventToSquadUser {
     @OneToOne(mappedBy = "eventToSquadUser",
             cascade = CascadeType.ALL)
     private Feedback feedback;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+            CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "visiting_result_id")
+    private VisitingResult visitingResult;
 
     @Override
     public String toString() {

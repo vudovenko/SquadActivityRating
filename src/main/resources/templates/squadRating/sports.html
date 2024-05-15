@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <meta charset="UTF-8">
+  <title>Рейтинг отрядов</title>
+</head>
+<body>
+<a th:href="@{/}">Вернуться на главную страницу.</a>
+<table th:each="event, index: ${events}">
+  <thead>
+  <tr>
+    <th th:if="${index.first}"></th>
+    <th><a th:href="@{/sports}">Спорт</a></th>
+    <th><a th:href="@{/creative-works}">Творчество</a></th>
+    <th><a th:href="@{/social-works}">Социальная работа</a></th>
+    <th><a th:href="@{/production-works}">Производственная работа</a></th>
+    <th><a th:href="@{/participation-in-events}">Участие в мероприятиях</a></th>
+    <th><a th:href="@{/participation-in-events-urfu}">Участие в мероприятиях Штаба СО УрФУ</a></th>
+    <th><a th:href="@{/agitsektor}">АГИТСЕКТОР</a></th>
+    <th><a th:href="@{/discipline}">Дисциплина</a></th>
+  </tr>
+  </thead>
+  <tbody>
+  <!--  <tr th:each="fighter : ${fightersWishingToJoin}">-->
+  <!--    <td><a th:text="${fighter.getFullName()}"></a></td>-->
+  <!--    <td>-->
+  <!--      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
+  <!--        Одобрить-->
+  <!--      </a>-->
+  <!--    </td>-->
+  <!--    <td>-->
+  <!--      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
+  <!--        Отказать-->
+  <!--      </a>-->
+  <!--    </td>-->
+  <!--  </tr>-->
+  </tbody>
+</table>
+</body>
+</html>
