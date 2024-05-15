@@ -1,5 +1,6 @@
 package ru.urfu.squadactivityrating.eventManagement.services;
 
+import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 
@@ -17,6 +18,14 @@ public interface EventToSquadUserService {
      * @return список посещений
      */
     List<EventToSquadUser> getByEventId(Long id);
+
+    /**
+     * Метод получения посещения по типу события
+     *
+     * @param eventTypes тип события
+     * @return список посещений
+     */
+    List<EventToSquadUser> getEventsToSquadUsersByEventType(EventTypes eventTypes);
 
     /**
      * Метод удаления всех переданных посещений

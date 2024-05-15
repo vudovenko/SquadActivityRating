@@ -17,6 +17,7 @@ import java.util.StringJoiner;
 @Getter
 @Setter
 @ToString(exclude = {"participants"})
+@EqualsAndHashCode(exclude = {"eventType", "participants"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

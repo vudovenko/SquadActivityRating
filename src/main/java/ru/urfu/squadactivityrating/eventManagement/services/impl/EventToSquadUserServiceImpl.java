@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
+import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.repositories.EventToSquadUserRepository;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
@@ -26,6 +27,12 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
     @Override
     public List<EventToSquadUser> getByEventId(Long id) {
         return eventToSquadUserRepository.findByEventId(id);
+    }
+
+    @Override
+    public List<EventToSquadUser> getEventsToSquadUsersByEventType(EventTypes eventTypes) {
+        return eventToSquadUserRepository
+                .findByEvent_EventType_EventTypeValue(eventTypes);
     }
 
     @Override

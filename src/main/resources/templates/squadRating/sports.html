@@ -5,37 +5,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Рейтинг отрядов</title>
+  <style>
+      table {
+          border-collapse: collapse; /* Убирает двойные границы между соседними ячейками */
+      }
+
+      td, th {
+          border: 1px solid black; /* Граница толщиной 1 пиксель, черного цвета */
+      }
+  </style>
 </head>
 <body>
-<a th:href="@{/}">Вернуться на главную страницу.</a>
-<table th:each="event, index: ${events}">
+<a th:href="@{/}">Вернуться на главную страницу</a>
+<a th:href="@{/squad-rating}">Назад</a>
+<table>
   <thead>
   <tr>
-    <th th:if="${index.first}"></th>
-    <th><a th:href="@{/sports}">Спорт</a></th>
-    <th><a th:href="@{/creative-works}">Творчество</a></th>
-    <th><a th:href="@{/social-works}">Социальная работа</a></th>
-    <th><a th:href="@{/production-works}">Производственная работа</a></th>
-    <th><a th:href="@{/participation-in-events}">Участие в мероприятиях</a></th>
-    <th><a th:href="@{/participation-in-events-urfu}">Участие в мероприятиях Штаба СО УрФУ</a></th>
-    <th><a th:href="@{/agitsektor}">АГИТСЕКТОР</a></th>
-    <th><a th:href="@{/discipline}">Дисциплина</a></th>
+    <th></th>
+    <th th:each="event : ${events}"><a th:text="${event.name}"></a></th>
+  </tr>
+  <tr>
+    <th></th>
+    <th th:each="event : ${events}">
+      <a>Место</a>
+    </th>
   </tr>
   </thead>
   <tbody>
-  <!--  <tr th:each="fighter : ${fightersWishingToJoin}">-->
-  <!--    <td><a th:text="${fighter.getFullName()}"></a></td>-->
-  <!--    <td>-->
-  <!--      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
-  <!--        Одобрить-->
-  <!--      </a>-->
-  <!--    </td>-->
-  <!--    <td>-->
-  <!--      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
-  <!--        Отказать-->
-  <!--      </a>-->
-  <!--    </td>-->
-  <!--  </tr>-->
+  <tr th:each="squadVisitingResult : ${squadVisitingResults}" th:eac>
+    <td th:text="${squadVisitingResult.key.getName()}"></td>
+    <td th:each="eventToResult : ${squadVisitingResult.value}">
+      <a th:each="visitingResult : ${eventToResult.value}"
+         th:text="${visitingResult.visitingResult}"></a>
+    </td>
+  </tr>
   </tbody>
 </table>
 </body>

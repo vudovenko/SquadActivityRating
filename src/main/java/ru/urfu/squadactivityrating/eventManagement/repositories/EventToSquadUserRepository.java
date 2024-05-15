@@ -1,6 +1,7 @@
 package ru.urfu.squadactivityrating.eventManagement.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 
 import java.util.List;
@@ -27,4 +28,12 @@ public interface EventToSquadUserRepository extends JpaRepository<EventToSquadUs
      * @return посещение
      */
     Optional<EventToSquadUser> findByEventIdAndSquadUserId(Long eventId, Long squadUserId);
+
+    /**
+     * Метод получения посещения по типу события
+     *
+     * @param eventTypes тип события
+     * @return список посещений
+     */
+    List<EventToSquadUser> findByEvent_EventType_EventTypeValue(EventTypes eventTypes);
 }
