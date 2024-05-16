@@ -20,6 +20,8 @@ public interface EventToSquadUserRepository extends JpaRepository<EventToSquadUs
      */
     List<EventToSquadUser> findByEventId(Long id);
 
+    List<EventToSquadUser> findAllByVisitingResultNotNull();
+
     /**
      * Метод поиска посещения по id события и id участника
      *

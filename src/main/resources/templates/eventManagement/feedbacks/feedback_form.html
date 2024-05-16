@@ -3,6 +3,7 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
@@ -10,7 +11,7 @@
   <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
-<a th:href="@{/events/{id}(id=${event.id})}">Назад</a>
+<a th:href="@{/events/{id}(id=${event.id})}" class="btn btn-primary">Назад</a>
 <form action=""
       method="post" th:object="${feedbackDTO}">
   <div>
@@ -24,9 +25,9 @@
            th:field="*{comment}" required/>
   </div>
   <div>
-    <input type="reset">
+    <input type="reset" class="btn btn-danger">
   </div>
-  <div><input type="submit" value="Оставить отзыв"/></div>
+  <div><input type="submit" value="Оставить отзыв" class="btn btn-primary"/></div>
 </form>
 </body>
 </html>

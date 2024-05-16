@@ -20,6 +20,13 @@ public interface EventToSquadUserService {
     List<EventToSquadUser> getByEventId(Long id);
 
     /**
+     * Метод получения всех посещений, у которых есть результат участия
+     *
+     * @return список посещений с результатом участия
+     */
+    List<EventToSquadUser> getAllEventsToSquadUsersWhereVisitingResultNotNull();
+
+    /**
      * Метод получения посещения по типу события
      *
      * @param eventTypes тип события

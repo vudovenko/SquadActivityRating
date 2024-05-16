@@ -3,13 +3,14 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
-<a th:href="@{/squads/{squadId}(squadId=${squadId})}">Назад</a>
+<a th:href="@{/squads/{squadId}(squadId=${squadId})}" class="btn btn-primary">Назад</a>
 <table>
   <thead>
   <tr>
@@ -22,18 +23,20 @@
   <tr th:each="fighter : ${fightersWishingToJoin}">
     <td><a th:text="${fighter.getFullName()}"></a></td>
     <td>
-      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">
+      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}"
+         class="btn btn-primary">
         Одобрить
       </a>
     </td>
     <td>
-      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">
+      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}"
+         class="btn btn-danger">
         Отказать
       </a>
     </td>
   </tr>
   </tbody>
 </table>
-<a th:href="@{/}">Вернуться на главную страницу.</a>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
 </body>
 </html>

@@ -4,6 +4,7 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
@@ -11,19 +12,21 @@
 </head>
 <body>
 <div>
-  <a th:href="@{/events}">Назад</a>
-  <a th:href="@{/events/{id}/update(id=${event.id})}">Редактировать информацию о мероприятии</a>
-  <a th:href="@{/events/{id}/delete(id=${event.id})}">
-    Удалить
-  </a>
   <br>
-  <a th:href="@{/events/{id}/feedbacks(id=${event.id})}">Отзывы о мероприятии</a>
-  <a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}">Оставить отзыв</a>
-  <br>
+  <a th:href="@{/events}" class="btn btn-primary">Назад</a>
+  <a th:href="@{/events/{id}/update(id=${event.id})}" class="btn btn-primary">Редактировать информацию о мероприятии</a>
   <a href="/events/"
      th:attrappend="href=${event.id + (isParticipant
        ? '/unsubscribe' : '/subscribe')}"
-     th:text="${isParticipant ? 'Отписаться от мероприятия' : 'Записаться на мероприятие'}"></a>
+     th:text="${isParticipant ? 'Отписаться от мероприятия' : 'Записаться на мероприятие'}" class="btn btn-primary"></a>
+  <a th:href="@{/events/{id}/delete(id=${event.id})}" class="btn btn-danger">
+    Удалить
+  </a>
+  <br>
+  <br>
+  <a th:href="@{/events/{id}/feedbacks(id=${event.id})}" class="btn btn-primary">Отзывы о мероприятии</a>
+  <a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}" class="btn btn-primary">Оставить отзыв</a>
+  <br>
 </div>
 
 <div>

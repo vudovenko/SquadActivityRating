@@ -4,6 +4,7 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
@@ -13,14 +14,14 @@
 <div class="card-header">
   <a class="btn btn-primary" th:href="@{/squads}">Назад</a>
   <a class="btn btn-primary" th:href="@{/squads/{id}/update(id=${squad.id})}">Редактировать профиль отряда</a>
-  <a class="btn btn-primary" th:href="@{/squads/{id}/delete(id=${squad.id})}">
-    Удалить
-  </a>
   <a class="btn btn-primary" th:href="@{/squads/{id}/membership-applications(id=${squad.id})}">
     Заявки на вступление
   </a>
   <a class="btn btn-primary" th:href="@{/squads/{id}/membership-applications/submit-application(id=${squad.id})}">
     Подать заявку на вступление
+  </a>
+  <a class="btn btn-danger" th:href="@{/squads/{id}/delete(id=${squad.id})}">
+    Удалить
   </a>
 </div>
 

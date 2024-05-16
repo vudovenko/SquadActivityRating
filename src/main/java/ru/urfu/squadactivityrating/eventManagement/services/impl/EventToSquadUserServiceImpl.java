@@ -30,6 +30,11 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
     }
 
     @Override
+    public List<EventToSquadUser> getAllEventsToSquadUsersWhereVisitingResultNotNull() {
+        return eventToSquadUserRepository.findAllByVisitingResultNotNull();
+    }
+
+    @Override
     public List<EventToSquadUser> getEventsToSquadUsersByEventType(EventTypes eventTypes) {
         return eventToSquadUserRepository
                 .findByEvent_EventType_EventTypeValue(eventTypes);

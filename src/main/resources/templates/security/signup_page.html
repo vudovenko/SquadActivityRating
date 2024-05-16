@@ -3,6 +3,7 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
@@ -42,10 +43,10 @@
            th:field="*{email}" required/>
   </div>
   <div>
-    <input type="reset">
+    <input type="reset" class="btn btn-danger">
   </div>
   <div><input type="submit" value="Зарегистрироваться"/></div>
 </form>
-<a th:href="@{/auth/login}">Вернуться на страницу входа</a>
+<a th:href="@{/auth/login}" class="btn btn-primary">Вернуться на страницу входа</a>
 </body>
 </html>

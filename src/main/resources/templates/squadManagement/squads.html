@@ -3,13 +3,15 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
-<a th:href="@{/squads/create}">Создать новый отряд</a>
+<br>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
 <form>
   <table>
     <thead>
@@ -26,14 +28,14 @@
       <td th:text="${squad.commander != null
                    ? squad.commander.getFullName()
                    : 'Командира нет'}"></td>
-      <td><a th:href="@{/squads/{id}/delete(id=${squad.id})}">
+      <td><a th:href="@{/squads/{id}/delete(id=${squad.id})}" class="btn btn-danger">
         Удалить
       </a></td>
     </tr>
     </tbody>
   </table>
 </form>
-<a th:href="@{/}">Вернуться на главную страницу.</a>
+<a th:href="@{/squads/create}" class="btn btn-primary">Создать новый отряд</a>
 
 <script src="/webjars/bootstrap/5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -3,17 +3,18 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
-<a th:href="@{/events/{eventId}(eventId=${event.id})}">Назад</a>
-<a th:href="@{/}">Вернуться на главную страницу.</a>
+<a th:href="@{/events/{eventId}(eventId=${event.id})}" class="btn btn-primary">Назад</a>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
 <br>
 <br>
-<a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}">Оставить отзыв</a>
+<a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}" class="btn btn-primary">Оставить отзыв</a>
 <br>
 <br>
 <form>

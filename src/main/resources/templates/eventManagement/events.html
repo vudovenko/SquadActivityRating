@@ -3,26 +3,27 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
   <title>Title</title>
 </head>
 <body>
-<a th:href="@{/}">Вернуться на главную страницу.</a>
+<br>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
 <br>
 <br>
-<a th:href="@{/events/create}">Создать новое мероприятие</a>
+<a class="btn btn-primary" th:href="@{/events/create}">Создать новое мероприятие</a>
 <br>
 <br>
-<a th:href="@{/events(type='sport')}">Спорт</a>
-<a th:href="@{/events(type='creative_work')}">Творческая работа</a>
-<a th:href="@{/events(type='social_work')}">Социальная работа</a>
-<a th:href="@{/events(type='production_work')}">Производственная работа</a>
-<a th:href="@{/events(type='participation_in_events')}">Участие в мероприятиях</a>
-<a th:href="@{/events(type='participation_in_events_URFU')}">Участие в мероприятиях Штаба СО УрФУ</a>
-<a th:href="@{/events(type='agitsektor')}">Агитсектор</a>
-<a th:href="@{/events(type='discipline')}">Дисциплина</a>
+<a class="btn btn-primary" th:href="@{/events(type='sport')}">Спорт</a>
+<a class="btn btn-primary" th:href="@{/events(type='creative_work')}">Творческая работа</a>
+<a class="btn btn-primary" th:href="@{/events(type='social_work')}">Социальная работа</a>
+<a class="btn btn-primary" th:href="@{/events(type='production_work')}">Производственная работа</a>
+<a class="btn btn-primary" th:href="@{/events(type='participation_in_events')}">Участие в мероприятиях</a>
+<a class="btn btn-primary" th:href="@{/events(type='participation_in_events_URFU')}">Участие в мероприятиях Штаба СО УрФУ</a>
+<a class="btn btn-primary" th:href="@{/events(type='discipline')}">Дисциплина</a>
 <form>
   <table>
     <thead>

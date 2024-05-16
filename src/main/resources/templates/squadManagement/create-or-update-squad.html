@@ -3,6 +3,7 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
@@ -10,7 +11,8 @@
   <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
-<a th:href="@{/squads}">Назад</a>
+<br>
+<a th:href="@{/squads}" class="btn btn-primary">Назад</a>
 <form th:attr="action=${squad.id == null
       ? '/squads' : '/squads/' + squad.id + '/update'}"
       method="post" th:object="${squad}">
@@ -53,9 +55,10 @@
     </div>
   </div>
   <div>
-    <input type="reset">
+    <input type="reset" class="btn btn-danger">
   </div>
   <div><input type="submit"
+              class="btn btn-primary"
               th:value="${squad.id == null ? 'Создать отряд' : 'Обновить отряд'}"/></div>
 </form>
 </body>

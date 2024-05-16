@@ -3,6 +3,7 @@
 <head>
   <!-- Подключение стилей Bootstrap -->
   <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
@@ -10,10 +11,11 @@
   <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
+<br>
 <a href="/events"
    th:attrappend="href=${event.id == null
       ? '' : '/' + event.id}"
->Назад</a>
+ class="btn btn-primary">Назад</a>
 <form th:attr="action=${event.id == null
       ? '/events' : '/events/' + event.id + '/update'}"
       method="post" th:object="${event}">
@@ -30,7 +32,7 @@
   <div>
     <label for="eLocat">Место проведения мероприятия:</label>
     <input type="text" id="eLocat" name="eLocat" placeholder="Екатеринбург, ул. Мира, 32"
-           th:field="*{location}"/>
+           th:field="*{location}" required/>
   </div>
   <div>
     <label for="eDateold">Прошлая дата и время проведения мероприятия:</label>
@@ -39,7 +41,7 @@
   <div>
     <label for="eDateNew">Новая дата и время проведения мероприятия:</label>
     <input type="datetime-local" id="eDateNew" name="eDateNew" placeholder="2024-07-19 11:00:00"
-           th:field="*{date}"/>
+           th:field="*{date}" required/>
   </div>
   <div>
     <label for="eHours">Длительность мероприятия:</label>
@@ -48,11 +50,11 @@
       <tr>
         <td>
           <input type="number" id="eHours" name="hoursDuration"
-                 placeholder="07"/>
+                 placeholder="07" required min="0"/>
         </td>
         <td>
           <input type="number" id="eMinutes" name="minutesDuration"
-                 placeholder="37"/>
+                 placeholder="37" required min="0" max="59"/>
         </td>
       </tr>
       </tbody>
@@ -90,10 +92,11 @@
     </div>
   </div>
   <div>
-    <input type="reset">
+    <input type="reset" class="btn btn-danger">
   </div>
   <div><input type="submit"
-              th:value="${event.id == null ? 'Создать мероприятие' : 'Обновить мероприятие'}"/></div>
+              th:value="${event.id == null ? 'Создать мероприятие' : 'Обновить мероприятие'}"
+  class="btn btn-primary"/></div>
 </form>
 </body>
 </html>

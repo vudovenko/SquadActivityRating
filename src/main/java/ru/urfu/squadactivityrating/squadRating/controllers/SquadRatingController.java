@@ -22,7 +22,31 @@ public class SquadRatingController {
     private final EventToSquadUserService eventToSquadUserService;
 
     @GetMapping
-    public String getSquadRatingPage() {
+    public String getSquadRatingPage(Model model) {
+//        List<EventToSquadUser> allEventsToSquadUsers =
+//                eventToSquadUserService.getAllEventsToSquadUsersWhereVisitingResultNotNull();
+//        LinkedHashSet<EventType> eventTypeNames =
+//                new LinkedHashSet<>(allEventsToSquadUsers
+//                        .stream()
+//                        .map(eTSU -> eTSU.getEvent().getEventType())
+//                        .sorted(Comparator.comparing(EventType::getEventTypeValue))
+//                        .toList());
+//
+//        LinkedHashMap<Squad, LinkedHashMap<String, List<VisitingResult>>> squadVisitingResults
+//                = new LinkedHashMap<>();
+//
+//        for (EventType event : eventTypeNames) {
+//            Squad squad = eventToSquadUser.getSquadUser().getSquad();
+//            if (!squadVisitingResults.containsKey(squad)) {
+//                squadVisitingResults.put(squad, new LinkedHashMap<>());
+//            }
+//            for () {
+//                if (!squadVisitingResults.get(squad).containsKey(event)) {
+//                    squadVisitingResults.get(squad).put(event, new ArrayList<>());
+//                }
+//            }
+//        }
+
         return "squadRating/squad_rating";
     }
 
@@ -42,7 +66,6 @@ public class SquadRatingController {
         LinkedHashMap<Squad, LinkedHashMap<Event, List<VisitingResult>>> squadVisitingResults
                 = new LinkedHashMap<>();
 
-        // Надо заполнить каждый отряд значениями мероприятий. Т.е. будет ключ отряда, которому будут соответствовать мероприятия. Они будут добавляться, даже если в мероприятии никто не участвовал.
         for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
             Squad squad = eventToSquadUser.getSquadUser().getSquad();
             if (!squadVisitingResults.containsKey(squad)) {
