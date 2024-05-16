@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.feedbacks.dto.FeedbackDTO;
 import ru.urfu.squadactivityrating.eventManagement.feedbacks.services.FeedbackService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
@@ -33,10 +34,14 @@ public class FeedbackController {
      */
     @GetMapping
     public String getFeedbackListPage(@PathVariable(name = "id") Long eventId,
+                                      @AuthenticationPrincipal SecurityUser currentUser,
                                       Model model) {
-        model.addAttribute("event", eventService.getEventById(eventId));
+        Event event = eventService.getEventById(eventId);
+        model.addAttribute("event", event);
         model.addAttribute("feedbacks",
                 feedbackService.getAllFeedbacksByEventId(eventId));
+        model.addAttribute("isParticipantEvent",
+                event.getParticipants().contains(currentUser.getSquadUser()));
         return "eventManagement/feedbacks/feedbacks";
     }
 
