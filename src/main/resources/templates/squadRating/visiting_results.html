@@ -19,26 +19,49 @@
 </head>
 <body>
 <a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
-<a th:href="@{/squad-rating}" class="btn btn-primary">Назад</a>
+<a th:href="@{/squad-ratings}" class="btn btn-primary">Назад</a>
 <table>
   <thead>
   <tr>
     <th></th>
-    <th th:each="event : ${events}"><a th:text="${event.name}"></a></th>
+    <th colspan="2" th:each="event : ${events}"><a th:text="${event.name}"></a></th>
   </tr>
   <tr>
     <th></th>
-    <th th:each="event : ${events}">
+    <div th:each="event : ${events}">
+      <th>
+        <a>Место</a>
+      </th>
+      <th>
+        <a>Очки</a>
+      </th>
+    </div>
+    <th>
+      <a>Суммарный балл</a>
+    </th>
+    <th>
       <a>Место</a>
     </th>
   </tr>
   </thead>
   <tbody>
-  <tr th:each="squadVisitingResult : ${squadVisitingResults}" th:eac>
+  <tr th:each="squadVisitingResult, index : ${squadVisitingResults}">
     <td th:text="${squadVisitingResult.key.getName()}"></td>
-    <td th:each="eventToResult : ${squadVisitingResult.value}">
-      <a th:each="visitingResult : ${eventToResult.value}"
-         th:text="${visitingResult.visitingResult}"></a>
+    <div th:each="eventToResult : ${squadVisitingResult.value}">
+      <td>
+        <div th:each="visitingResult : ${eventToResult.value.firstValue}">
+          <a th:text="${visitingResult.visitingResult}"></a>
+        </div>
+      </td>
+      <td>
+        <a th:text="${eventToResult.value.secondValue}"></a>
+      </td>
+    </div>
+    <td>
+      <a th:text="${totalPlaces.get(index.index).firstValue}"></a>
+    </td>
+    <td>
+      <a th:text="${totalPlaces.get(index.index).secondValue}"></a>
     </td>
   </tr>
   </tbody>

@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "visits")
 @Entity
 @Table(name = "visiting_results")
 public class VisitingResult {
