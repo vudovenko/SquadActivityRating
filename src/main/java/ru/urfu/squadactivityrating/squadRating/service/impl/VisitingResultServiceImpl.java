@@ -24,7 +24,6 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
     @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
-        // todo перенести в сервис
         List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
                 .getEventsToSquadUsersByEventType(eventTypes);
         LinkedHashSet<Event> events =

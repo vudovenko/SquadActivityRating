@@ -36,6 +36,8 @@ public class FeedbackController {
     public String getFeedbackListPage(@PathVariable(name = "id") Long eventId,
                                       @AuthenticationPrincipal SecurityUser currentUser,
                                       Model model) {
+
+        // todo добавить расчет среднего рейтинга мероприятия
         Event event = eventService.getEventById(eventId);
         model.addAttribute("event", event);
         model.addAttribute("feedbacks",
