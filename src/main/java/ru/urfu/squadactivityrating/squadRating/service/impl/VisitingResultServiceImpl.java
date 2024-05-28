@@ -15,6 +15,7 @@ import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -26,28 +27,12 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
                 .getEventsToSquadUsersByEventType(eventTypes);
-        LinkedHashSet<Event> events =
-                new LinkedHashSet<>(eventsToSquadUsersByEventType
-                        .stream()
-                        .map(EventToSquadUser::getEvent)
-                        .sorted(Comparator.comparing(Event::getDate))
-                        .toList());
-        model.addAttribute("events", events);
-        LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> squadVisitingResults
-                = new LinkedHashMap<>();
-        List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
 
-        for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
-            Squad squad = eventToSquadUser.getSquadUser().getSquad();
-            if (!squadVisitingResults.containsKey(squad)) {
-                squadVisitingResults.put(squad, new LinkedHashMap<>());
-            }
-            for (Event event : events) {
-                if (!squadVisitingResults.get(squad).containsKey(event)) {
-                    squadVisitingResults.get(squad).put(event, new Pair<>(new ArrayList<>(), 0.0));
-                }
-            }
-        }
+        LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>>
+                squadVisitingResults
+                = setVisitingResultsInModelByType(eventsToSquadUsersByEventType,
+                () -> new Pair<>(new ArrayList<>(), 0.0), model);
+
         // todo если нет мероприятий, то выбрасывается ошибка при null
         // todo также добавить тестовые данные
         for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
@@ -60,6 +45,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     getWeightByType(eventTypes, eventToSquadUser.getVisitingResult())));
         }
 
+        List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
         for (Map.Entry<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> entry
                 : squadVisitingResults.entrySet()) {
             Double sum = round(entry.getValue().values()
@@ -71,6 +57,34 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         assignPlaces(totalPlaces);
         model.addAttribute("totalPlaces", totalPlaces);
         model.addAttribute("squadVisitingResults", squadVisitingResults);
+    }
+
+    private <T> LinkedHashMap<Squad, LinkedHashMap<Event, T>>
+    setVisitingResultsInModelByType(List<EventToSquadUser> eventsToSquadUsersByEventType,
+                                    Supplier<T> pairType,
+                                    Model model) {
+        LinkedHashSet<Event> events =
+                new LinkedHashSet<>(eventsToSquadUsersByEventType
+                        .stream()
+                        .map(EventToSquadUser::getEvent)
+                        .sorted(Comparator.comparing(Event::getDate))
+                        .toList());
+        model.addAttribute("events", events);
+        LinkedHashMap<Squad, LinkedHashMap<Event, T>> squadVisitingResults
+                = new LinkedHashMap<>();
+
+        for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
+            Squad squad = eventToSquadUser.getSquadUser().getSquad();
+            if (!squadVisitingResults.containsKey(squad)) {
+                squadVisitingResults.put(squad, new LinkedHashMap<>());
+            }
+            for (Event event : events) {
+                if (!squadVisitingResults.get(squad).containsKey(event)) {
+                    squadVisitingResults.get(squad).put(event, pairType.get());
+                }
+            }
+        }
+        return squadVisitingResults;
     }
 
     private Double getWeightByType(EventTypes eventTypes, VisitingResult visitingResult) {
