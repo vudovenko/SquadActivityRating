@@ -27,7 +27,42 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
                 .getEventsToSquadUsersByEventType(eventTypes);
+        List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
 
+        if (eventTypes == EventTypes.SPORT || eventTypes == EventTypes.CREATIVE_WORK) {
+            setResultVisitToModelForTypes1And2(
+                    eventsToSquadUsersByEventType,
+                    eventTypes,
+                    totalPlaces,
+                    model);
+        } /*else if (eventTypes == EventTypes.SOCIAL_WORK || eventTypes == EventTypes.PRODUCTION_WORK) {
+            setResultVisitToModelForTypes3And4(
+                    eventsToSquadUsersByEventType,
+                    eventTypes,
+                    totalPlaces,
+                    model);
+        }*/
+
+        assignPlaces(totalPlaces);
+        model.addAttribute("totalPlaces", totalPlaces);
+    }
+
+//    private void setResultVisitToModelForTypes3And4(
+//            List<EventToSquadUser> eventsToSquadUsersByEventType,
+//            EventTypes eventTypes,
+//            List<Pair<Double, Integer>> totalPlaces,
+//            Model model) {
+//        LinkedHashMap<Squad, LinkedHashMap<Event, List<Integer>>>
+//                squadVisitingResults
+//                = setVisitingResultsInModelByType(eventsToSquadUsersByEventType,
+//                ArrayList::new, model);
+//    }
+
+    private void setResultVisitToModelForTypes1And2(
+            List<EventToSquadUser> eventsToSquadUsersByEventType,
+            EventTypes eventTypes,
+            List<Pair<Double, Integer>> totalPlaces,
+            Model model) {
         LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>>
                 squadVisitingResults
                 = setVisitingResultsInModelByType(eventsToSquadUsersByEventType,
@@ -45,7 +80,6 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     getWeightByType(eventTypes, eventToSquadUser.getVisitingResult())));
         }
 
-        List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
         for (Map.Entry<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> entry
                 : squadVisitingResults.entrySet()) {
             Double sum = round(entry.getValue().values()
@@ -53,9 +87,6 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
             totalPlaces.add(new Pair<>(sum, 0));
         }
-
-        assignPlaces(totalPlaces);
-        model.addAttribute("totalPlaces", totalPlaces);
         model.addAttribute("squadVisitingResults", squadVisitingResults);
     }
 
