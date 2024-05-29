@@ -5,6 +5,7 @@ import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.feedbacks.entities.Feedback;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 
 /**
@@ -23,6 +24,15 @@ public class EventToSquadUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(mappedBy = "eventToSquadUser",
+            cascade = CascadeType.ALL)
+    private Feedback feedback;
+
+
+    @OneToOne(mappedBy = "eventToSquadUser",
+            cascade = CascadeType.ALL)
+    private VisitingHours visitingHours;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "squad_user_id")
@@ -32,10 +42,6 @@ public class EventToSquadUser {
             CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "event_id")
     private Event event;
-
-    @OneToOne(mappedBy = "eventToSquadUser",
-            cascade = CascadeType.ALL)
-    private Feedback feedback;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
             CascadeType.REFRESH, CascadeType.MERGE})
