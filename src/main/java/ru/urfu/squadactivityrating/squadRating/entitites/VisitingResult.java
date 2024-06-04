@@ -7,6 +7,9 @@ import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 
 import java.util.List;
 
+/**
+ * Класс, хранящий баллы за результаты участия в мероприятиях по типам
+ */
 @Getter
 @Setter
 @Builder

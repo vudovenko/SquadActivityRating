@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 
+/**
+ * Контроллер для работы с расчётом рейтинга отрядов
+ */
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/squad-ratings")
@@ -16,6 +19,16 @@ public class SquadRatingController {
 
     private final VisitingResultService visitingResultService;
 
+    /**
+     * Метод для отображения страницы рейтинга отрядов.
+     * <br>
+     * В зависимости от параметра <code>eventType</code> отображается главная страница рейтинга
+     * или страница с подробными результатами по типу мероприятия
+     *
+     * @param eventType тип мероприятия <em>(необязательный параметр)</em>
+     * @param model     модель
+     * @return страница рейтинга отрядов
+     */
     @GetMapping
     public String getSportsSquadRatingPage(@RequestParam(name = "eventType", required = false) String eventType,
                                            Model model) {

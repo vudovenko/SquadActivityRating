@@ -3,6 +3,9 @@ package ru.urfu.squadactivityrating.squadRating.entitites.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Класс для хранения результата посещения мероприятий
+ */
 @Getter
 @AllArgsConstructor
 public enum VisitingResults {

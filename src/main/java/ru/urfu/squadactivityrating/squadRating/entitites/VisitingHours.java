@@ -5,8 +5,10 @@ import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+/**
+ * Класс для хранения времени посещения мероприятий
+ */
 @Getter
 @Setter
 @Builder
