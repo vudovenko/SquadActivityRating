@@ -29,30 +29,32 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
                 .getEventsToSquadUsersByEventType(eventTypes);
-        List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
 
         if (eventTypes == EventTypes.SPORT || eventTypes == EventTypes.CREATIVE_WORK) {
+            List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
             setResultVisitToModelForTypes1And2(
                     eventsToSquadUsersByEventType,
                     eventTypes,
                     totalPlaces,
                     model);
+            addFinalPlaces(totalPlaces, Comparator.comparingDouble(Pair::getFirstValue));
+            model.addAttribute("totalPlaces", totalPlaces);
         } else if (eventTypes == EventTypes.SOCIAL_WORK || eventTypes == EventTypes.PRODUCTION_WORK) {
+            List<Pair<Duration, Integer>> totalPlaces = new ArrayList<>();
             setResultVisitToModelForTypes3And4(
                     eventsToSquadUsersByEventType,
                     eventTypes,
                     totalPlaces,
                     model);
+            addFinalPlaces(totalPlaces, Comparator.comparing(Pair::getFirstValue));
+            model.addAttribute("totalPlaces", totalPlaces);
         }
-
-        addFinalPlaces(totalPlaces);
-        model.addAttribute("totalPlaces", totalPlaces);
     }
 
     private void setResultVisitToModelForTypes3And4(
             List<EventToSquadUser> eventsToSquadUsersByEventType,
             EventTypes eventTypes,
-            List<Pair<Double, Integer>> totalPlaces,
+            List<Pair<Duration, Integer>> totalPlaces,
             Model model) {
         /* Создаем структуру, в которой будут храниться результаты посещения мероприятий.
          * Каждому отряду будет соответствовать словарь с мероприятиями и результатами участия.
@@ -81,6 +83,16 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     .put(eventToSquadUser.getEvent(), totalDuration);
         }
         model.addAttribute("squadVisitingResults", squadVisitingResults);
+
+        /* получаем сумму часов за каждое мероприятия для каждого отряда,
+           но без итоговых мест относительно других отрядов*/
+        for (Map.Entry<Squad, LinkedHashMap<Event, Duration>> entry
+                : squadVisitingResults.entrySet()) {
+            Duration durationSum = entry.getValue().values()
+                    .stream().reduce(Duration.ZERO, Duration::plus);
+
+            totalPlaces.add(new Pair<>(durationSum, 0));
+        }
     }
 
     /**
@@ -195,14 +207,15 @@ public class VisitingResultServiceImpl implements VisitingResultService {
      *
      * @param totalPlaces список с итоговыми баллами и назначенными итоговыми местами
      */
-    public static void addFinalPlaces(List<Pair<Double, Integer>> totalPlaces) {
+    public static <T> void addFinalPlaces(List<Pair<T, Integer>> totalPlaces,
+                                          Comparator<Pair<T, Integer>> comparator) {
         // Копия списка для сортировки
-        List<Pair<Double, Integer>> sortedPlaces = new ArrayList<>(totalPlaces);
-        sortedPlaces.sort(Comparator.comparingDouble(Pair::getFirstValue));
+        List<Pair<T, Integer>> sortedPlaces = new ArrayList<>(totalPlaces);
+        sortedPlaces.sort(comparator);
         Collections.reverse(sortedPlaces); // Сортировка в порядке убывания
 
         // Карта для хранения мест
-        Map<Double, Integer> placeMap = new HashMap<>();
+        Map<T, Integer> placeMap = new HashMap<>();
         int place = 1;
         for (int i = 0; i < sortedPlaces.size(); i++) {
             if (i > 0 && !sortedPlaces.get(i).getFirstValue().equals(sortedPlaces.get(i - 1).getFirstValue())) {
@@ -212,7 +225,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         }
 
         // Назначение мест в исходном списке
-        for (Pair<Double, Integer> pair : totalPlaces) {
+        for (Pair<T, Integer> pair : totalPlaces) {
             pair.setSecondValue(placeMap.get(pair.getFirstValue()));
         }
     }
