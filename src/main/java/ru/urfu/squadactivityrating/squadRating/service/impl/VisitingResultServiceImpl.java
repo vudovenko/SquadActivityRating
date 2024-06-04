@@ -8,12 +8,14 @@ import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -35,34 +37,69 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     eventTypes,
                     totalPlaces,
                     model);
-        } /*else if (eventTypes == EventTypes.SOCIAL_WORK || eventTypes == EventTypes.PRODUCTION_WORK) {
+        } else if (eventTypes == EventTypes.SOCIAL_WORK || eventTypes == EventTypes.PRODUCTION_WORK) {
             setResultVisitToModelForTypes3And4(
                     eventsToSquadUsersByEventType,
                     eventTypes,
                     totalPlaces,
                     model);
-        }*/
+        }
 
-        assignPlaces(totalPlaces);
+        addFinalPlaces(totalPlaces);
         model.addAttribute("totalPlaces", totalPlaces);
     }
 
-//    private void setResultVisitToModelForTypes3And4(
-//            List<EventToSquadUser> eventsToSquadUsersByEventType,
-//            EventTypes eventTypes,
-//            List<Pair<Double, Integer>> totalPlaces,
-//            Model model) {
-//        LinkedHashMap<Squad, LinkedHashMap<Event, List<Integer>>>
-//                squadVisitingResults
-//                = setVisitingResultsInModelByType(eventsToSquadUsersByEventType,
-//                ArrayList::new, model);
-//    }
+    private void setResultVisitToModelForTypes3And4(
+            List<EventToSquadUser> eventsToSquadUsersByEventType,
+            EventTypes eventTypes,
+            List<Pair<Double, Integer>> totalPlaces,
+            Model model) {
+        /* Создаем структуру, в которой будут храниться результаты посещения мероприятий.
+         * Каждому отряду будет соответствовать словарь с мероприятиями и результатами участия.
+         * На данном этапе заполняем значениями по умолчанию (duration = 0)*/
+        LinkedHashMap<Squad, LinkedHashMap<Event, Duration>>
+                squadVisitingResults
+                = setVisitingResultsInModelByType(eventsToSquadUsersByEventType,
+                () -> Duration.ZERO, model);
 
+        // todo если нет мероприятий, то выбрасывается ошибка при null
+        // todo также добавить тестовые данные
+        /* Проходимся по списку посещений.
+           Заполняем структуру squadVisitingResults, увеличивая Duration.*/
+
+        for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
+            Squad squad = eventToSquadUser.getSquadUser().getSquad();
+            Duration totalDuration = squadVisitingResults
+                    .get(squad)
+                    .get(eventToSquadUser.getEvent());
+            VisitingHours visitingHours = eventToSquadUser.getVisitingHours();
+            Duration durationUserParticipation = Duration
+                    .between(visitingHours.getStartTime(), visitingHours.getEndTime());
+            totalDuration = totalDuration.plus(durationUserParticipation);
+            squadVisitingResults
+                    .get(squad)
+                    .put(eventToSquadUser.getEvent(), totalDuration);
+        }
+        model.addAttribute("squadVisitingResults", squadVisitingResults);
+    }
+
+    /**
+     * Метод, который устанавливает результат посещения мероприятий
+     * отрядами для спорта и творческой работы.
+     *
+     * @param eventsToSquadUsersByEventType список мероприятий, из которых достаются баллы для каждого отряда
+     * @param eventTypes                    тип мероприятия
+     * @param totalPlaces                   список, в котором хранятся итоговые суммы баллов за все мероприятия по указанному типу
+     * @param model                         модель
+     */
     private void setResultVisitToModelForTypes1And2(
             List<EventToSquadUser> eventsToSquadUsersByEventType,
             EventTypes eventTypes,
             List<Pair<Double, Integer>> totalPlaces,
             Model model) {
+        /* Создаем структуру, в которой будут храниться результаты посещения мероприятий.
+         * Каждому отряду будет соответствовать словарь с мероприятиями и результатами участия.
+         * На данном этапе заполняем значениями по умолчанию (отсутствие мест - 0 баллов)*/
         LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>>
                 squadVisitingResults
                 = setVisitingResultsInModelByType(eventsToSquadUsersByEventType,
@@ -70,6 +107,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
         // todo если нет мероприятий, то выбрасывается ошибка при null
         // todo также добавить тестовые данные
+        /* Проходимся по списку посещений.
+           Заполняем структуру squadVisitingResults парой (выйгранные места - общая сумма баллов)*/
         for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
             Squad squad = eventToSquadUser.getSquadUser().getSquad();
             Pair<List<VisitingResult>, Double> pair = squadVisitingResults
@@ -80,6 +119,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     getWeightByType(eventTypes, eventToSquadUser.getVisitingResult())));
         }
 
+        /* получаем итоговые суммы баллов за каждое мероприятия для каждого отряда,
+           но без итоговых мест относительно других отрядов*/
         for (Map.Entry<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> entry
                 : squadVisitingResults.entrySet()) {
             Double sum = round(entry.getValue().values()
@@ -90,9 +131,22 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         model.addAttribute("squadVisitingResults", squadVisitingResults);
     }
 
+    /**
+     * Метод, который получает и возвращает заготовку структуры для отображения результатов посещений мероприятий.
+     * <br>
+     * Устанавливает значения по умолчанию для каждого посещения.
+     * <br>
+     * Например, отряд №1 - 1 мероприятие - 0 часов, Отряд №2 - 2 мероприятие - 0 часов и т.д.
+     *
+     * @param eventsToSquadUsersByEventType посещения, для которых устанавливаются значения по умолчанию
+     * @param defaultValue                  значение по умолчанию
+     * @param model                         модель
+     * @param <T>                           тип значения по умолчанию для результата посещения
+     * @return структура, с результатами посещения мероприятий отрядами в виде значений по умолчанию
+     */
     private <T> LinkedHashMap<Squad, LinkedHashMap<Event, T>>
     setVisitingResultsInModelByType(List<EventToSquadUser> eventsToSquadUsersByEventType,
-                                    Supplier<T> pairType,
+                                    Supplier<T> defaultValue,
                                     Model model) {
         LinkedHashSet<Event> events =
                 new LinkedHashSet<>(eventsToSquadUsersByEventType
@@ -111,24 +165,37 @@ public class VisitingResultServiceImpl implements VisitingResultService {
             }
             for (Event event : events) {
                 if (!squadVisitingResults.get(squad).containsKey(event)) {
-                    squadVisitingResults.get(squad).put(event, pairType.get());
+                    squadVisitingResults.get(squad).put(event, defaultValue.get());
                 }
             }
         }
         return squadVisitingResults;
     }
 
+    /**
+     * Устанавливает вес посещения мероприятия в зависимости от типа мероприятия
+     *
+     * @param eventTypes     тип мероприятия
+     * @param visitingResult результат посещения
+     * @return балл за результат участия в мероприятии
+     */
     private Double getWeightByType(EventTypes eventTypes, VisitingResult visitingResult) {
 
         return switch (eventTypes) {
             case SPORT -> visitingResult.getWeightInSection1();
             case CREATIVE_WORK -> visitingResult.getWeightInSection2();
             case PARTICIPATION_IN_EVENTS -> visitingResult.getWeightInSection5();
-            default -> visitingResult.getWeightInSection6();
+            case PARTICIPATION_IN_EVENTS_URFU -> visitingResult.getWeightInSection6();
+            default -> throw new IllegalStateException("У типа мероприятия " + eventTypes + " нет веса");
         };
     }
 
-    public static void assignPlaces(List<Pair<Double, Integer>> totalPlaces) {
+    /**
+     * Метод для назначения итоговых мест в исходном списке по сумме баллов, полученных за участие в мероприятиях
+     *
+     * @param totalPlaces список с итоговыми баллами и назначенными итоговыми местами
+     */
+    public static void addFinalPlaces(List<Pair<Double, Integer>> totalPlaces) {
         // Копия списка для сортировки
         List<Pair<Double, Integer>> sortedPlaces = new ArrayList<>(totalPlaces);
         sortedPlaces.sort(Comparator.comparingDouble(Pair::getFirstValue));

@@ -17,16 +17,24 @@ public class SquadRatingController {
     private final VisitingResultService visitingResultService;
 
     @GetMapping
-    public String getSportsSquadRatingPage(@RequestParam(name = "type", required = false) String type,
+    public String getSportsSquadRatingPage(@RequestParam(name = "eventType", required = false) String eventType,
                                            Model model) {
         // todo добавить логику обработки мероприятий 3, 4 и 8 типа
-        if (type == null) {
+        if (eventType == null) {
             return "squadRating/squad_rating";
         }
+        EventTypes eventTypes = EventTypes.valueOf(eventType.toUpperCase());
         visitingResultService.setVisitingResultsInModel(
-                EventTypes.valueOf(type.toUpperCase()),
+                eventTypes,
                 model);
+        if (eventTypes == EventTypes.SPORT
+                || eventTypes == EventTypes.CREATIVE_WORK) {
+            return "squadRating/visiting_results12";
+        } else if (eventTypes == EventTypes.SOCIAL_WORK
+                || eventTypes == EventTypes.PRODUCTION_WORK) {
+            return "squadRating/visiting_results34";
+        }
 
-        return "squadRating/visiting_results";
+        return "squadRating/squad_rating";
     }
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Рейтинг отрядов</title>
+  <style>
+      table {
+          border-collapse: collapse; /* Убирает двойные границы между соседними ячейками */
+      }
+
+      td, th {
+          border: 1px solid black; /* Граница толщиной 1 пиксель, черного цвета */
+      }
+  </style>
+</head>
+<body>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
+<a th:href="@{/squad-ratings}" class="btn btn-primary">Назад</a>
+<br>
+<br>
+<table>
+  <thead>
+  <tr>
+    <th></th>
+    <th colspan="2" th:each="event : ${events}"><a th:text="${event.name}"></a></th>
+  </tr>
+  <tr>
+    <th></th>
+    <div th:each="event : ${events}">
+      <th>
+        <a>Место</a>
+      </th>
+      <th>
+        <a>Очки</a>
+      </th>
+    </div>
+    <th>
+      <a>Суммарный балл</a>
+    </th>
+    <th>
+      <a>Место</a>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="squadVisitingResult, index : ${squadVisitingResults}">
+    <td th:text="${squadVisitingResult.key.getName()}"></td>
+    <div th:each="eventToResult : ${squadVisitingResult.value}">
+      <td>
+        <div th:each="visitingResult : ${eventToResult.value.firstValue}">
+          <a th:text="${visitingResult.visitingResult}"></a>
+        </div>
+      </td>
+      <td>
+        <a th:text="${eventToResult.value.secondValue}"></a>
+      </td>
+    </div>
+    <td>
+      <a th:text="${totalPlaces.get(index.index).firstValue}"></a>
+    </td>
+    <td>
+      <a th:text="${totalPlaces.get(index.index).secondValue}"></a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
