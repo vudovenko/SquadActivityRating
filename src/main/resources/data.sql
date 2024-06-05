@@ -1,3 +1,5 @@
+--  todo надо разбить на несколько отдельных sql-файлов
+
 insert into security_users (login, password, active)
 VALUES ('commander1', '$2a$10$s7ECzeXM9/ztbWtY2wQxzeGTBKqe4z3GcQCzb3Q5k8wi.qUe9PTBi', true),
        ('commander2', '$2a$10$5WtlEFrB3IeMSiGXynMlLuKwaPOHydAWYCv2myPz2RjDkriVfayHS', true),
@@ -155,3 +157,11 @@ values (1, 10, 'Отличное мероприятие!'), (2, 8, 'Хороше
        (19, 8, 'Хорошее мероприятие!'), (20, 9, 'Отличное мероприятие!'),
        (21, 6, 'Не очень понравилось'), (22, 5, 'Не очень понравилось'), (23, 8, 'Хорошее мероприятие!'),
        (24, 3, 'Мне почему-то не понравилось :(');
+
+insert into personal_rating_coefficients (event_types, personal_rating_coefficient)
+values ('SPORT', 3.0), ('CREATIVE_WORK', 2.0), ('SOCIAL_WORK', 0.2), ('PRODUCTION_WORK', 0.3),
+       ('PARTICIPATION_IN_EVENTS', 3.0), ('PARTICIPATION_IN_EVENTS_URFU', 1.0), ('DISCIPLINE', 1.0);
+
+insert into weight_rating_sections (event_types, weight_rating_section)
+values ('SPORT', 20), ('CREATIVE_WORK', 20), ('SOCIAL_WORK', 11), ('PRODUCTION_WORK', 20),
+       ('PARTICIPATION_IN_EVENTS', 5), ('PARTICIPATION_IN_EVENTS_URFU', 13), ('AGITSEKTOR', 11);
