@@ -59,7 +59,9 @@
       <a th:text="${totalPlaces.get(index.index).firstValue.toHours() + ' час. '
       + totalPlaces.get(index.index).firstValue.toMinutesPart() + ' мин.'}"></a>
     </td>
-    <td>Баллы не определены</td>
+    <td>
+      <a th:text="${finalScores.get(index.index)}"></a>
+    </td>
     <td>
       <a th:text="${totalPlaces.get(index.index).secondValue}"></a>
     </td>

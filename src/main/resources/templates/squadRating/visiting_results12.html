@@ -42,6 +42,9 @@
       <a>Суммарный балл</a>
     </th>
     <th>
+      <a>Итоговые баллы</a>
+    </th>
+    <th>
       <a>Место</a>
     </th>
   </tr>
@@ -61,6 +64,9 @@
     </div>
     <td>
       <a th:text="${totalPlaces.get(index.index).firstValue}"></a>
+    </td>
+    <td>
+      <a th:text="${finalScores.get(index.index)}"></a>
     </td>
     <td>
       <a th:text="${totalPlaces.get(index.index).secondValue}"></a>

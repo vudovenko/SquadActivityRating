@@ -12,11 +12,13 @@ import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
+import ru.urfu.squadactivityrating.squadRating.service.WeightRatingSectionsService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 @Service
@@ -24,36 +26,49 @@ import java.util.function.Supplier;
 public class VisitingResultServiceImpl implements VisitingResultService {
 
     private final EventToSquadUserService eventToSquadUserService;
+    private final WeightRatingSectionsService weightRatingSectionsService;
 
     @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
                 .getEventsToSquadUsersByEventType(eventTypes);
+        List<Double> finalScores = new ArrayList<>();
 
-        if (eventTypes == EventTypes.SPORT || eventTypes == EventTypes.CREATIVE_WORK) {
+        if (eventTypes == EventTypes.SPORT
+                || eventTypes == EventTypes.CREATIVE_WORK) {
             List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
             setResultVisitToModelForTypes1And2(
                     eventsToSquadUsersByEventType,
                     eventTypes,
                     totalPlaces,
                     model);
-            addFinalPlaces(totalPlaces, Comparator.comparingDouble(Pair::getFirstValue));
+            Comparator<Pair<Double, Integer>> comparator
+                    = Comparator.comparingDouble(Pair::getFirstValue);
+            addFinalPlaces(totalPlaces, comparator);
             model.addAttribute("totalPlaces", totalPlaces);
-        } else if (eventTypes == EventTypes.SOCIAL_WORK || eventTypes == EventTypes.PRODUCTION_WORK) {
+            finalScores = getFinalScores(totalPlaces, comparator,
+                    (pair, maxValue) -> pair.getFirstValue() / maxValue, eventTypes);
+        } else if (eventTypes == EventTypes.SOCIAL_WORK
+                || eventTypes == EventTypes.PRODUCTION_WORK) {
             List<Pair<Duration, Integer>> totalPlaces = new ArrayList<>();
             setResultVisitToModelForTypes3And4(
                     eventsToSquadUsersByEventType,
-                    eventTypes,
                     totalPlaces,
                     model);
-            addFinalPlaces(totalPlaces, Comparator.comparing(Pair::getFirstValue));
+            Comparator<Pair<Duration, Integer>> comparator
+                    = Comparator.comparing(Pair::getFirstValue);
+            addFinalPlaces(totalPlaces, comparator);
             model.addAttribute("totalPlaces", totalPlaces);
+            finalScores = getFinalScores(totalPlaces, comparator,
+                    (pair, maxValue) -> (double) pair.getFirstValue().toSeconds()
+                            / maxValue.toSeconds(),
+                    eventTypes);
         }
+        model.addAttribute("finalScores", finalScores);
     }
 
     private void setResultVisitToModelForTypes3And4(
             List<EventToSquadUser> eventsToSquadUsersByEventType,
-            EventTypes eventTypes,
             List<Pair<Duration, Integer>> totalPlaces,
             Model model) {
         /* Создаем структуру, в которой будут храниться результаты посещения мероприятий.
@@ -68,7 +83,6 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         // todo также добавить тестовые данные
         /* Проходимся по списку посещений.
            Заполняем структуру squadVisitingResults, увеличивая Duration.*/
-
         for (EventToSquadUser eventToSquadUser : eventsToSquadUsersByEventType) {
             Squad squad = eventToSquadUser.getSquadUser().getSquad();
             Duration totalDuration = squadVisitingResults
@@ -128,7 +142,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     .get(eventToSquadUser.getEvent());
             pair.getFirstValue().add(eventToSquadUser.getVisitingResult());
             pair.setSecondValue(round(pair.getSecondValue() +
-                    getWeightByType(eventTypes, eventToSquadUser.getVisitingResult())));
+                    getWeightByType(eventTypes, eventToSquadUser.getVisitingResult()), 2));
         }
 
         /* получаем итоговые суммы баллов за каждое мероприятия для каждого отряда,
@@ -136,7 +150,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         for (Map.Entry<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> entry
                 : squadVisitingResults.entrySet()) {
             Double sum = round(entry.getValue().values()
-                    .stream().mapToDouble(Pair::getSecondValue).sum());
+                    .stream().mapToDouble(Pair::getSecondValue).sum(), 2);
 
             totalPlaces.add(new Pair<>(sum, 0));
         }
@@ -230,9 +244,33 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         }
     }
 
-    private static double round(double value) {
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(2, RoundingMode.HALF_UP); // Используйте другой режим округления, если нужно
-        return bd.doubleValue();
+    public <T> List<Double> getFinalScores(List<Pair<T, Integer>> totalPlaces,
+                                           Comparator<Pair<T, Integer>> comparator,
+                                           BiFunction<Pair<T, Integer>, T, Double>
+                                                   finalScoreCalculator,
+                                           EventTypes eventTypes) {
+        Optional<Pair<T, Integer>> maxPair = totalPlaces
+                .stream()
+                .max(comparator);
+        if (maxPair.isPresent()) {
+            List<Double> finalScores = new ArrayList<>();
+            Integer weightRatingSection = weightRatingSectionsService
+                    .findByEventTypes(eventTypes).getWeightRatingSection();
+            for (Pair<T, Integer> pair : totalPlaces) {
+                Double coefficient = finalScoreCalculator
+                        .apply(pair, maxPair.get().getFirstValue());
+                Double scores = round(coefficient * weightRatingSection, 1);
+                finalScores.add(scores);
+            }
+
+            return finalScores;
+        }
+        throw new IllegalStateException("Максимальное значение не найдено");
+    }
+
+    private static double round(double value, int scale) {
+        BigDecimal bigDecimal = BigDecimal.valueOf(value);
+        bigDecimal = bigDecimal.setScale(scale, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
     }
 }
