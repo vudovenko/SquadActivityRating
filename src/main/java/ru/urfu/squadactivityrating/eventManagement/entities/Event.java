@@ -56,7 +56,7 @@ public class Event {
     public String getFormattedDuration() {
         StringJoiner joiner = new StringJoiner(" ");
         if (duration.toHoursPart() > 0) {
-            joiner.add(String.format("%d час.", duration.toHoursPart()));
+            joiner.add(String.format("%d час.", duration.toHours()));
         }
         if (duration.toMinutesPart() > 0) {
             joiner.add(String.format("%d мин.", duration.toMinutesPart()));
