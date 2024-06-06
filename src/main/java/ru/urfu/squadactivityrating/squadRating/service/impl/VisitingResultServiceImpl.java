@@ -176,12 +176,14 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     .get(squad)
                     .get(eventToSquadUser.getEvent());
             VisitingHours visitingHours = eventToSquadUser.getVisitingHours();
-            Duration durationUserParticipation = Duration
-                    .between(visitingHours.getStartTime(), visitingHours.getEndTime());
-            totalDuration = totalDuration.plus(durationUserParticipation);
-            squadVisitingResults
-                    .get(squad)
-                    .put(eventToSquadUser.getEvent(), totalDuration);
+            if (visitingHours != null) {
+                Duration durationUserParticipation = Duration
+                        .between(visitingHours.getStartTime(), visitingHours.getEndTime());
+                totalDuration = totalDuration.plus(durationUserParticipation);
+                squadVisitingResults
+                        .get(squad)
+                        .put(eventToSquadUser.getEvent(), totalDuration);
+            }
         }
         model.addAttribute("squadVisitingResults", squadVisitingResults);
 
