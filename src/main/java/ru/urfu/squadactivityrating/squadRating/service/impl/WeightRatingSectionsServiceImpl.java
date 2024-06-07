@@ -13,6 +13,7 @@ public class WeightRatingSectionsServiceImpl implements WeightRatingSectionsServ
 
     private final WeightRatingSectionsServiceRepository weightRatingSectionsServiceRepository;
 
+    @Override
     public WeightRatingSections findByEventTypes(EventTypes eventTypes) {
         if (weightRatingSectionsServiceRepository.findByEventTypes(eventTypes).isPresent()) {
             return weightRatingSectionsServiceRepository.findByEventTypes(eventTypes).get();
