@@ -32,7 +32,7 @@
     <th></th>
     <div th:each="event : ${events}">
       <th>
-        <a>Место</a>
+        <a th:text="${event.isItOnlyParticipation ? 'Люди' : 'Место'}">Место</a>
       </th>
       <th>
         <a>Очки</a>
@@ -54,9 +54,10 @@
     <td th:text="${squadVisitingResult.key.getName()}"></td>
     <div th:each="eventToResult : ${squadVisitingResult.value}">
       <td>
-        <div th:each="visitingResult : ${eventToResult.value.firstValue}">
+        <div th:if="${!eventToResult.key.isItOnlyParticipation}" th:each="visitingResult : ${eventToResult.value.firstValue}">
           <a th:text="${visitingResult.visitingResult}"></a>
         </div>
+        <a th:if="${eventToResult.key.isItOnlyParticipation}" th:text="${eventToResult.value.firstValue.size()}"></a>
       </td>
       <td>
         <a th:text="${eventToResult.value.secondValue}"></a>

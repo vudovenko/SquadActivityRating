@@ -41,8 +41,10 @@ public class SquadRatingController {
                 eventTypes,
                 model);
         if (eventTypes == EventTypes.SPORT
-                || eventTypes == EventTypes.CREATIVE_WORK) {
-            return "squadRating/visiting_results12";
+                || eventTypes == EventTypes.CREATIVE_WORK
+                || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
+                || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
+            return "squadRating/visiting_results1256";
         } else if (eventTypes == EventTypes.SOCIAL_WORK
                 || eventTypes == EventTypes.PRODUCTION_WORK) {
             return "squadRating/visiting_results34";

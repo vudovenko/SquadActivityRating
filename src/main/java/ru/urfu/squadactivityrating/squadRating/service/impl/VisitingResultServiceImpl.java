@@ -30,12 +30,15 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
     @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
+        // todo код надо рефакторить
         List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
                 .getEventsToSquadUsersByEventType(eventTypes);
         List<Double> finalScores = new ArrayList<>();
 
         if (eventTypes == EventTypes.SPORT
-                || eventTypes == EventTypes.CREATIVE_WORK) {
+                || eventTypes == EventTypes.CREATIVE_WORK
+                || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
+                || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
             List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
             setResultVisitToModelForTypes1And2(
                     eventsToSquadUsersByEventType,

@@ -31,6 +31,7 @@ public class Event {
     private String name;
     private String description;
     private String location;
+    private Boolean isItOnlyParticipation;
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime date;

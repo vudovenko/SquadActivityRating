@@ -13,7 +13,8 @@ public enum VisitingResults {
     PLACE1("1 место"),
     PLACE2("2 место"),
     PLACE3("3 место"),
-    PARTICIPATION("Участие");
+    PARTICIPATION("Участие"),
+    PRESENCE("Присутствие");
 
     private final String result;
 
