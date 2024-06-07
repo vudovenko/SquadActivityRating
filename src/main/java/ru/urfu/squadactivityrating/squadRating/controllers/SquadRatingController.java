@@ -30,7 +30,8 @@ public class SquadRatingController {
      * @return страница рейтинга отрядов
      */
     @GetMapping
-    public String getSportsSquadRatingPage(@RequestParam(name = "eventType", required = false) String eventType,
+    public String getSportsSquadRatingPage(@RequestParam(name = "eventType", required = false)
+                                           String eventType,
                                            Model model) {
         // todo добавить логику обработки мероприятий 3, 4 и 8 типа
         if (eventType == null) {

@@ -138,8 +138,7 @@ values (19, 6, 1), (19, 8, 2), (19, 10, 3), -- 32
        (29, 5, 5), (29, 6, 5), (29, 7, 5), (29, 8, 5), (29, 9, 5), (29, 10, 5), -- 38
        (30, 5, 1), (30, 9, 2), (30, 13, 3), -- 41
        (32, 4, 5),  (32, 6, 5), (32, 8, 5), (32, 12, 5), (32, 13, 5), -- 46
-       (33, 9, 1), (33, 13, 2), -- 48
-       (36, 7, 1); -- 49
+       (33, 9, 1), (33, 13, 2); -- 48
 
 insert into visiting_hours (event_to_squad_user_id, start_time, end_time)
 values (14, '2024-10-15 23:20:00', '2024-10-16 02:20:00'), (15, '2024-10-15 23:20:00', '2024-10-16 01:10:00'), (16, '2024-10-15 23:20:00', '2024-10-16 03:20:00'),
@@ -168,3 +167,10 @@ values ('SPORT', 3.0), ('CREATIVE_WORK', 2.0), ('SOCIAL_WORK', 0.2), ('PRODUCTIO
 insert into weight_rating_sections (event_types, weight_rating_section)
 values ('SPORT', 20), ('CREATIVE_WORK', 20), ('SOCIAL_WORK', 11), ('PRODUCTION_WORK', 20),
        ('PARTICIPATION_IN_EVENTS', 5), ('PARTICIPATION_IN_EVENTS_URFU', 13), ('AGITSEKTOR', 11);
+
+
+insert into violations (violation, weight)
+values ('VERBAL_WARNING', 1.0), ('REPRIMAND', 5.0), ('SEVERE_REPRIMAND', 10.0);
+
+insert into violation_to_squad_user (violation_id, violator_id)
+values (1, 4), (2, 6), (3, 7), (3, 9), (1, 12), (2, 14);
