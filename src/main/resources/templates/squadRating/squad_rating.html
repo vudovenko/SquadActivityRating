@@ -3,12 +3,15 @@
       xmlns:th="http://www.thymeleaf.org/"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <meta charset="UTF-8">
   <title>Рейтинг отрядов</title>
 </head>
 <body>
 <a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
+<br>
+<br>
 <table>
   <thead>
   <tr>
@@ -23,19 +26,6 @@
   </tr>
   </thead>
   <tbody>
-<!--  <tr th:each="fighter : ${fightersWishingToJoin}">-->
-<!--    <td><a th:text="${fighter.getFullName()}"></a></td>-->
-<!--    <td>-->
-<!--      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
-<!--        Одобрить-->
-<!--      </a>-->
-<!--    </td>-->
-<!--    <td>-->
-<!--      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
-<!--        Отказать-->
-<!--      </a>-->
-<!--    </td>-->
-<!--  </tr>-->
   </tbody>
 </table>
 </body>
