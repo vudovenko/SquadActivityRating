@@ -8,5 +8,11 @@ import ru.urfu.squadactivityrating.squadRating.entitites.WeightRatingSections;
  */
 public interface WeightRatingSectionsService {
 
+    /**
+     * Метод для получения веса типа мероприятия по указанному типу мероприятия
+     *
+     * @param eventTypes тип мероприятия для фильтрации
+     * @return сущность веса
+     */
     WeightRatingSections findByEventTypes(EventTypes eventTypes);
 }

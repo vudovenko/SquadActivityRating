@@ -282,7 +282,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
      * @param <T>                  тип для баллов или часов
      * @return список с итоговыми баллами
      */
-    public <T> List<Double> getFinalScores(List<Pair<T, Integer>> totalPlaces,
+    public  <T> List<Double> getFinalScores(List<Pair<T, Integer>> totalPlaces,
                                            Comparator<Pair<T, Integer>> comparator,
                                            BiFunction<Pair<T, Integer>, T, Double>
                                                    finalScoreCalculator,

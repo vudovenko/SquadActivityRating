@@ -2,11 +2,10 @@ package ru.urfu.squadactivityrating.squadRating.entitites;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
-import ru.urfu.squadactivityrating.squadRating.entitites.enums.Violations;
 
-import java.util.List;
-
+/**
+ * Сущность дисциплинарного нарушения
+ */
 @Getter
 @Setter
 @Builder
@@ -14,17 +13,26 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "violations")
-public class Violation {
+public class Violation implements Comparable<Violation> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String description;
 
-    @Enumerated(EnumType.STRING)
-    private Violations violation;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH,
+            CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "type_id")
+    private ViolationType violationType;
 
-    private Double weight;
-
-    @ManyToMany(mappedBy = "violations")
-    private List<SquadUser> violators;
+    @Override
+    public int compareTo(Violation o) {
+        int compareResult = this.violationType.getWeight()
+                .compareTo(o.violationType.getWeight());
+        if (compareResult == 0) {
+            return this.name.compareTo(o.name);
+        }
+        return compareResult;
+    }
 }

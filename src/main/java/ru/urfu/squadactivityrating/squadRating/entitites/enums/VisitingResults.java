@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Класс для хранения результата посещения мероприятий
+ * Энум для хранения результата посещения мероприятий
  */
 @Getter
 @AllArgsConstructor

@@ -169,8 +169,19 @@ values ('SPORT', 20), ('CREATIVE_WORK', 20), ('SOCIAL_WORK', 11), ('PRODUCTION_W
        ('PARTICIPATION_IN_EVENTS', 5), ('PARTICIPATION_IN_EVENTS_URFU', 13), ('AGITSEKTOR', 11);
 
 
-insert into violations (violation, weight)
+insert into violation_type (violation, weight)
 values ('VERBAL_WARNING', 1.0), ('REPRIMAND', 5.0), ('SEVERE_REPRIMAND', 10.0);
 
-insert into violation_to_squad_user (violation_id, violator_id)
-values (1, 4), (2, 6), (3, 7), (3, 9), (1, 12), (2, 14);
+insert into violations (name, description, type_id)
+values ('Опоздание на встречу', 'Не пришли вовремя', 1),
+       ('Потеря имущества', 'Потеря доверенного имущества', 2),
+       ('Поломка оборудования', 'Сломали дорогостоящее оборудование на сцене', 3);
+
+insert into violation_to_squad_user (violation_id, violator_id, date, comment, is_solved)
+values (1, 4, '2022-06-01 12:30:00', 'Боец опоздал на 10 минут', false),
+       (1, 6, '2023-06-02 12:30:00', 'Боец опоздал на 11 минут', true),
+       (2, 7, '2024-06-03 12:30:00', 'Боец потерял ключи от склада №10', true),
+       (3, 8, '2021-06-04 12:30:00', 'Боец сломал барабаны', true),
+       (3, 9, '2022-06-04 12:30:00', 'Боец опоздал на 5 минут', false),
+       (2, 13, '2020-06-05 12:30:00', 'Боец потерял пропуск', false),
+       (1, 15, '2022-07-06 12:30:00', 'Боец опоздал на встречу', true);

@@ -5,7 +5,7 @@ import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
-import ru.urfu.squadactivityrating.squadRating.entitites.Violation;
+import ru.urfu.squadactivityrating.squadRating.entitites.ViolationType;
 
 import java.util.List;
 
@@ -60,11 +60,11 @@ public class SquadUser {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "user_to_violation",
-            joinColumns = @JoinColumn(name = "squad_user_id"),
+            name = "violation_to_squad_user",
+            joinColumns = @JoinColumn(name = "violator_id"),
             inverseJoinColumns = @JoinColumn(name = "violation_id")
     )
-    private List<Violation> violations;
+    private List<ViolationType> violationTypes;
 
     public String getFullName() {
         return lastname + " " + firstname + " " + patronymic;

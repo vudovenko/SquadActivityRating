@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div th:fragment="violationsListFragment(violationsToSquadUsers)">
+  <tr th:each="violationToSquadUser : ${violationsToSquadUsers}">
+    <td>
+      <a th:text="${violationToSquadUser.getViolation().getName()}"></a>
+    </td>
+    <td>
+      <a th:text="${violationToSquadUser.getViolator().getFullName()}"></a>
+    </td>
+    <td>
+      <a th:text="${violationToSquadUser.getViolator().getSquad()?.getName()}"></a>
+    </td>
+    <td>
+      <a th:text="${violationToSquadUser.getViolation()
+                      .getViolationType().getViolation().getResult()}"></a>
+    </td>
+    <td>
+      <a th:text="${violationToSquadUser.getFormattedDate()}"></a>
+    </td>
+    <td>
+      <a th:text="${violationToSquadUser.getComment()}"></a>
+    </td>
+    <td>
+      <a th:text="${violationToSquadUser.isSolved ? 'Да' : 'Нет'}"></a>
+    </td>
+  </tr>
+</div>
+</body>
+</html>

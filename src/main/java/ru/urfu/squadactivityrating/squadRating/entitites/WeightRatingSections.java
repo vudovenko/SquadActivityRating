@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 
+/**
+ * Сущность для хранения веса типов мероприятий для рейтинга отрядов
+ */
 @Getter
 @Setter
 @Builder
