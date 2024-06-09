@@ -126,6 +126,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         finalScores = (List<Double>)
                 model.getAttribute("finalScores");
         int counter = 0;
+        // todo если ни один отряд не посещал мероприятие, то таблица будет отображаться неправильно
         for (Squad squad : squadVisitingResults.keySet()) {
             if (!totalSquadVisitingResults.containsKey(squad)) {
                 totalSquadVisitingResults
@@ -138,21 +139,29 @@ public class VisitingResultServiceImpl implements VisitingResultService {
             }
             counter++;
         }
-        
+        if (squadVisitingResults.keySet().size() == 0) {
+            LinkedHashMap<EventTypes, Double> eventMap = new LinkedHashMap<>();
+            eventMap.put(eventType, 0.0);
+            totalSquadVisitingResults.put(null, eventMap);
+        }
+
         return totalSquadVisitingResults;
     }
 
     @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         // todo код надо рефакторить
-        List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
-                .getEventsToSquadUsersByEventType(eventTypes);
         List<Double> finalScores = new ArrayList<>();
 
         if (eventTypes == EventTypes.SPORT
                 || eventTypes == EventTypes.CREATIVE_WORK
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
+            List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
+                    .getEventsToSquadUsersByEventType(eventTypes)
+                    .stream()
+                    .filter(eventToSquadUser -> eventToSquadUser.getVisitingResult() != null)
+                    .toList();
             List<Pair<Double, Integer>> totalPlaces = new ArrayList<>();
             setResultVisitToModelForTypes1And2(
                     eventsToSquadUsersByEventType,
@@ -168,6 +177,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         } else if (eventTypes == EventTypes.SOCIAL_WORK
                 || eventTypes == EventTypes.PRODUCTION_WORK) {
             List<Pair<Duration, Integer>> totalPlaces = new ArrayList<>();
+            List<EventToSquadUser> eventsToSquadUsersByEventType = eventToSquadUserService
+                    .getEventsToSquadUsersByEventType(eventTypes);
             setResultVisitToModelForTypes3And4(
                     eventsToSquadUsersByEventType,
                     totalPlaces,
@@ -417,6 +428,6 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
             return finalScores;
         }
-        throw new IllegalStateException("Максимальное значение не найдено");
+        return new ArrayList<>(List.of());
     }
 }

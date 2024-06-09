@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.EventType;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
+import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
@@ -57,6 +58,7 @@ public class EventController {
         Event event = new Event();
         EventType eventType = new EventType();
         eventType.setEventTypeValue(EventTypes.SPORT);
+        event.setIsItOnlyParticipation(false);
         event.setEventType(eventType);
         List<SquadUser> fighters = squadUserService.getFighters();
         Map<Boolean, List<SquadUser>> fightersMap = fighters
@@ -116,7 +118,7 @@ public class EventController {
                 hoursDuration,
                 minutesDuration,
                 eventType,
-                selectedFightersIds
+                Arrays.stream(selectedFightersIds).toList()
         );
 
         return "redirect:/events/" + eventEntity.getId();
@@ -144,20 +146,51 @@ public class EventController {
                               String eventType,
                               @RequestParam(name = "selectedFightersIds", required = false)
                               Long... selectedFightersIds) {
+        Result eventToSquadUsers = processEventToSquadUsers(eventId, selectedFightersIds);
+
         eventToSquadUserService
-                .deleteAllEventsToSquadUsers(eventToSquadUserService
-                        .getByEventId(eventId));
+                .deleteAllEventsToSquadUsers(eventToSquadUsers.eventToSquadUsersToDelete());
         event.setId(eventId);
+        List<Long> eventToSquadUserIdsToCreate = new ArrayList<>(selectedFightersIds != null
+                ? Arrays.stream(selectedFightersIds).toList()
+                : List.of());
+        eventToSquadUserIdsToCreate.removeAll(eventToSquadUsers.userIDsWithAlreadyExistingEntities);
 
         Event eventEntity = eventService.saveEvent(
                 event,
                 hoursDuration,
                 minutesDuration,
                 eventType,
-                selectedFightersIds
+                eventToSquadUserIdsToCreate
         );
 
         return "redirect:/events/" + eventEntity.getId();
+    }
+
+    private Result processEventToSquadUsers(Long eventId, Long[] selectedFightersIds) {
+        List<EventToSquadUser> eventToSquadUsersToDelete = new ArrayList<>();
+        List<Long> userIDsWithAlreadyExistingEntities = new ArrayList<>();
+
+        eventToSquadUserService.getByEventId(eventId).forEach(eTSU -> {
+            boolean isSelected = false;
+            if (selectedFightersIds != null) {
+                for (Long id : selectedFightersIds) {
+                    if (eTSU.getSquadUser().getId().equals(id)) {
+                        userIDsWithAlreadyExistingEntities.add(eTSU.getSquadUser().getId());
+                        isSelected = true;
+                    }
+                }
+            }
+
+            if (!isSelected) {
+                eventToSquadUsersToDelete.add(eTSU);
+            }
+        });
+        return new Result(eventToSquadUsersToDelete, userIDsWithAlreadyExistingEntities);
+    }
+
+    private record Result(List<EventToSquadUser> eventToSquadUsersToDelete,
+                          List<Long> userIDsWithAlreadyExistingEntities) {
     }
 
     /**
