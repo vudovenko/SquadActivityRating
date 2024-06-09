@@ -63,7 +63,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     for (Double score : eventTypeToScore.values()) {
                         totalScore += score;
                     }
-                    scoreToPlace.setFirstValue(totalScore);
+                    scoreToPlace.setFirstValue(round(totalScore, 1));
                 }
         );
         supplementWithDiscipline(totalSquadVisitingResults);
@@ -81,7 +81,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 squad -> {
                     List<ViolationToSquadUser> squadViolations
                             = violationToSquadUserService.getAllUnsolvedViolationsBySquad(squad);
-                    Double amountPenalties = getAmountPenalties(squadViolations);
+                    Double amountPenalties = round(getAmountPenalties(squadViolations), 1);
 
                     totalSquadVisitingResults.get(squad).put(EventTypes.DISCIPLINE, amountPenalties);
                 }
@@ -96,9 +96,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     = violationToSquadUserService.getAllUnsolvedViolationsBySquad(squad);
             Pair<Double, Integer> scoreToPlace = finalPlaces.get(counter);
 
-            scoreToPlace
-                    .setFirstValue(
-                            scoreToPlace.getFirstValue() - getAmountPenalties(unsolvedViolations));
+            Double finalScore = scoreToPlace.getFirstValue() - getAmountPenalties(unsolvedViolations);
+            scoreToPlace.setFirstValue(round(finalScore, 1));
             counter++;
         }
     }
@@ -139,8 +138,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
             }
             counter++;
         }
-
-
+        
         return totalSquadVisitingResults;
     }
 
