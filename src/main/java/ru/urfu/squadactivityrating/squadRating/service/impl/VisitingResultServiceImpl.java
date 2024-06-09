@@ -11,6 +11,8 @@ import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
+import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
+import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import ru.urfu.squadactivityrating.squadRating.service.WeightRatingSectionsService;
 
@@ -27,6 +29,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
     private final EventToSquadUserService eventToSquadUserService;
     private final WeightRatingSectionsService weightRatingSectionsService;
+    private final ViolationToSquadUserService violationToSquadUserService;
 
     // todo это ужасный код. Надо переписать, но нет времени. Удачи тому, кто возьмется это переписывать.
     //  Думаю, как минимум не надо передавать модель в методы. Модель надо выпилить из аргументов методов.
@@ -63,11 +66,53 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     scoreToPlace.setFirstValue(totalScore);
                 }
         );
+        supplementWithDiscipline(totalSquadVisitingResults);
+        addDisciplinePenaltiesInFinalScores(totalSquadVisitingResults.keySet(), finalPlaces);
         addFinalPlaces(
                 finalPlaces,
                 Comparator.comparingDouble(Pair::getFirstValue));
 
         return finalPlaces;
+    }
+
+    private void supplementWithDiscipline(LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
+                                                  totalSquadVisitingResults) {
+        totalSquadVisitingResults.keySet().forEach(
+                squad -> {
+                    List<ViolationToSquadUser> squadViolations
+                            = violationToSquadUserService.getAllUnsolvedViolationsBySquad(squad);
+                    Double amountPenalties = getAmountPenalties(squadViolations);
+
+                    totalSquadVisitingResults.get(squad).put(EventTypes.DISCIPLINE, amountPenalties);
+                }
+        );
+    }
+
+    private void addDisciplinePenaltiesInFinalScores(Set<Squad> squads,
+                                                     List<Pair<Double, Integer>> finalPlaces) {
+        int counter = 0;
+        for (Squad squad : squads) {
+            List<ViolationToSquadUser> unsolvedViolations
+                    = violationToSquadUserService.getAllUnsolvedViolationsBySquad(squad);
+            Pair<Double, Integer> scoreToPlace = finalPlaces.get(counter);
+
+            scoreToPlace
+                    .setFirstValue(
+                            scoreToPlace.getFirstValue() - getAmountPenalties(unsolvedViolations));
+            counter++;
+        }
+    }
+
+    private Double getAmountPenalties(List<ViolationToSquadUser> violationsToSquadUser) {
+        Double amountPenalties = 0.0;
+        for (ViolationToSquadUser violationToSquadUser : violationsToSquadUser) {
+            Double penalty = violationToSquadUser
+                    .getViolation().getViolationType().getWeight();
+
+            amountPenalties += penalty;
+        }
+
+        return amountPenalties;
     }
 
     public LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
@@ -89,9 +134,12 @@ public class VisitingResultServiceImpl implements VisitingResultService {
             }
             LinkedHashMap<EventTypes, Double> eventTypeToScore
                     = totalSquadVisitingResults.get(squad);
-            eventTypeToScore.put(eventType, finalScores.get(counter));
+            if (finalScores != null) {
+                eventTypeToScore.put(eventType, finalScores.get(counter));
+            }
             counter++;
         }
+
 
         return totalSquadVisitingResults;
     }

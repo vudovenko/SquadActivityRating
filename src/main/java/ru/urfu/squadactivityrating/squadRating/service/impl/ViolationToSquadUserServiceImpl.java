@@ -2,6 +2,7 @@ package ru.urfu.squadactivityrating.squadRating.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
 import ru.urfu.squadactivityrating.squadRating.repository.ViolationToSquadUserRepository;
 import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
@@ -43,5 +44,10 @@ public class ViolationToSquadUserServiceImpl implements ViolationToSquadUserServ
         );
 
         return violationsToSquadUsers;
+    }
+
+    @Override
+    public List<ViolationToSquadUser> getAllUnsolvedViolationsBySquad(Squad squad) {
+        return violationToSquadUserRepository.findAllByViolator_SquadAndIsSolved(squad, false);
     }
 }
