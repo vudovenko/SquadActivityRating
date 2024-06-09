@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Настройка весов</title>
+</head>
+<body>
+<form th:action="@{/weight-settings/update-weight-settings}"
+      th:object="${weightRatingSectionsDto}"
+      method="post">
+  <table>
+    <thead>
+    <tr>
+      <th colspan="7">Вес разделов рейтинга отрядов</th>
+    </tr>
+    <tr>
+      <td>Вес раздела 1</td>
+      <td>Вес раздела 2</td>
+      <td>Вес раздела 3</td>
+      <td>Вес раздела 4</td>
+      <td>Вес раздела 5</td>
+      <td>Вес раздела 6</td>
+      <td>Вес раздела 7</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><input type="text"
+                 th:field="*{weightRatingSection1}"></td>
+      <td><input type="text"
+                 th:field="*{weightRatingSection2}"></td>
+      <td><input type="text"
+                 th:field="*{weightRatingSection3}"></td>
+      <td><input type="text"
+                 th:field="*{weightRatingSection4}"></td>
+      <td><input type="text"
+                 th:field="*{weightRatingSection5}"></td>
+      <td><input type="text"
+                 th:field="*{weightRatingSection6}"></td>
+      <td><input type="text"
+                 th:field="*{weightRatingSection7}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+</body>
+</html>
