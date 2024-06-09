@@ -35,6 +35,7 @@ public class SquadRatingController {
                                       Model model) {
         // todo добавить логику обработки мероприятий 3, 4 и 8 типа
         if (eventType == null) {
+            visitingResultService.setTotalVisitingResultsInModel(model);
             return "squadRating/squad_rating";
         }
         EventTypes eventTypes = EventTypes.valueOf(eventType.toUpperCase());

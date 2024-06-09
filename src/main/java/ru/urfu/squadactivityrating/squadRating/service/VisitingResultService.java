@@ -8,8 +8,10 @@ import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
  */
 public interface VisitingResultService {
 
+    void setTotalVisitingResultsInModel(Model model);
+
     /**
-     * Метод для установки результатов посещения в модель
+     * Метод для установки результатов по типу посещения в модель
      *
      * @param eventTypes тип мероприятия
      * @param model      модель

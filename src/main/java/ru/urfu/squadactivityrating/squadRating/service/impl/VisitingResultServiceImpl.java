@@ -28,6 +28,50 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     private final EventToSquadUserService eventToSquadUserService;
     private final WeightRatingSectionsService weightRatingSectionsService;
 
+    // todo это ужасный код. Надо переписать, но нет времени. Удачи тому, кто возьмется это переписывать.
+    //  Думаю, как минимум не надо передавать модель в методы. Модель надо выпилить из аргументов методов.
+
+    @Override
+    public void setTotalVisitingResultsInModel(Model model) {
+        LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
+                totalSquadVisitingResults
+                = new LinkedHashMap<>();
+
+        for (EventTypes eventType : EventTypes.values()) {
+            if (!eventType.equals(EventTypes.DISCIPLINE)
+                    && !eventType.equals(EventTypes.AGITSEKTOR)) {
+                totalSquadVisitingResults
+                        = processTotalSquadVisitingResults(totalSquadVisitingResults, eventType, model);
+            }
+        }
+    }
+
+    public LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
+    processTotalSquadVisitingResults(LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
+                                             totalSquadVisitingResults,
+                                     EventTypes eventType, Model model) {
+        List<Double> finalScores;
+        setVisitingResultsInModel(eventType, model);
+        LinkedHashMap<Squad, Object> squadVisitingResults
+                = (LinkedHashMap<Squad, Object>) model
+                .getAttribute("squadVisitingResults");
+        finalScores = (List<Double>)
+                model.getAttribute("finalScores");
+        int counter = 0;
+        for (Squad squad : squadVisitingResults.keySet()) {
+            if (!totalSquadVisitingResults.containsKey(squad)) {
+                totalSquadVisitingResults
+                        .put(squad, new LinkedHashMap<>());
+            }
+            LinkedHashMap<EventTypes, Double> eventTypeToScore
+                    = totalSquadVisitingResults.get(squad);
+            eventTypeToScore.put(eventType, finalScores.get(counter));
+            counter++;
+        }
+
+        return totalSquadVisitingResults;
+    }
+
     @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         // todo код надо рефакторить
@@ -282,7 +326,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
      * @param <T>                  тип для баллов или часов
      * @return список с итоговыми баллами
      */
-    public  <T> List<Double> getFinalScores(List<Pair<T, Integer>> totalPlaces,
+    public <T> List<Double> getFinalScores(List<Pair<T, Integer>> totalPlaces,
                                            Comparator<Pair<T, Integer>> comparator,
                                            BiFunction<Pair<T, Integer>, T, Double>
                                                    finalScoreCalculator,
