@@ -47,7 +47,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="squadVisitingResult, index : ${squadVisitingResults}">
+  <tr th:if="${squadVisitingResult.key != null}" th:each="squadVisitingResult, index : ${squadVisitingResults}">
     <td th:text="${squadVisitingResult.key.getName()}"></td>
     <div th:each="eventToResult : ${squadVisitingResult.value}">
       <td>

@@ -27,7 +27,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="totalSquadVisitingResult, iter : ${totalSquadVisitingResults}">
+  <tr th:if="${totalSquadVisitingResult.getKey() != null}" th:each="totalSquadVisitingResult, iter : ${totalSquadVisitingResults}">
     <td>
       <a th:text="${totalSquadVisitingResult.getKey().getName()}"></a>
     </td>
