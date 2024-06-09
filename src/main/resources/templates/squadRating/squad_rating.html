@@ -23,15 +23,23 @@
     <th><a th:href="@{/squad-ratings(eventType='participation_in_events')}">Участие в мероприятиях</a></th>
     <th><a th:href="@{/squad-ratings(eventType='participation_in_events_URFU')}">Участие в мероприятиях Штаба СО УрФУ</a></th>
     <th><a th:href="@{/violations}">Дисциплина</a></th>
+    <th><a>Итоговый балл</a></th>
   </tr>
   </thead>
   <tbody>
-  <tr th:each="totalSquadVisitingResult : ${totalSquadVisitingResults}">
+  <tr th:each="totalSquadVisitingResult, iter : ${totalSquadVisitingResults}">
     <td>
       <a th:text="${totalSquadVisitingResult.getKey().getName()}"></a>
     </td>
     <td th:each="eventToScore : ${totalSquadVisitingResult.getValue()}">
       <a th:text="${eventToScore.getValue()}"></a>
+    </td>
+    <td></td>
+    <td>
+      <a th:text="${finalPlacesForTotalResult.get(iter.index).getFirstValue()}"></a>
+    </td>
+    <td>
+      <a th:text="${finalPlacesForTotalResult.get(iter.index).getSecondValue()}"></a>
     </td>
   </tr>
   </tbody>

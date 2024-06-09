@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Контроллер для работы с расчётом рейтинга отрядов
@@ -41,6 +43,10 @@ public class SquadRatingController {
             LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalSquadVisitingResults
                     = visitingResultService.getTotalVisitingResultsFromModel(model);
             model.addAttribute("totalSquadVisitingResults", totalSquadVisitingResults);
+            List<Pair<Double, Integer>> finalPlacesForTotalResult
+                    = visitingResultService
+                    .getFinalPlacesFromTotalResult(totalSquadVisitingResults);
+            model.addAttribute("finalPlacesForTotalResult", finalPlacesForTotalResult);
             return "squadRating/squad_rating";
         }
         EventTypes eventTypes = EventTypes.valueOf(eventType.toUpperCase());

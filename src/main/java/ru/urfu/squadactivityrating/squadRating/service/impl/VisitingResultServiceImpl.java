@@ -48,6 +48,28 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return totalSquadVisitingResults;
     }
 
+    @Override
+    public List<Pair<Double, Integer>> getFinalPlacesFromTotalResult(
+            LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalSquadVisitingResults) {
+        List<Pair<Double, Integer>> finalPlaces = new ArrayList<>();
+        totalSquadVisitingResults.values().forEach(
+                (eventTypeToScore) -> {
+                    Pair<Double, Integer> scoreToPlace = new Pair<>(0.0, 0);
+                    finalPlaces.add(scoreToPlace);
+                    Double totalScore = 0.0;
+                    for (Double score : eventTypeToScore.values()) {
+                        totalScore += score;
+                    }
+                    scoreToPlace.setFirstValue(totalScore);
+                }
+        );
+        addFinalPlaces(
+                finalPlaces,
+                Comparator.comparingDouble(Pair::getFirstValue));
+
+        return finalPlaces;
+    }
+
     public LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
     processTotalSquadVisitingResults(LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
                                              totalSquadVisitingResults,
