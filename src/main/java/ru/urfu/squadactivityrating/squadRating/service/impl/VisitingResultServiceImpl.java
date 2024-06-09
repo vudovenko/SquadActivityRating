@@ -32,7 +32,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     //  Думаю, как минимум не надо передавать модель в методы. Модель надо выпилить из аргументов методов.
 
     @Override
-    public void setTotalVisitingResultsInModel(Model model) {
+    public LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> getTotalVisitingResultsFromModel(Model model) {
         LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>
                 totalSquadVisitingResults
                 = new LinkedHashMap<>();
@@ -44,6 +44,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                         = processTotalSquadVisitingResults(totalSquadVisitingResults, eventType, model);
             }
         }
+
+        return totalSquadVisitingResults;
     }
 
     public LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>>

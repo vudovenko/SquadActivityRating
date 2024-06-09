@@ -15,7 +15,7 @@
 <table>
   <thead>
   <tr>
-    <th></th>
+    <th><a>Отряд</a></th>
     <th><a th:href="@{/squad-ratings(eventType='sport')}">Спорт</a></th>
     <th><a th:href="@{/squad-ratings(eventType='creative_work')}">Творческая работа</a></th>
     <th><a th:href="@{/squad-ratings(eventType='social_work')}">Социальная работа</a></th>
@@ -26,6 +26,14 @@
   </tr>
   </thead>
   <tbody>
+  <tr th:each="totalSquadVisitingResult : ${totalSquadVisitingResults}">
+    <td>
+      <a th:text="${totalSquadVisitingResult.getKey().getName()}"></a>
+    </td>
+    <td th:each="eventToScore : ${totalSquadVisitingResult.getValue()}">
+      <a th:text="${eventToScore.getValue()}"></a>
+    </td>
+  </tr>
   </tbody>
 </table>
 </body>
