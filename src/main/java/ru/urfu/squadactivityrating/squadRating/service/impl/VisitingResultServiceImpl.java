@@ -18,12 +18,14 @@ import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadU
 import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import ru.urfu.squadactivityrating.squadRating.service.WeightRatingSectionsService;
+import ru.urfu.squadactivityrating.utils.functionalInterfaces.TriFunction;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -42,13 +44,33 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     getPointsForEventsWithVisitingResults(EventTypes eventTypes) {
         LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result = new LinkedHashMap<>();
         result = getResultWithAllSquads(result, LinkedHashMap::new);
-        result = getResultWithAllEvents(result, eventTypes);
-        result = getResultWithAllVisitingResults(result, eventTypes);
+        result = getResultWithAllEvents(result, () -> new Pair<>(new ArrayList<>(), 0.0), eventTypes);
+        result = getResultWithAllVisitingResults(result,
+                this::setVisitingResult,
+                eTSU -> eTSU.getVisitingResult() != null,
+                eventTypes);
         LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
         finalResult = getResultWithAllSquads(finalResult,
                 () -> new FinalResultDTO(0.0, 0.0, 0));
         finalResult = getFinalResultWithAllVisitingResults(finalResult, result, eventTypes);
         return new SectionResult(result, finalResult);
+    }
+
+    @Override
+    public SectionResult getPointsForEventsWithVisitingHours(EventTypes eventTypes) {
+        LinkedHashMap<Squad, LinkedHashMap<Event, Duration>> result = new LinkedHashMap<>();
+        result = getResultWithAllSquads(result, LinkedHashMap::new);
+        result = getResultWithAllEvents(result, () -> Duration.ZERO, eventTypes);
+        result = getResultWithAllVisitingResults(result,
+                this::increaseVisitingHours,
+                eTSU -> eTSU.getVisitingHours() != null,
+                eventTypes);
+
+//        LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
+//        finalResult = getResultWithAllSquads(finalResult,
+//                () -> new FinalResultDTO(0.0, 0.0, 0));
+//        finalResult = getFinalResultWithAllVisitingResults(finalResult, result, eventTypes);
+        return new SectionResult(result, null);
     }
 
     @Override
@@ -63,7 +85,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return events;
     }
 
-    public record SectionResult(LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> points,
+    public record SectionResult<T>(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points,
                                 LinkedHashMap<Squad, FinalResultDTO> finalPoints) {
     }
 
@@ -88,8 +110,9 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return allSquads;
     }
 
-    private LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> getResultWithAllEvents(
-            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result,
+    private <T> LinkedHashMap<Squad, LinkedHashMap<Event, T>> getResultWithAllEvents(
+            LinkedHashMap<Squad, LinkedHashMap<Event, T>> result,
+            Supplier<T> defaultValueSupplier,
             EventTypes eventTypes
     ) {
         List<Event> events = eventService.getEventsByType(eventTypes);
@@ -98,7 +121,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 squad -> {
                     events.forEach(
                             event -> {
-                                result.get(squad).put(event, new Pair<>(new ArrayList<>(), 0.0));
+                                result.get(squad).put(event, defaultValueSupplier.get());
                             }
                     );
                 }
@@ -107,14 +130,16 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return result;
     }
 
-    private LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> getResultWithAllVisitingResults(
-            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result,
+    private <T> LinkedHashMap<Squad, LinkedHashMap<Event, T>> getResultWithAllVisitingResults(
+            LinkedHashMap<Squad, LinkedHashMap<Event, T>> result,
+            TriFunction<T, EventToSquadUser, EventTypes, T> visitingResultSetter,
+            Predicate<EventToSquadUser> filter,
             EventTypes eventTypes
     ) {
         Map<Event, List<EventToSquadUser>> eventToEventToSquadUsers
                 = eventToSquadUserService.getEventsToSquadUsersByEventType(eventTypes)
                 .stream()
-                .filter(eventToSquadUser -> eventToSquadUser.getVisitingResult() != null)
+                .filter(filter)
                 .collect(Collectors.groupingBy(EventToSquadUser::getEvent));
         result.forEach(
                 (squad, events) -> {
@@ -129,10 +154,17 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                                             .toList();
                                     eventToSquadUsers.forEach(
                                             eventToSquadUser -> {
-                                                setVisitingResult(pair, eventToSquadUser, eventTypes);
+                                                T visitingResHours = visitingResultSetter.apply(pair, eventToSquadUser, eventTypes);
+                                                if (eventTypes.equals(EventTypes.SOCIAL_WORK)
+                                                        || eventTypes.equals(EventTypes.PRODUCTION_WORK)) {
+                                                    AbstractMap<Event, T> eventTLinkedHashMap = result.get(squad);
+                                                    eventTLinkedHashMap.put(event, visitingResHours);
+                                                } else {
+                                                    sortVisitingResults(eventTypes,
+                                                            (Pair<List<VisitingResult>, Double>) pair);
+                                                }
                                             }
                                     );
-                                    sortVisitingResults(eventTypes, pair);
                                 }
                             }
                     );
@@ -259,14 +291,30 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         }
     }
 
-    private void setVisitingResult(Pair<List<VisitingResult>, Double> pair,
-                                   EventToSquadUser eventToSquadUser,
-                                   EventTypes eventTypes) {
+    private Pair<List<VisitingResult>, Double>
+    setVisitingResult(Pair<List<VisitingResult>, Double> pair,
+                      EventToSquadUser eventToSquadUser,
+                      EventTypes eventTypes) {
         VisitingResult visitingResult = eventToSquadUser.getVisitingResult();
         pair.getFirstValue()
                 .add(visitingResult);
         pair.setSecondValue(round(pair.getSecondValue() +
                 getWeightByType(eventTypes, visitingResult), 2));
+
+        return pair;
+    }
+
+    private Duration increaseVisitingHours(Duration totalDuration,
+                                           EventToSquadUser eventToSquadUser,
+                                           EventTypes eventTypes) {
+        VisitingHours visitingHours = eventToSquadUser.getVisitingHours();
+        if (visitingHours != null) {
+            Duration durationUserParticipation = Duration
+                    .between(visitingHours.getStartTime(), visitingHours.getEndTime());
+            totalDuration = totalDuration.plus(durationUserParticipation);
+        }
+
+        return totalDuration;
     }
 
     // todo это ужасный код. Надо переписать, но нет времени. Удачи тому, кто возьмется это переписывать.

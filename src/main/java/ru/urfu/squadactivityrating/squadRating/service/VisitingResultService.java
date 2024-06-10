@@ -29,5 +29,7 @@ public interface VisitingResultService {
      */
     VisitingResultServiceImpl.SectionResult getPointsForEventsWithVisitingResults(EventTypes eventTypes);
 
+    VisitingResultServiceImpl.SectionResult getPointsForEventsWithVisitingHours(EventTypes eventTypes);
+
     List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> points);
 }

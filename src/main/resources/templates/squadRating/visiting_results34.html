@@ -47,24 +47,17 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:if="${squadVisitingResult.key != null}" th:each="squadVisitingResult, index : ${squadVisitingResults}">
-    <td th:text="${squadVisitingResult.key.getName()}"></td>
-    <div th:each="eventToResult : ${squadVisitingResult.value}">
+  <tr th:each="squad : ${squads}">
+    <td>
+      <a th:text="${squad.getName()}"></a>
+    </td>
+    <div th:each="eventToPairEntry : ${sectionResult.points().get(squad)}">
       <td>
-        <a th:text="${eventToResult.value.toHours() + ' час. '
-        + eventToResult.value.toMinutesPart() + ' мин.'}"></a>
+        <a th:if="${eventToPairEntry.value.toMinutes() != 0}"
+           th:text="${eventToPairEntry.value.toHours() + ' час. '
+        + eventToPairEntry.value.toMinutesPart() + ' мин.'}"></a>
       </td>
     </div>
-    <td>
-      <a th:text="${totalPlaces.get(index.index).firstValue.toHours() + ' час. '
-      + totalPlaces.get(index.index).firstValue.toMinutesPart() + ' мин.'}"></a>
-    </td>
-    <td>
-      <a th:text="${finalScores.get(index.index)}"></a>
-    </td>
-    <td>
-      <a th:text="${totalPlaces.get(index.index).secondValue}"></a>
-    </td>
   </tr>
   </tbody>
 </table>

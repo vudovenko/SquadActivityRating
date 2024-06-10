@@ -52,21 +52,29 @@ public class SquadRatingController {
             return "squadRating/squad_rating";
         }
         EventTypes eventTypes = EventTypes.valueOf(eventType.toUpperCase());
-        VisitingResultServiceImpl.SectionResult sectionResult
-                = visitingResultService.getPointsForEventsWithVisitingResults(eventTypes);
-        model.addAttribute("sectionResult", sectionResult);
-
-        List<Event> events = visitingResultService.getEvents(sectionResult.points());
-        model.addAttribute("events", events);
-        model.addAttribute("squads", sectionResult.points().keySet());
 
         if (eventTypes == EventTypes.SPORT
                 || eventTypes == EventTypes.CREATIVE_WORK
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
+
+            VisitingResultServiceImpl.SectionResult sectionResult
+                    = visitingResultService.getPointsForEventsWithVisitingResults(eventTypes);
+            model.addAttribute("sectionResult", sectionResult);
+
+            List<Event> events = visitingResultService.getEvents(sectionResult.points());
+            model.addAttribute("events", events);
+            model.addAttribute("squads", sectionResult.points().keySet());
             return "squadRating/visiting_results1256";
         } else if (eventTypes == EventTypes.SOCIAL_WORK
                 || eventTypes == EventTypes.PRODUCTION_WORK) {
+            VisitingResultServiceImpl.SectionResult sectionResult
+                    = visitingResultService.getPointsForEventsWithVisitingHours(eventTypes);
+            model.addAttribute("sectionResult", sectionResult);
+
+            List<Event> events = visitingResultService.getEvents(sectionResult.points());
+            model.addAttribute("events", events);
+            model.addAttribute("squads", sectionResult.points().keySet());
             return "squadRating/visiting_results34";
         }
 
