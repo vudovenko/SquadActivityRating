@@ -2,7 +2,9 @@ package ru.urfu.squadactivityrating.weightSettings.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoefficient;
 import ru.urfu.squadactivityrating.squadRating.entitites.WeightRatingSections;
+import ru.urfu.squadactivityrating.squadRating.repository.PersonalRatingCoefficientRepository;
 import ru.urfu.squadactivityrating.weightSettings.dto.WeightRatingSectionsDto;
 import ru.urfu.squadactivityrating.weightSettings.repositories.WeightRatingSectionsRepository;
 
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class WeightSettingsService {
 
     private final WeightRatingSectionsRepository weightRatingSectionsRepository;
+    private final PersonalRatingCoefficientRepository personalRatingCoefficientRepository;
 
     public List<WeightRatingSections> getWeights() {
         return weightRatingSectionsRepository.findAll();
@@ -37,5 +40,9 @@ public class WeightSettingsService {
                 }
             }
         }
+    }
+
+    public List<PersonalRatingCoefficient> getPersonalRatingCoefficients() {
+        return personalRatingCoefficientRepository.findAll();
     }
 }

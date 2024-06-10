@@ -13,7 +13,6 @@
       th:object="${weightRatingSectionsDto}"
       method="post">
   <table>
-    <thead>
     <tr>
       <th colspan="7">Вес разделов рейтинга отрядов</th>
     </tr>
@@ -26,8 +25,6 @@
       <td>Вес раздела 6</td>
       <td>Вес раздела 7</td>
     </tr>
-    </thead>
-    <tbody>
     <tr>
       <td><input type="text"
                  th:field="*{weightRatingSection1}"></td>
@@ -44,7 +41,42 @@
       <td><input type="text"
                  th:field="*{weightRatingSection7}"></td>
     </tr>
-    </tbody>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+
+<form th:action="@{/weight-settings/update-personal-rating-coefficients}"
+      th:object="${personalRatingCoefficientsDto}"
+      method="post">
+  <table>
+    <tr>
+      <th colspan="7">Коэффициенты личного рейтинга</th>
+    </tr>
+    <tr>
+      <td>Вес раздела 1</td>
+      <td>Вес раздела 2</td>
+      <td>Вес раздела 3</td>
+      <td>Вес раздела 4</td>
+      <td>Вес раздела 5</td>
+      <td>Вес раздела 6</td>
+      <td>Дисциплина</td>
+    </tr>
+    <tr>
+      <td><input type="text"
+                 th:field="*{coefficient1}"></td>
+      <td><input type="text"
+                 th:field="*{coefficient2}"></td>
+      <td><input type="text"
+                 th:field="*{coefficient3}"></td>
+      <td><input type="text"
+                 th:field="*{coefficient4}"></td>
+      <td><input type="text"
+                 th:field="*{coefficient5}"></td>
+      <td><input type="text"
+                 th:field="*{coefficient6}"></td>
+      <td><input type="text"
+                 th:field="*{coefficient7}"></td>
+    </tr>
   </table>
   <input type="submit" value="Сохранить">
 </form>

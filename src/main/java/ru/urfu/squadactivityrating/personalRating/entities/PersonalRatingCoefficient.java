@@ -1,9 +1,8 @@
-package ru.urfu.squadactivityrating.squadRating.entitites;
+package ru.urfu.squadactivityrating.personalRating.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
-
 
 /**
  * Сущность для хранения коэффициентов личного рейтинга бойца
