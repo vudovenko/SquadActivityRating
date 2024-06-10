@@ -24,9 +24,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +50,13 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
         finalResult = getResultWithAllSquads(finalResult,
                 () -> new FinalResultDTO(0.0, 0.0, 0));
-        finalResult = getFinalResultWithAllVisitingResults(finalResult, result, eventTypes);
+        finalResult = getFinalResultWithAllVisitingResults(finalResult, result,
+                (pair, finalResultDTO) -> {
+                    Double pointForEvent = pair.getSecondValue();
+                    finalResultDTO.addToTotalPoints(pointForEvent);
+                },
+                Comparator.comparing(FinalResultDTO::getTotalPoints),
+                eventTypes);
         return new SectionResult(result, finalResult);
     }
 
@@ -66,11 +70,16 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 eTSU -> eTSU.getVisitingHours() != null,
                 eventTypes);
 
-//        LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
-//        finalResult = getResultWithAllSquads(finalResult,
-//                () -> new FinalResultDTO(0.0, 0.0, 0));
-//        finalResult = getFinalResultWithAllVisitingResults(finalResult, result, eventTypes);
-        return new SectionResult(result, null);
+        LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
+        finalResult = getResultWithAllSquads(finalResult,
+                () -> new FinalResultDTO(Duration.ZERO, 0.0, 0));
+        finalResult = getFinalResultWithAllVisitingResults(finalResult, result,
+                (hoursForEvent, finalResultDTO) -> {
+                    finalResultDTO.addToTotalHours(hoursForEvent);
+                },
+                Comparator.comparing(FinalResultDTO::getTotalHours),
+                eventTypes);
+        return new SectionResult(result, finalResult);
     }
 
     @Override
@@ -189,27 +198,30 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 );
     }
 
-    private LinkedHashMap<Squad, FinalResultDTO> getFinalResultWithAllVisitingResults(
+    private <T> LinkedHashMap<Squad, FinalResultDTO> getFinalResultWithAllVisitingResults(
             LinkedHashMap<Squad, FinalResultDTO> finalResult,
-            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result,
+            LinkedHashMap<Squad, LinkedHashMap<Event, T>> result,
+            BiConsumer<T, FinalResultDTO> recipientResultInDto,
+            Comparator<FinalResultDTO> finalResultComparator,
             EventTypes eventTypes) {
-        calculateTotalPoints(finalResult, result);
-        calculateFinalPoints(finalResult, eventTypes);
-        calculateFinalPlaces(finalResult, Comparator.comparing(pair -> pair.getSecondValue().getFinalPoints()));
+        calculateTotalPoints(finalResult, result, recipientResultInDto);
+        calculateFinalPoints(finalResult, finalResultComparator, eventTypes);
+        calculateFinalPlaces(finalResult,
+                Comparator.comparing(pair -> pair.getSecondValue().getFinalPoints()));
 
         return finalResult;
     }
 
-    private static void calculateTotalPoints(
+    private static <T> void calculateTotalPoints(
             LinkedHashMap<Squad, FinalResultDTO> finalResult,
-            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result) {
+            LinkedHashMap<Squad, LinkedHashMap<Event, T>> result,
+            BiConsumer<T, FinalResultDTO> recipientResultInDto) {
         result.forEach(
                 (squad, eventsToResults) -> {
                     eventsToResults.forEach(
-                            (event, pair) -> {
+                            (event, pairOrHours) -> {
                                 FinalResultDTO finalResultDTO = finalResult.get(squad);
-                                Double pointForEvent = pair.getSecondValue();
-                                finalResultDTO.addToTotalPoints(pointForEvent);
+                                recipientResultInDto.accept(pairOrHours, finalResultDTO);
                             }
                     );
                 }
@@ -218,11 +230,12 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
     private LinkedHashMap<Squad, FinalResultDTO> calculateFinalPoints(
             LinkedHashMap<Squad, FinalResultDTO> finalResult,
+            Comparator<FinalResultDTO> finalResultComparator,
             EventTypes eventTypes) {
         Optional<FinalResultDTO> maxFinalResultOptional = finalResult
                 .values()
                 .stream()
-                .max(Comparator.comparing(FinalResultDTO::getTotalPoints));
+                .max(finalResultComparator);
 
         if (maxFinalResultOptional.isPresent()) {
             FinalResultDTO maxFinalResultDto = maxFinalResultOptional.get();
@@ -230,10 +243,17 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                     .findByEventTypes(eventTypes).getWeightRatingSection();
             finalResult.values().forEach(
                     (finalResultDTO) -> {
-                        Double coefficient = maxFinalResultDto.getTotalPoints() != 0
-                                ? finalResultDTO.getTotalPoints()
-                                / maxFinalResultDto.getTotalPoints()
-                                : 0.0;
+                        Double coefficient;
+                        if (eventTypes.equals(EventTypes.SOCIAL_WORK)
+                                || eventTypes.equals(EventTypes.PRODUCTION_WORK)) {
+                            coefficient = getCoefficient(
+                                    (double) finalResultDTO.getTotalHours().toSeconds(),
+                                    (double) maxFinalResultDto.getTotalHours().toSeconds());
+                        } else {
+                            coefficient = getCoefficient(
+                                    finalResultDTO.getTotalPoints(),
+                                    maxFinalResultDto.getTotalPoints());
+                        }
                         Double finalPoints = round(coefficient * weightRatingSection, 1);
                         finalResultDTO.setFinalPoints(finalPoints);
                     }
@@ -241,6 +261,15 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         }
 
         return finalResult;
+    }
+
+    private Double getCoefficient(Double currentValue, Double maxValue) {
+        Double coefficient = maxValue != 0
+                ? currentValue
+                / maxValue
+                : 0.0;
+
+        return coefficient;
     }
 
     private static void calculateFinalPlaces(

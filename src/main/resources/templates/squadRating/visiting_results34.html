@@ -58,6 +58,16 @@
         + eventToPairEntry.value.toMinutesPart() + ' мин.'}"></a>
       </td>
     </div>
+    <td>
+      <a th:text="${sectionResult.finalPoints().get(squad).totalHours.toHours() + ' час. '
+          + sectionResult.finalPoints().get(squad).totalHours.toMinutesPart() + ' мин.'}"></a>
+    </td>
+    <td>
+      <a th:text="${sectionResult.finalPoints().get(squad).finalPoints}"></a>
+    </td>
+    <td>
+      <a th:text="${sectionResult.finalPoints().get(squad).finalPlace}"></a>
+    </td>
   </tr>
   </tbody>
 </table>
