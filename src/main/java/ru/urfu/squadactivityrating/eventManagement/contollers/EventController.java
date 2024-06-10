@@ -167,6 +167,7 @@ public class EventController {
         return "redirect:/events/" + eventEntity.getId();
     }
 
+    // todo вынести в сервис
     private Result processEventToSquadUsers(Long eventId, Long[] selectedFightersIds) {
         List<EventToSquadUser> eventToSquadUsersToDelete = new ArrayList<>();
         List<Long> userIDsWithAlreadyExistingEntities = new ArrayList<>();

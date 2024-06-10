@@ -50,27 +50,33 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:if="${squadVisitingResult.key != null}" th:each="squadVisitingResult, index : ${squadVisitingResults}">
-    <td th:text="${squadVisitingResult.key.getName()}"></td>
-    <div th:each="eventToResult : ${squadVisitingResult.value}">
+  <tr th:each="squad : ${squads}">
+    <td>
+      <a th:text="${squad.getName()}"></a>
+    </td>
+    <div th:each="eventToPairEntry : ${sectionResult.points().get(squad)}">
       <td>
-        <div th:if="${!eventToResult.key.isItOnlyParticipation}" th:each="visitingResult : ${eventToResult.value.firstValue}">
+        <div th:if="${!eventToPairEntry.key.isItOnlyParticipation}"
+             th:each="visitingResult : ${eventToPairEntry.value.firstValue}">
           <a th:text="${visitingResult.visitingResult}"></a>
         </div>
-        <a th:if="${eventToResult.key.isItOnlyParticipation}" th:text="${eventToResult.value.firstValue.size()}"></a>
+        <a th:if="${eventToPairEntry.key.isItOnlyParticipation}"
+        th:text="${eventToPairEntry.value.firstValue.size() == 0
+        ? '' : eventToPairEntry.value.firstValue.size()}"></a>
       </td>
       <td>
-        <a th:text="${eventToResult.value.secondValue}"></a>
+        <a th:text="${eventToPairEntry.value.secondValue == 0.0
+        ? '' : eventToPairEntry.value.secondValue}"></a>
       </td>
     </div>
     <td>
-      <a th:text="${totalPlaces.get(index.index).firstValue}"></a>
+      <a th:text="${sectionResult.finalPoints().get(squad).totalPoints}"></a>
     </td>
     <td>
-      <a th:text="${finalScores.get(index.index)}"></a>
+      <a th:text="${sectionResult.finalPoints().get(squad).finalPoints}"></a>
     </td>
     <td>
-      <a th:text="${totalPlaces.get(index.index).secondValue}"></a>
+      <a th:text="${sectionResult.finalPoints().get(squad).finalPlace}"></a>
     </td>
   </tr>
   </tbody>

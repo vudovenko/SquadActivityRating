@@ -27,7 +27,7 @@ public interface EventToSquadUserService {
     List<EventToSquadUser> getAllEventsToSquadUsersWhereVisitingResultNotNull();
 
     /**
-     * Метод получения посещения по типу события
+     * Метод получения посещений по типу события
      *
      * @param eventTypes тип события
      * @return список посещений

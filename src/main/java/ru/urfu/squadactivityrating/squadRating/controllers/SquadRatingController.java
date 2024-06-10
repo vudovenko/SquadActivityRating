@@ -6,10 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
+import ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,9 +52,14 @@ public class SquadRatingController {
             return "squadRating/squad_rating";
         }
         EventTypes eventTypes = EventTypes.valueOf(eventType.toUpperCase());
-        visitingResultService.setVisitingResultsInModel(
-                eventTypes,
-                model);
+        VisitingResultServiceImpl.SectionResult sectionResult
+                = visitingResultService.getPointsForEventsWithVisitingResults(eventTypes);
+        model.addAttribute("sectionResult", sectionResult);
+
+        List<Event> events = visitingResultService.getEvents(sectionResult.points());
+        model.addAttribute("events", events);
+        model.addAttribute("squads", sectionResult.points().keySet());
+
         if (eventTypes == EventTypes.SPORT
                 || eventTypes == EventTypes.CREATIVE_WORK
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS

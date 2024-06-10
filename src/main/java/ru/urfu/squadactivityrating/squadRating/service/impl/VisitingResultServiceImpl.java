@@ -6,10 +6,13 @@ import org.springframework.ui.Model;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
+import ru.urfu.squadactivityrating.eventManagement.services.EventService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
+import ru.urfu.squadactivityrating.squadRating.entitites.dto.FinalResultDTO;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
 import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
@@ -22,14 +25,248 @@ import java.time.Duration;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class VisitingResultServiceImpl implements VisitingResultService {
 
     private final EventToSquadUserService eventToSquadUserService;
+    private final EventService eventService;
     private final WeightRatingSectionsService weightRatingSectionsService;
     private final ViolationToSquadUserService violationToSquadUserService;
+    private final SquadService squadService;
+
+    @Override
+    public SectionResult
+    getPointsForEventsWithVisitingResults(EventTypes eventTypes) {
+        LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result = new LinkedHashMap<>();
+        result = getResultWithAllSquads(result, LinkedHashMap::new);
+        result = getResultWithAllEvents(result, eventTypes);
+        result = getResultWithAllVisitingResults(result, eventTypes);
+        LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
+        finalResult = getResultWithAllSquads(finalResult,
+                () -> new FinalResultDTO(0.0, 0.0, 0));
+        finalResult = getFinalResultWithAllVisitingResults(finalResult, result, eventTypes);
+        return new SectionResult(result, finalResult);
+    }
+
+    @Override
+    public List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> points) {
+        if (points.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Collection<LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> eventMaps = points.values();
+        Set<Event> eventSet = eventMaps.stream().findFirst().get().keySet();
+        List<Event> events = new ArrayList<>(eventSet);
+
+        return events;
+    }
+
+    public record SectionResult(LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> points,
+                                LinkedHashMap<Squad, FinalResultDTO> finalPoints) {
+    }
+
+    private <T> LinkedHashMap<Squad, T> getResultWithAllSquads(
+            LinkedHashMap<Squad, T> result,
+            Supplier<T> supplier
+    ) {
+        List<Squad> allSquads = getSortedSquads();
+
+        allSquads.forEach(
+                squad -> {
+                    result.put(squad, supplier.get());
+                }
+        );
+
+        return result;
+    }
+
+    private List<Squad> getSortedSquads() {
+        List<Squad> allSquads = squadService.getAllSquads();
+        allSquads.sort(Comparator.comparing(Squad::getName));
+        return allSquads;
+    }
+
+    private LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> getResultWithAllEvents(
+            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result,
+            EventTypes eventTypes
+    ) {
+        List<Event> events = eventService.getEventsByType(eventTypes);
+        events.sort(Comparator.comparing(Event::getDate));
+        result.keySet().forEach(
+                squad -> {
+                    events.forEach(
+                            event -> {
+                                result.get(squad).put(event, new Pair<>(new ArrayList<>(), 0.0));
+                            }
+                    );
+                }
+        );
+
+        return result;
+    }
+
+    private LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> getResultWithAllVisitingResults(
+            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result,
+            EventTypes eventTypes
+    ) {
+        Map<Event, List<EventToSquadUser>> eventToEventToSquadUsers
+                = eventToSquadUserService.getEventsToSquadUsersByEventType(eventTypes)
+                .stream()
+                .filter(eventToSquadUser -> eventToSquadUser.getVisitingResult() != null)
+                .collect(Collectors.groupingBy(EventToSquadUser::getEvent));
+        result.forEach(
+                (squad, events) -> {
+                    events.forEach(
+                            (event, pair) -> {
+                                List<EventToSquadUser> eventToSquadUsers = eventToEventToSquadUsers
+                                        .get(event);
+                                if (eventToSquadUsers != null) {
+                                    eventToSquadUsers = eventToSquadUsers
+                                            .stream()
+                                            .filter(eTSU1 -> eTSU1.getSquadUser().getSquad().equals(squad))
+                                            .toList();
+                                    eventToSquadUsers.forEach(
+                                            eventToSquadUser -> {
+                                                setVisitingResult(pair, eventToSquadUser, eventTypes);
+                                            }
+                                    );
+                                    sortVisitingResults(eventTypes, pair);
+                                }
+                            }
+                    );
+                }
+        );
+
+        return result;
+    }
+
+    private void sortVisitingResults(EventTypes eventTypes,
+                                     Pair<List<VisitingResult>, Double> pair) {
+        pair.getFirstValue()
+                .sort((vr1, vr2) -> {
+                            Double weight1 = getWeightByType(eventTypes, vr1);
+                            Double weight2 = getWeightByType(eventTypes, vr2);
+
+                            return Double.compare(weight2, weight1);
+                        }
+                );
+    }
+
+    private LinkedHashMap<Squad, FinalResultDTO> getFinalResultWithAllVisitingResults(
+            LinkedHashMap<Squad, FinalResultDTO> finalResult,
+            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result,
+            EventTypes eventTypes) {
+        calculateTotalPoints(finalResult, result);
+        calculateFinalPoints(finalResult, eventTypes);
+        calculateFinalPlaces(finalResult, Comparator.comparing(pair -> pair.getSecondValue().getFinalPoints()));
+
+        return finalResult;
+    }
+
+    private static void calculateTotalPoints(
+            LinkedHashMap<Squad, FinalResultDTO> finalResult,
+            LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result) {
+        result.forEach(
+                (squad, eventsToResults) -> {
+                    eventsToResults.forEach(
+                            (event, pair) -> {
+                                FinalResultDTO finalResultDTO = finalResult.get(squad);
+                                Double pointForEvent = pair.getSecondValue();
+                                finalResultDTO.addToTotalPoints(pointForEvent);
+                            }
+                    );
+                }
+        );
+    }
+
+    private LinkedHashMap<Squad, FinalResultDTO> calculateFinalPoints(
+            LinkedHashMap<Squad, FinalResultDTO> finalResult,
+            EventTypes eventTypes) {
+        Optional<FinalResultDTO> maxFinalResultOptional = finalResult
+                .values()
+                .stream()
+                .max(Comparator.comparing(FinalResultDTO::getTotalPoints));
+
+        if (maxFinalResultOptional.isPresent()) {
+            FinalResultDTO maxFinalResultDto = maxFinalResultOptional.get();
+            Integer weightRatingSection = weightRatingSectionsService
+                    .findByEventTypes(eventTypes).getWeightRatingSection();
+            finalResult.values().forEach(
+                    (finalResultDTO) -> {
+                        Double coefficient = maxFinalResultDto.getTotalPoints() != 0
+                                ? finalResultDTO.getTotalPoints()
+                                / maxFinalResultDto.getTotalPoints()
+                                : 0.0;
+                        Double finalPoints = round(coefficient * weightRatingSection, 1);
+                        finalResultDTO.setFinalPoints(finalPoints);
+                    }
+            );
+        }
+
+        return finalResult;
+    }
+
+    private static void calculateFinalPlaces(
+            LinkedHashMap<Squad, FinalResultDTO> finalResult,
+            Comparator<Pair<Squad, FinalResultDTO>> comparator) {
+        List<Pair<Squad, FinalResultDTO>> finalResultsList
+                = finalResult.entrySet()
+                .stream()
+                .map(e -> new Pair<>(e.getKey(), e.getValue()))
+                .toList();
+        finalResultsList = new ArrayList<>(finalResultsList);
+        finalResultsList.sort(comparator);
+        Collections.reverse(finalResultsList);
+
+        // Карта для хранения мест
+        int place = 1;
+        for (int i = 0; i < finalResultsList.size(); i++) {
+            Squad currentSquad = finalResultsList.get(i).getFirstValue();
+            if (i > 0) {
+                Squad previousSquad = finalResultsList.get(i - 1).getFirstValue();
+                if (!currentSquad.equals(previousSquad)) {
+                    place = i + 1;
+                }
+            }
+            FinalResultDTO finalResultDTO = finalResult.get(currentSquad);
+            finalResultDTO.setFinalPlace(place);
+        }
+    }
+
+    public static <T> void addFinalPlaces(List<Pair<T, Integer>> totalPlaces,
+                                          Comparator<Pair<T, Integer>> comparator) {
+        // Копия списка для сортировки
+        List<Pair<T, Integer>> sortedPlaces = new ArrayList<>(totalPlaces);
+        sortedPlaces.sort(comparator);
+        Collections.reverse(sortedPlaces); // Сортировка в порядке убывания
+
+        // Карта для хранения мест
+        Map<T, Integer> placeMap = new HashMap<>();
+        int place = 1;
+        for (int i = 0; i < sortedPlaces.size(); i++) {
+            if (i > 0 && !sortedPlaces.get(i).getFirstValue().equals(sortedPlaces.get(i - 1).getFirstValue())) {
+                place = i + 1;
+            }
+            placeMap.put(sortedPlaces.get(i).getFirstValue(), place);
+        }
+
+        // Назначение мест в исходном списке
+        for (Pair<T, Integer> pair : totalPlaces) {
+            pair.setSecondValue(placeMap.get(pair.getFirstValue()));
+        }
+    }
+
+    private void setVisitingResult(Pair<List<VisitingResult>, Double> pair,
+                                   EventToSquadUser eventToSquadUser,
+                                   EventTypes eventTypes) {
+        VisitingResult visitingResult = eventToSquadUser.getVisitingResult();
+        pair.getFirstValue()
+                .add(visitingResult);
+        pair.setSecondValue(round(pair.getSecondValue() +
+                getWeightByType(eventTypes, visitingResult), 2));
+    }
 
     // todo это ужасный код. Надо переписать, но нет времени. Удачи тому, кто возьмется это переписывать.
     //  Думаю, как минимум не надо передавать модель в методы. Модель надо выпилить из аргументов методов.
@@ -148,7 +385,6 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return totalSquadVisitingResults;
     }
 
-    @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
         // todo код надо рефакторить
         List<Double> finalScores = new ArrayList<>();
@@ -367,35 +603,35 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return squadVisitingResults;
     }
 
-    /**
-     * Метод для назначения итоговых мест в исходном списке по сумме баллов, полученных за участие в мероприятиях
-     *
-     * @param totalPlaces список с итоговыми баллами и назначенными итоговыми местами
-     * @param comparator  компаратор для сортировки пар с итоговыми местами
-     * @param <T>         тип для баллов или часов
-     */
-    public static <T> void addFinalPlaces(List<Pair<T, Integer>> totalPlaces,
-                                          Comparator<Pair<T, Integer>> comparator) {
-        // Копия списка для сортировки
-        List<Pair<T, Integer>> sortedPlaces = new ArrayList<>(totalPlaces);
-        sortedPlaces.sort(comparator);
-        Collections.reverse(sortedPlaces); // Сортировка в порядке убывания
-
-        // Карта для хранения мест
-        Map<T, Integer> placeMap = new HashMap<>();
-        int place = 1;
-        for (int i = 0; i < sortedPlaces.size(); i++) {
-            if (i > 0 && !sortedPlaces.get(i).getFirstValue().equals(sortedPlaces.get(i - 1).getFirstValue())) {
-                place = i + 1;
-            }
-            placeMap.put(sortedPlaces.get(i).getFirstValue(), place);
-        }
-
-        // Назначение мест в исходном списке
-        for (Pair<T, Integer> pair : totalPlaces) {
-            pair.setSecondValue(placeMap.get(pair.getFirstValue()));
-        }
-    }
+//    /**
+//     * Метод для назначения итоговых мест в исходном списке по сумме баллов, полученных за участие в мероприятиях
+//     *
+//     * @param totalPlaces список с итоговыми баллами и назначенными итоговыми местами
+//     * @param comparator  компаратор для сортировки пар с итоговыми местами
+//     * @param <T>         тип для баллов или часов
+//     */
+//    public static <T> void addFinalPlaces(List<Pair<T, Integer>> totalPlaces,
+//                                          Comparator<Pair<T, Integer>> comparator) {
+//        // Копия списка для сортировки
+//        List<Pair<T, Integer>> sortedPlaces = new ArrayList<>(totalPlaces);
+//        sortedPlaces.sort(comparator);
+//        Collections.reverse(sortedPlaces); // Сортировка в порядке убывания
+//
+//        // Карта для хранения мест
+//        Map<T, Integer> placeMap = new HashMap<>();
+//        int place = 1;
+//        for (int i = 0; i < sortedPlaces.size(); i++) {
+//            if (i > 0 && !sortedPlaces.get(i).getFirstValue().equals(sortedPlaces.get(i - 1).getFirstValue())) {
+//                place = i + 1;
+//            }
+//            placeMap.put(sortedPlaces.get(i).getFirstValue(), place);
+//        }
+//
+//        // Назначение мест в исходном списке
+//        for (Pair<T, Integer> pair : totalPlaces) {
+//            pair.setSecondValue(placeMap.get(pair.getFirstValue()));
+//        }
+//    }
 
     /**
      * Метод, который список итоговых баллов.
