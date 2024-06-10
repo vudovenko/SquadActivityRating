@@ -125,7 +125,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         result = getResultWithAllEvents(result, () -> new Pair<>(new ArrayList<>(), 0.0), eventTypes);
         result = getResultWithAllVisitingResults(result,
                 this::setVisitingResult,
-                eTSU -> eTSU.getVisitingResult() != null,
+                eTSU -> eTSU.getVisitingResult() != null
+                        && eTSU.getSquadUser().getSquad() != null,
                 eventTypes);
         LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
         finalResult = getResultWithAllSquads(finalResult,
@@ -147,7 +148,8 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         result = getResultWithAllEvents(result, () -> Duration.ZERO, eventTypes);
         result = getResultWithAllVisitingResults(result,
                 this::increaseVisitingHours,
-                eTSU -> eTSU.getVisitingHours() != null,
+                eTSU -> eTSU.getVisitingHours() != null
+                        && eTSU.getSquadUser().getSquad() != null,
                 eventTypes);
 
         LinkedHashMap<Squad, FinalResultDTO> finalResult = new LinkedHashMap<>();
