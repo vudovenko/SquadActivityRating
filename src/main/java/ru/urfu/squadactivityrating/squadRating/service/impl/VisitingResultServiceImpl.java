@@ -38,7 +38,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     private final SquadService squadService;
 
     @Override
-    public SectionResult
+    public SectionResult<Pair<List<VisitingResult>, Double>>
     getPointsForEventsWithVisitingResults(EventTypes eventTypes) {
         LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result = new LinkedHashMap<>();
         result = getResultWithAllSquads(result, LinkedHashMap::new);
@@ -57,11 +57,11 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 },
                 Comparator.comparing(FinalResultDTO::getTotalPoints),
                 eventTypes);
-        return new SectionResult(result, finalResult);
+        return new SectionResult<>(result, finalResult);
     }
 
     @Override
-    public SectionResult getPointsForEventsWithVisitingHours(EventTypes eventTypes) {
+    public SectionResult<Duration> getPointsForEventsWithVisitingHours(EventTypes eventTypes) {
         LinkedHashMap<Squad, LinkedHashMap<Event, Duration>> result = new LinkedHashMap<>();
         result = getResultWithAllSquads(result, LinkedHashMap::new);
         result = getResultWithAllEvents(result, () -> Duration.ZERO, eventTypes);
@@ -79,15 +79,15 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 },
                 Comparator.comparing(FinalResultDTO::getTotalHours),
                 eventTypes);
-        return new SectionResult(result, finalResult);
+        return new SectionResult<>(result, finalResult);
     }
 
     @Override
-    public List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> points) {
+    public <T> List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points) {
         if (points.isEmpty()) {
             return Collections.emptyList();
         }
-        Collection<LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> eventMaps = points.values();
+        Collection<LinkedHashMap<Event, T>> eventMaps = points.values();
         Set<Event> eventSet = eventMaps.stream().findFirst().get().keySet();
         List<Event> events = new ArrayList<>(eventSet);
 

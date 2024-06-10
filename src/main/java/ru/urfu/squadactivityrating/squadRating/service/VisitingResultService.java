@@ -8,6 +8,7 @@ import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl;
 
+import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public interface VisitingResultService {
      * @param eventTypes тип мероприятия
      * @return список баллов (отряд - мероприятия - результаты участия и баллы за участие)
      */
-    VisitingResultServiceImpl.SectionResult getPointsForEventsWithVisitingResults(EventTypes eventTypes);
+    VisitingResultServiceImpl.SectionResult<Pair<List<VisitingResult>, Double>> getPointsForEventsWithVisitingResults(EventTypes eventTypes);
 
-    VisitingResultServiceImpl.SectionResult getPointsForEventsWithVisitingHours(EventTypes eventTypes);
+    VisitingResultServiceImpl.SectionResult<Duration> getPointsForEventsWithVisitingHours(EventTypes eventTypes);
 
-    List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> points);
+    <T> List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points);
 }

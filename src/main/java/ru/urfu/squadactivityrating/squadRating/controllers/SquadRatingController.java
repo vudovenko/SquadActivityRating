@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl;
 
+import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -58,7 +60,7 @@ public class SquadRatingController {
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
 
-            VisitingResultServiceImpl.SectionResult sectionResult
+            VisitingResultServiceImpl.SectionResult<Pair<List<VisitingResult>, Double>> sectionResult
                     = visitingResultService.getPointsForEventsWithVisitingResults(eventTypes);
             model.addAttribute("sectionResult", sectionResult);
 
@@ -68,7 +70,7 @@ public class SquadRatingController {
             return "squadRating/visiting_results1256";
         } else if (eventTypes == EventTypes.SOCIAL_WORK
                 || eventTypes == EventTypes.PRODUCTION_WORK) {
-            VisitingResultServiceImpl.SectionResult sectionResult
+            VisitingResultServiceImpl.SectionResult<Duration> sectionResult
                     = visitingResultService.getPointsForEventsWithVisitingHours(eventTypes);
             model.addAttribute("sectionResult", sectionResult);
 
