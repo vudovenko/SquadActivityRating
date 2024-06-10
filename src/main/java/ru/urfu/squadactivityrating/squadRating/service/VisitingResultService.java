@@ -1,6 +1,5 @@
 package ru.urfu.squadactivityrating.squadRating.service;
 
-import org.springframework.ui.Model;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
@@ -16,11 +15,6 @@ import java.util.List;
  * Сервис для работы с результатами посещения мероприятий
  */
 public interface VisitingResultService {
-
-    LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> getTotalVisitingResultsFromModel(Model model);
-
-    List<Pair<Double, Integer>> getFinalPlacesFromTotalResult(
-            LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalSquadVisitingResults);
 
     VisitingResultServiceImpl.SectionResult<EventTypes, Double> getTotalPointsForAllEvents();
 
