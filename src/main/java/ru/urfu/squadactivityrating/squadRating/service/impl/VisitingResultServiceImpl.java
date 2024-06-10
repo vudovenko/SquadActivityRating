@@ -86,7 +86,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     }
 
     public record SectionResult<T>(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points,
-                                LinkedHashMap<Squad, FinalResultDTO> finalPoints) {
+                                   LinkedHashMap<Squad, FinalResultDTO> finalPoints) {
     }
 
     private <T> LinkedHashMap<Squad, T> getResultWithAllSquads(
@@ -142,9 +142,9 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                 .filter(filter)
                 .collect(Collectors.groupingBy(EventToSquadUser::getEvent));
         result.forEach(
-                (squad, events) -> {
-                    events.forEach(
-                            (event, pair) -> {
+                (squad, eventsToPairOrHours) -> {
+                    eventsToPairOrHours.forEach(
+                            (event, pairOrHours) -> {
                                 List<EventToSquadUser> eventToSquadUsers = eventToEventToSquadUsers
                                         .get(event);
                                 if (eventToSquadUsers != null) {
@@ -154,14 +154,17 @@ public class VisitingResultServiceImpl implements VisitingResultService {
                                             .toList();
                                     eventToSquadUsers.forEach(
                                             eventToSquadUser -> {
-                                                T visitingResHours = visitingResultSetter.apply(pair, eventToSquadUser, eventTypes);
+
                                                 if (eventTypes.equals(EventTypes.SOCIAL_WORK)
                                                         || eventTypes.equals(EventTypes.PRODUCTION_WORK)) {
                                                     AbstractMap<Event, T> eventTLinkedHashMap = result.get(squad);
+                                                    T hours = eventTLinkedHashMap.get(event);
+                                                    T visitingResHours = visitingResultSetter.apply(hours, eventToSquadUser, eventTypes);
                                                     eventTLinkedHashMap.put(event, visitingResHours);
                                                 } else {
+                                                    visitingResultSetter.apply(pairOrHours, eventToSquadUser, eventTypes);
                                                     sortVisitingResults(eventTypes,
-                                                            (Pair<List<VisitingResult>, Double>) pair);
+                                                            (Pair<List<VisitingResult>, Double>) pairOrHours);
                                                 }
                                             }
                                     );
