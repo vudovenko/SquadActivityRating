@@ -8,14 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
-import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl;
 
 import java.time.Duration;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -42,15 +40,14 @@ public class SquadRatingController {
     public String getSquadRatingsPage(@RequestParam(name = "eventType", required = false)
                                       String eventType,
                                       Model model) {
-        // todo добавить логику обработки мероприятий 3, 4 и 8 типа
+        // todo добавить логику обработки мероприятий 8 типа
         if (eventType == null) {
-            LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalSquadVisitingResults
-                    = visitingResultService.getTotalVisitingResultsFromModel(model);
-            model.addAttribute("totalSquadVisitingResults", totalSquadVisitingResults);
-            List<Pair<Double, Integer>> finalPlacesForTotalResult
-                    = visitingResultService
-                    .getFinalPlacesFromTotalResult(totalSquadVisitingResults);
-            model.addAttribute("finalPlacesForTotalResult", finalPlacesForTotalResult);
+            VisitingResultServiceImpl.SectionResult<EventTypes, Double> totalSectionResult
+                    = visitingResultService.getTotalPointsForAllEvents();
+            model.addAttribute("totalSectionResult", totalSectionResult);
+            List<EventTypes> eventTypes = visitingResultService.getEventsAndTypes(totalSectionResult.points());
+            model.addAttribute("eventTypes", eventTypes);
+            model.addAttribute("squads", totalSectionResult.points().keySet());
             return "squadRating/squad_rating";
         }
         EventTypes eventTypes = EventTypes.valueOf(eventType.toUpperCase());
@@ -60,21 +57,21 @@ public class SquadRatingController {
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
                 || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
 
-            VisitingResultServiceImpl.SectionResult<Pair<List<VisitingResult>, Double>> sectionResult
+            VisitingResultServiceImpl.SectionResult<Event, Pair<List<VisitingResult>, Double>> sectionResult
                     = visitingResultService.getPointsForEventsWithVisitingResults(eventTypes);
             model.addAttribute("sectionResult", sectionResult);
 
-            List<Event> events = visitingResultService.getEvents(sectionResult.points());
+            List<Event> events = visitingResultService.getEventsAndTypes(sectionResult.points());
             model.addAttribute("events", events);
             model.addAttribute("squads", sectionResult.points().keySet());
             return "squadRating/visiting_results1256";
         } else if (eventTypes == EventTypes.SOCIAL_WORK
                 || eventTypes == EventTypes.PRODUCTION_WORK) {
-            VisitingResultServiceImpl.SectionResult<Duration> sectionResult
+            VisitingResultServiceImpl.SectionResult<Event, Duration> sectionResult
                     = visitingResultService.getPointsForEventsWithVisitingHours(eventTypes);
             model.addAttribute("sectionResult", sectionResult);
 
-            List<Event> events = visitingResultService.getEvents(sectionResult.points());
+            List<Event> events = visitingResultService.getEventsAndTypes(sectionResult.points());
             model.addAttribute("events", events);
             model.addAttribute("squads", sectionResult.points().keySet());
             return "squadRating/visiting_results34";

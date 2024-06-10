@@ -22,15 +22,17 @@ public interface VisitingResultService {
     List<Pair<Double, Integer>> getFinalPlacesFromTotalResult(
             LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalSquadVisitingResults);
 
+    VisitingResultServiceImpl.SectionResult<EventTypes, Double> getTotalPointsForAllEvents();
+
     /**
      * Метод для получения баллов по всем мероприятиям и всем отрядам
      *
      * @param eventTypes тип мероприятия
      * @return список баллов (отряд - мероприятия - результаты участия и баллы за участие)
      */
-    VisitingResultServiceImpl.SectionResult<Pair<List<VisitingResult>, Double>> getPointsForEventsWithVisitingResults(EventTypes eventTypes);
+    VisitingResultServiceImpl.SectionResult<Event, Pair<List<VisitingResult>, Double>> getPointsForEventsWithVisitingResults(EventTypes eventTypes);
 
-    VisitingResultServiceImpl.SectionResult<Duration> getPointsForEventsWithVisitingHours(EventTypes eventTypes);
+    VisitingResultServiceImpl.SectionResult<Event, Duration> getPointsForEventsWithVisitingHours(EventTypes eventTypes);
 
-    <T> List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points);
+    <U, T> List<U> getEventsAndTypes(LinkedHashMap<Squad, LinkedHashMap<U, T>> points);
 }

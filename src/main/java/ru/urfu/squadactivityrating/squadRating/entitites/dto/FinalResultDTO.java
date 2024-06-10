@@ -28,6 +28,13 @@ public class FinalResultDTO {
         this.finalPlace = finalPlace;
     }
 
+    public FinalResultDTO() {
+        totalPoints = 0.0;
+        totalHours = Duration.ZERO;
+        finalPoints = 0.0;
+        finalPlace = 0;
+    }
+
     public void addToTotalPoints(Double newPoint) {
         totalPoints += newPoint;
     }

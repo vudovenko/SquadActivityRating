@@ -38,7 +38,87 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     private final SquadService squadService;
 
     @Override
-    public SectionResult<Pair<List<VisitingResult>, Double>>
+    public SectionResult<EventTypes, Double> getTotalPointsForAllEvents() {
+        LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalResult = new LinkedHashMap<>();
+        totalResult = getResultWithAllSquads(totalResult, LinkedHashMap::new);
+        totalResult = getTotalResultWithAllEventTypes(totalResult);
+        totalResult = fillInTotalScoreWithPoints(totalResult);
+        LinkedHashMap<Squad, FinalResultDTO> finalPlacesForTotalResult = new LinkedHashMap<>();
+        finalPlacesForTotalResult = getResultWithAllSquads(finalPlacesForTotalResult, FinalResultDTO::new);
+        finalPlacesForTotalResult = getFinalPlacesForTotalResult(finalPlacesForTotalResult, totalResult);
+
+
+        return new SectionResult<>(totalResult, finalPlacesForTotalResult);
+    }
+
+    LinkedHashMap<Squad, FinalResultDTO> getFinalPlacesForTotalResult(
+            LinkedHashMap<Squad, FinalResultDTO> finalPlacesForTotalResult,
+            LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalResult) {
+        totalResult.forEach(
+                (squad, eventTypesToPoints) -> {
+                    eventTypesToPoints.forEach(
+                            (eventTypes, points) -> {
+                                FinalResultDTO finalResultDTO = finalPlacesForTotalResult.get(squad);
+                                if (eventTypes.equals(EventTypes.DISCIPLINE)) {
+                                    finalResultDTO.addToFinalPoints(-points);
+                                } else {
+                                    finalResultDTO.addToFinalPoints(points);
+                                }
+                            }
+                    );
+                }
+        );
+        calculateFinalPlaces(finalPlacesForTotalResult,
+                Comparator.comparing(pair -> pair.getSecondValue().getFinalPoints()));
+
+        return finalPlacesForTotalResult;
+    }
+
+    private LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> fillInTotalScoreWithPoints(
+            LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> totalResult
+    ) {
+        totalResult.forEach(
+                (squad, eventTypesToPoints) -> {
+                    eventTypesToPoints.keySet().forEach(
+                            eventTypes -> {
+                                if (eventTypes == EventTypes.SPORT
+                                        || eventTypes == EventTypes.CREATIVE_WORK
+                                        || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
+                                        || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
+                                    VisitingResultServiceImpl.SectionResult<Event, Pair<List<VisitingResult>, Double>> sectionResult
+                                            = getPointsForEventsWithVisitingResults(eventTypes);
+                                    AbstractMap<Squad, FinalResultDTO> finalPoints = sectionResult.finalPoints();
+                                    eventTypesToPoints.put(eventTypes, finalPoints.get(squad).getFinalPoints());
+                                } else if (eventTypes == EventTypes.SOCIAL_WORK
+                                        || eventTypes == EventTypes.PRODUCTION_WORK) {
+                                    VisitingResultServiceImpl.SectionResult<Event, Duration> sectionResult
+                                            = getPointsForEventsWithVisitingHours(eventTypes);
+                                    AbstractMap<Squad, FinalResultDTO> finalPoints = sectionResult.finalPoints();
+                                    eventTypesToPoints.put(eventTypes, finalPoints.get(squad).getFinalPoints());
+                                } else if (eventTypes == EventTypes.DISCIPLINE) {
+                                    supplementWithDiscipline(totalResult);
+                                }
+                            }
+                    );
+                }
+        );
+
+        return totalResult;
+    }
+
+    private LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> getTotalResultWithAllEventTypes(
+            LinkedHashMap<Squad, LinkedHashMap<EventTypes, Double>> result) {
+        for (EventTypes eventType : EventTypes.values()) {
+            if (!eventType.equals(EventTypes.AGITSEKTOR)) {
+                result.keySet().forEach(squad -> result.get(squad).put(eventType, 0.0));
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public SectionResult<Event, Pair<List<VisitingResult>, Double>>
     getPointsForEventsWithVisitingResults(EventTypes eventTypes) {
         LinkedHashMap<Squad, LinkedHashMap<Event, Pair<List<VisitingResult>, Double>>> result = new LinkedHashMap<>();
         result = getResultWithAllSquads(result, LinkedHashMap::new);
@@ -61,7 +141,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     }
 
     @Override
-    public SectionResult<Duration> getPointsForEventsWithVisitingHours(EventTypes eventTypes) {
+    public SectionResult<Event, Duration> getPointsForEventsWithVisitingHours(EventTypes eventTypes) {
         LinkedHashMap<Squad, LinkedHashMap<Event, Duration>> result = new LinkedHashMap<>();
         result = getResultWithAllSquads(result, LinkedHashMap::new);
         result = getResultWithAllEvents(result, () -> Duration.ZERO, eventTypes);
@@ -81,19 +161,19 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     }
 
     @Override
-    public <T> List<Event> getEvents(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points) {
+    public <U, T> List<U> getEventsAndTypes(LinkedHashMap<Squad, LinkedHashMap<U, T>> points) {
         if (points.isEmpty()) {
             return Collections.emptyList();
         }
-        Collection<LinkedHashMap<Event, T>> eventMaps = points.values();
-        Set<Event> eventSet = eventMaps.stream().findFirst().get().keySet();
-        List<Event> events = new ArrayList<>(eventSet);
+        Collection<LinkedHashMap<U, T>> eventMaps = points.values();
+        Set<U> eventSet = eventMaps.stream().findFirst().get().keySet();
+        List<U> events = new ArrayList<>(eventSet);
 
         return events;
     }
 
-    public record SectionResult<T>(LinkedHashMap<Squad, LinkedHashMap<Event, T>> points,
-                                   LinkedHashMap<Squad, FinalResultDTO> finalPoints) {
+    public record SectionResult<T, U>(LinkedHashMap<Squad, LinkedHashMap<T, U>> points,
+                                      LinkedHashMap<Squad, FinalResultDTO> finalPoints) {
     }
 
     private <T> LinkedHashMap<Squad, T> getResultWithAllSquads(

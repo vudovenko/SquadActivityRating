@@ -28,18 +28,20 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:if="${totalSquadVisitingResult.getKey() != null}" th:each="totalSquadVisitingResult, iter : ${totalSquadVisitingResults}">
+  <tr th:each="squad : ${squads}">
     <td>
-      <a th:text="${totalSquadVisitingResult.getKey().getName()}"></a>
+      <a th:text="${squad.getName()}"></a>
     </td>
-    <td th:each="eventToScore : ${totalSquadVisitingResult.getValue()}">
-      <a th:text="${eventToScore.getValue()}"></a>
+    <div th:each="eventTypesToScore : ${totalSectionResult.points().get(squad)}">
+      <td>
+        <a th:text="${eventTypesToScore.value}"></a>
+      </td>
+    </div>
+    <td>
+      <a th:text="${totalSectionResult.finalPoints().get(squad).finalPoints}"></a>
     </td>
     <td>
-      <a th:text="${finalPlacesForTotalResult.get(iter.index).getFirstValue()}"></a>
-    </td>
-    <td>
-      <a th:text="${finalPlacesForTotalResult.get(iter.index).getSecondValue()}"></a>
+      <a th:text="${totalSectionResult.finalPoints().get(squad).finalPlace}"></a>
     </td>
   </tr>
   </tbody>
