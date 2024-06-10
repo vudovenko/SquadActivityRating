@@ -74,9 +74,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         finalResult = getResultWithAllSquads(finalResult,
                 () -> new FinalResultDTO(Duration.ZERO, 0.0, 0));
         finalResult = getFinalResultWithAllVisitingResults(finalResult, result,
-                (hoursForEvent, finalResultDTO) -> {
-                    finalResultDTO.addToTotalHours(hoursForEvent);
-                },
+                (hoursForEvent, finalResultDTO) -> finalResultDTO.addToTotalHours(hoursForEvent),
                 Comparator.comparing(FinalResultDTO::getTotalHours),
                 eventTypes);
         return new SectionResult<>(result, finalResult);
@@ -105,9 +103,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         List<Squad> allSquads = getSortedSquads();
 
         allSquads.forEach(
-                squad -> {
-                    result.put(squad, supplier.get());
-                }
+                squad -> result.put(squad, supplier.get())
         );
 
         return result;
@@ -129,9 +125,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         result.keySet().forEach(
                 squad -> {
                     events.forEach(
-                            event -> {
-                                result.get(squad).put(event, defaultValueSupplier.get());
-                            }
+                            event -> result.get(squad).put(event, defaultValueSupplier.get())
                     );
                 }
         );
