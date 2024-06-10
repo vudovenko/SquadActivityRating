@@ -223,14 +223,15 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         // Карта для хранения мест
         int place = 1;
         for (int i = 0; i < finalResultsList.size(); i++) {
-            Squad currentSquad = finalResultsList.get(i).getFirstValue();
+            FinalResultDTO currentFinalResultDto = finalResultsList.get(i).getSecondValue();
             if (i > 0) {
-                Squad previousSquad = finalResultsList.get(i - 1).getFirstValue();
-                if (!currentSquad.equals(previousSquad)) {
-                    place = i + 1;
+                FinalResultDTO previousFinalResultDto = finalResultsList.get(i - 1).getSecondValue();
+                if (!currentFinalResultDto.getFinalPoints()
+                        .equals(previousFinalResultDto.getFinalPoints())) {
+                    place += 1;
                 }
             }
-            FinalResultDTO finalResultDTO = finalResult.get(currentSquad);
+            FinalResultDTO finalResultDTO = finalResult.get(finalResultsList.get(i).getFirstValue());
             finalResultDTO.setFinalPlace(place);
         }
     }
