@@ -51,7 +51,6 @@
               (eventToSquadUserId=${eventToSquadUser.getId()})}" method="post" th:object="${visitingResultsObject}">
         <td>
           <select name="visitingResults123" th:field="*{visitingResult}">
-            <option value="">Выберите результат</option>
             <option th:each="visitingRes : ${T(ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults).values()}"
                     th:value="${visitingRes.name()}"
                     th:text="${visitingRes.toString()}"></option>

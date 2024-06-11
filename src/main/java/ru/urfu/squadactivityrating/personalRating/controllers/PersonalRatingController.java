@@ -36,20 +36,21 @@ public class PersonalRatingController {
         Event event = eventService.getEventById(eventId);
         model.addAttribute("event", event);
         EventTypes eventTypes = event.getEventType().getEventTypeValue();
+        VisitingResultsDTO visitingResultsDTO;
         if (eventTypes.equals(EventTypes.SOCIAL_WORK)
                 || eventTypes.equals(EventTypes.PRODUCTION_WORK)) {
-//            visitingHours.setStartTime(event.getDate());
-//            visitingHours.setEndTime(event.getDate().plus(event.getDuration()));
-//            eventToSquadUser.setVisitingHours(visitingHours);
+            visitingResultsDTO = new VisitingResultsDTO(
+                    event.getDate(),
+                    event.getDate().plus(event.getDuration())
+            );
         } else if (eventTypes == EventTypes.SPORT
                 || eventTypes == EventTypes.CREATIVE_WORK) {
-            model.addAttribute("visitingResultsObject",
-                    new VisitingResultsDTO());
-        } else if (eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
-                || eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU) {
-            VisitingResult visitingResult =
-                    visitingResultService.findByType(VisitingResults.PRESENCE);
+            visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PARTICIPATION);
+        } else { // (eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
+            // ||eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU){
+            visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PRESENCE);
         }
+        model.addAttribute("visitingResultsObject", visitingResultsDTO);
 
         return "personalRating/participation_results";
     }
