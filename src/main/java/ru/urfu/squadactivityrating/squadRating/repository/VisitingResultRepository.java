@@ -3,6 +3,7 @@ package ru.urfu.squadactivityrating.squadRating.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
+import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ import java.util.List;
 public interface VisitingResultRepository extends JpaRepository<VisitingResult, Long> {
 
     List<VisitingResult> findByVisits_Event_EventType_EventTypeValue(EventTypes eventTypes);
+
+    VisitingResult findByVisitingResult(VisitingResults visitingResults);
 }

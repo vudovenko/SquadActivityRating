@@ -1,5 +1,6 @@
 package ru.urfu.squadactivityrating.eventManagement.services;
 
+import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
@@ -10,6 +11,8 @@ import java.util.List;
  * Сервис для работы с посещениями событий участниками
  */
 public interface EventToSquadUserService {
+
+    EventToSquadUser getById(Long id);
 
     /**
      * Метод поиска посещения по id события
@@ -57,4 +60,6 @@ public interface EventToSquadUserService {
     void subscribeForEvent(SecurityUser securityUser, Long eventId);
 
     void unsubscribeFromEvent(SecurityUser securityUser, Long eventId);
+
+    EventToSquadUser getNewVisiting(Event event);
 }

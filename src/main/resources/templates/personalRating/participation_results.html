@@ -22,11 +22,6 @@
                 && !event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
       <a>Результат участия</a>
     </th>
-    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
-                || event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
-      <th><a>Начало участия</a></th>
-      <th><a>Конец участия</a></th>
-    </div>
   </tr>
   </thead>
   <tbody>
@@ -39,20 +34,33 @@
               ? eventToSquadUser.getSquadUser().getSquad().getName()
               : 'без отряда'}"></a>
     </td>
-    <div th:if="${!event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
-                && !event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+
+    <div th:if="${eventToSquadUser.visitingResult != null}">
       <td>
-        <a th:text="${eventToSquadUser.visitingResult.getVisitingResult()}"></a>
+        <a th:text="${eventToSquadUser.getVisitingResult().getVisitingResult()}"></a>
+      </td>
+      <td>
+        <a th:href="@{/personal-ratings/{eventToSquadUserId}/clear
+              (eventToSquadUserId=${eventToSquadUser.getId()})}"
+           class="btn btn-danger" th:text="Очистить"></a>
       </td>
     </div>
-    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
-                || event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
-      <td>
-        <a th:text="${event.getFormattedDate(eventToSquadUser.visitingHours.getStartTime())}"></a>
-      </td>
-      <td>
-        <a th:text="${event.getFormattedDate(eventToSquadUser.visitingHours.getEndTime())}"></a>
-      </td>
+
+    <div th:if="${eventToSquadUser.getVisitingResult() == null}">
+      <form th:action="@{/personal-ratings/{eventToSquadUserId}/change
+              (eventToSquadUserId=${eventToSquadUser.getId()})}" method="post" th:object="${visitingResultsObject}">
+        <td>
+          <select name="visitingResults123" th:field="*{visitingResult}">
+            <option value="">Выберите результат</option>
+            <option th:each="visitingRes : ${T(ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults).values()}"
+                    th:value="${visitingRes.name()}"
+                    th:text="${visitingRes.toString()}"></option>
+          </select>
+        </td>
+        <td>
+          <button type="submit" class="btn btn-primary" th:text="Обновить">Отправить</button>
+        </td>
+      </form>
     </div>
   </tr>
   </tbody>

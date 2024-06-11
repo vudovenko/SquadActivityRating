@@ -6,6 +6,8 @@ import lombok.ToString;
 
 import java.time.Duration;
 
+import static ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl.round;
+
 @Data
 @AllArgsConstructor
 @ToString
@@ -37,6 +39,7 @@ public class FinalResultDTO {
 
     public void addToTotalPoints(Double newPoint) {
         totalPoints += newPoint;
+        totalPoints = round(totalPoints, 1);
     }
 
     public void addToTotalHours(Duration newHours) {
@@ -45,5 +48,6 @@ public class FinalResultDTO {
 
     public void addToFinalPoints(Double newPoint) {
         finalPoints += newPoint;
+        finalPoints = round(finalPoints, 1);
     }
 }

@@ -128,7 +128,9 @@ values ('PLACE1', 3, 3, 3, 3),
 insert into event_to_squad_user (event_id, squad_user_id, visiting_result_id)
 values (1, 4, 1), (1, 5, 4), (1, 6, 4), (1, 8, 2), (1, 13, 3), -- 5
        (3, 5, 1), (3, 10, 2), (3, 11, 3), -- 8
-       (6, 4, 4), (6, 5, 4), (6, 7, 2), (6, 11, 3), (6, 12, 1); -- 13
+       (6, 4, 4), (6, 5, 4), (6, 7, 2), (6, 11, 3); -- 13
+insert into event_to_squad_user (event_id, squad_user_id)
+values (6, 12);
 insert into event_to_squad_user (event_id, squad_user_id)
 VALUES (10, 5), (10, 7), (10, 8), (10, 9), (10, 10), (10, 11), -- 19
        (11, 5), (11, 6), (11, 7), (11, 9), (11, 10), (11, 13), -- 25

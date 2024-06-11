@@ -13,7 +13,9 @@ import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.FinalResultDTO;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
+import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
+import ru.urfu.squadactivityrating.squadRating.repository.VisitingResultRepository;
 import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import ru.urfu.squadactivityrating.squadRating.service.WeightRatingSectionsService;
@@ -36,6 +38,17 @@ public class VisitingResultServiceImpl implements VisitingResultService {
     private final WeightRatingSectionsService weightRatingSectionsService;
     private final ViolationToSquadUserService violationToSquadUserService;
     private final SquadService squadService;
+    private final VisitingResultRepository visitingResultRepository;
+
+    @Override
+    public List<VisitingResult> getAll() {
+        return visitingResultRepository.findAll();
+    }
+
+    @Override
+    public VisitingResult findByType(VisitingResults visitingResults) {
+        return visitingResultRepository.findByVisitingResult(visitingResults);
+    }
 
     @Override
     public SectionResult<EventTypes, Double> getTotalPointsForAllEvents() {
@@ -172,6 +185,11 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         List<U> events = new ArrayList<>(eventSet);
 
         return events;
+    }
+
+    @Override
+    public void deleteVisitingResult(VisitingResult visitingResult) {
+        visitingResultRepository.delete(visitingResult);
     }
 
     public record SectionResult<T, U>(LinkedHashMap<Squad, LinkedHashMap<T, U>> points,
@@ -439,7 +457,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
      * @param scale  количество знаков после запятой
      * @return округленное число
      */
-    private static double round(double number, int scale) {
+    public static double round(double number, int scale) {
         BigDecimal bigDecimal = BigDecimal.valueOf(number);
         bigDecimal = bigDecimal.setScale(scale, RoundingMode.HALF_UP);
         return bigDecimal.doubleValue();
