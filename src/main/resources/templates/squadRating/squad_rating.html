@@ -30,7 +30,7 @@
   <tbody>
   <tr th:each="squad : ${squads}">
     <td>
-      <a th:text="${squad.getName()}"></a>
+      <a th:href="@{/squads/{id}(id=${squad.id})}" th:text="${squad.getName()}"></a>
     </td>
     <div th:each="eventTypesToScore : ${totalSectionResult.points().get(squad)}">
       <td>

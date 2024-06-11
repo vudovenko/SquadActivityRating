@@ -22,6 +22,7 @@ import ru.urfu.squadactivityrating.utils.functionalInterfaces.TriFunction;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
@@ -202,14 +203,19 @@ public class VisitingResultServiceImpl implements VisitingResultService {
             EventTypes eventTypes
     ) {
         List<Event> events = eventService.getEventsByType(eventTypes);
-        events.sort(Comparator.comparing(Event::getDate));
-        result.keySet().forEach(
-                squad -> {
-                    events.forEach(
-                            event -> result.get(squad).put(event, defaultValueSupplier.get())
-                    );
-                }
-        );
+        LocalDateTime currentDate = LocalDateTime.now();
+        events = new ArrayList<>(
+                events
+                        .stream()
+                        .filter(event -> event.getDate().plus(event.getDuration()).isBefore(currentDate))
+                        .toList());
+        events
+                .sort(Comparator.comparing(Event::getDate));
+        for (Squad squad : result.keySet()) {
+            for (Event event : events) {
+                result.get(squad).put(event, defaultValueSupplier.get());
+            }
+        }
 
         return result;
     }
