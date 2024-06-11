@@ -6,6 +6,7 @@ import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoeffic
 import ru.urfu.squadactivityrating.squadRating.entitites.WeightRatingSections;
 import ru.urfu.squadactivityrating.squadRating.repository.PersonalRatingCoefficientRepository;
 import ru.urfu.squadactivityrating.weightSettings.dto.WeightRatingSectionsDto;
+import ru.urfu.squadactivityrating.weightSettings.exceptions.SumOfWeightsGreaterThan100Exception;
 import ru.urfu.squadactivityrating.weightSettings.repositories.WeightRatingSectionsRepository;
 
 import java.lang.reflect.Field;
@@ -24,7 +25,15 @@ public class WeightSettingsService {
         return weightRatingSectionsRepository.findAll();
     }
 
-    public void updateWeights(WeightRatingSectionsDto weightRatingSectionsDto) {
+    public void updateWeights(WeightRatingSectionsDto weightRatingSectionsDto)
+            throws SumOfWeightsGreaterThan100Exception {
+        if (sumOfWeights(weightRatingSectionsDto) > 100) {
+            throw new SumOfWeightsGreaterThan100Exception("Сумма весов должна быть равна 100: перебор процентов = "
+                    + -(100 - sumOfWeights(weightRatingSectionsDto)) + "%");
+        } else if (sumOfWeights(weightRatingSectionsDto) < 100) {
+            throw new SumOfWeightsGreaterThan100Exception("Сумма весов должна быть равна 100: недобор процентов = "
+                    + (100 - sumOfWeights(weightRatingSectionsDto)) + "%");
+        }
         Field[] fields = WeightRatingSectionsDto.class.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
@@ -44,5 +53,14 @@ public class WeightSettingsService {
 
     public List<PersonalRatingCoefficient> getPersonalRatingCoefficients() {
         return personalRatingCoefficientRepository.findAll();
+    }
+
+    private static int sumOfWeights(WeightRatingSectionsDto weightRatingSectionsDto) {
+        return weightRatingSectionsDto.getWeightRatingSection1()
+                + weightRatingSectionsDto.getWeightRatingSection2()
+                + weightRatingSectionsDto.getWeightRatingSection3()
+                + weightRatingSectionsDto.getWeightRatingSection4()
+                + weightRatingSectionsDto.getWeightRatingSection5()
+                + weightRatingSectionsDto.getWeightRatingSection6();
     }
 }

@@ -11,8 +11,12 @@ import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
+import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 import ru.urfu.squadactivityrating.squadRating.service.WeightRatingSectionsService;
+import ru.urfu.squadactivityrating.weightSettings.dto.WeightInSection1Or2;
+import ru.urfu.squadactivityrating.weightSettings.dto.WeightInSection5Or6;
+import ru.urfu.squadactivityrating.weightSettings.repositories.VisitingResultsRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -27,6 +31,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
 
     private final EventToSquadUserService eventToSquadUserService;
     private final WeightRatingSectionsService weightRatingSectionsService;
+    private final VisitingResultsRepository visitingResultsRepository;
 
     @Override
     public void setVisitingResultsInModel(EventTypes eventTypes, Model model) {
@@ -304,5 +309,145 @@ public class VisitingResultServiceImpl implements VisitingResultService {
             return finalScores;
         }
         throw new IllegalStateException("Максимальное значение не найдено");
+    }
+
+    public WeightInSection1Or2 getWeightsInSection1() {
+        WeightInSection1Or2 weightInSection1 = WeightInSection1Or2.builder().build();
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                weightInSection1.setPlace1(visitingResult.getWeightInSection1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                weightInSection1.setPlace2(visitingResult.getWeightInSection1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                weightInSection1.setPlace3(visitingResult.getWeightInSection1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                weightInSection1.setParticipation(visitingResult.getWeightInSection1());
+            }
+        }
+        return weightInSection1;
+    }
+
+    public WeightInSection1Or2 getWeightsInSection2() {
+        WeightInSection1Or2 weightInSection2 = WeightInSection1Or2.builder().build();
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                weightInSection2.setPlace1(visitingResult.getWeightInSection2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                weightInSection2.setPlace2(visitingResult.getWeightInSection2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                weightInSection2.setPlace3(visitingResult.getWeightInSection2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                weightInSection2.setParticipation(visitingResult.getWeightInSection2());
+            }
+        }
+        return weightInSection2;
+    }
+
+    public WeightInSection5Or6 getWeightsInSection5() {
+        WeightInSection5Or6 weightInSection5 = WeightInSection5Or6.builder().build();
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                weightInSection5.setPlace1(visitingResult.getWeightInSection5());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                weightInSection5.setPlace2(visitingResult.getWeightInSection5());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                weightInSection5.setPlace3(visitingResult.getWeightInSection5());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                weightInSection5.setParticipation(visitingResult.getWeightInSection5());
+            } else {
+                weightInSection5.setPresence(visitingResult.getWeightInSection5());
+            }
+        }
+        return weightInSection5;
+    }
+
+    public WeightInSection5Or6 getWeightsInSection6() {
+        WeightInSection5Or6 weightInSection6 = WeightInSection5Or6.builder().build();
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                weightInSection6.setPlace1(visitingResult.getWeightInSection6());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                weightInSection6.setPlace2(visitingResult.getWeightInSection6());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                weightInSection6.setPlace3(visitingResult.getWeightInSection6());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                weightInSection6.setParticipation(visitingResult.getWeightInSection6());
+            } else {
+                weightInSection6.setPresence(visitingResult.getWeightInSection6());
+            }
+        }
+        return weightInSection6;
+    }
+
+    public void updateWeightsInSection1(WeightInSection1Or2 weightInSection1) {
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                visitingResult.setWeightInSection1(weightInSection1.getPlace1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                visitingResult.setWeightInSection1(weightInSection1.getPlace2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                visitingResult.setWeightInSection1(weightInSection1.getPlace3());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                visitingResult.setWeightInSection1(weightInSection1.getParticipation());
+            }
+            visitingResultsRepository.save(visitingResult);
+        }
+    }
+
+    public void updateWeightsInSection2(WeightInSection1Or2 weightInSection2) {
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                visitingResult.setWeightInSection2(weightInSection2.getPlace1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                visitingResult.setWeightInSection2(weightInSection2.getPlace2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                visitingResult.setWeightInSection2(weightInSection2.getPlace3());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                visitingResult.setWeightInSection2(weightInSection2.getParticipation());
+            }
+            visitingResultsRepository.save(visitingResult);
+        }
+    }
+
+    public void updateWeightsInSection5(WeightInSection5Or6 weightInSection5) {
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                visitingResult.setWeightInSection5(weightInSection5.getPlace1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                visitingResult.setWeightInSection5(weightInSection5.getPlace2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                visitingResult.setWeightInSection5(weightInSection5.getPlace3());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                visitingResult.setWeightInSection5(weightInSection5.getParticipation());
+            } else {
+                visitingResult.setWeightInSection5(weightInSection5.getPresence());
+            }
+            visitingResultsRepository.save(visitingResult);
+        }
+    }
+
+    public void updateWeightsInSection6(WeightInSection5Or6 weightInSection6) {
+        List<VisitingResult> visitingResults = visitingResultsRepository.findAll();
+        for (VisitingResult visitingResult : visitingResults) {
+            if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE1)) {
+                visitingResult.setWeightInSection6(weightInSection6.getPlace1());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE2)) {
+                visitingResult.setWeightInSection6(weightInSection6.getPlace2());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PLACE3)) {
+                visitingResult.setWeightInSection6(weightInSection6.getPlace3());
+            } else if (visitingResult.getVisitingResult().equals(VisitingResults.PARTICIPATION)) {
+                visitingResult.setWeightInSection6(weightInSection6.getParticipation());
+            } else {
+                visitingResult.setWeightInSection6(weightInSection6.getPresence());
+            }
+            visitingResultsRepository.save(visitingResult);
+        }
     }
 }

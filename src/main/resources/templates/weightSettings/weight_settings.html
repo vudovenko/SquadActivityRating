@@ -23,23 +23,31 @@
       <td>Вес раздела 4</td>
       <td>Вес раздела 5</td>
       <td>Вес раздела 6</td>
-      <td>Вес раздела 7</td>
     </tr>
     <tr>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
                  th:field="*{weightRatingSection1}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
                  th:field="*{weightRatingSection2}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
                  th:field="*{weightRatingSection3}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
                  th:field="*{weightRatingSection4}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
                  th:field="*{weightRatingSection5}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
                  th:field="*{weightRatingSection6}"></td>
-      <td><input type="text"
-                 th:field="*{weightRatingSection7}"></td>
+    </tr>
+    <tr th:if="${message}">
+      <td colspan="7">
+        <p th:text="${message}"></p>
+      </td>
     </tr>
   </table>
   <input type="submit" value="Сохранить">
@@ -62,20 +70,242 @@
       <td>Дисциплина</td>
     </tr>
     <tr>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient1}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient2}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient3}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient4}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient5}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient6}"></td>
-      <td><input type="text"
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
                  th:field="*{coefficient7}"></td>
+    </tr>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+
+<form th:action="@{/weight-settings/update-weight-in-section-1}"
+      th:object="${weightsInSection1}"
+      method="post">
+  <table>
+    <tr>
+      <th colspan="7">Раздел 1</th>
+    </tr>
+    <tr>
+      <td>1 место</td>
+      <td>2 место</td>
+      <td>3 место</td>
+      <td>Участие</td>
+    </tr>
+    <tr>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place1}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place2}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place3}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{participation}"></td>
+    </tr>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+
+<form th:action="@{/weight-settings/update-weight-in-section-2}"
+      th:object="${weightsInSection2}"
+      method="post">
+  <table>
+    <tr>
+      <th colspan="7">Раздел 2</th>
+    </tr>
+    <tr>
+      <td>1 место</td>
+      <td>2 место</td>
+      <td>3 место</td>
+      <td>Участие</td>
+    </tr>
+    <tr>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place1}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place2}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place3}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{participation}"></td>
+    </tr>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+
+<form th:action="@{/weight-settings/update-weight-in-section-5}"
+      th:object="${weightsInSection5}"
+      method="post">
+  <table>
+    <tr>
+      <th colspan="7">Раздел 5</th>
+    </tr>
+    <tr>
+      <td>1 место</td>
+      <td>2 место</td>
+      <td>3 место</td>
+      <td>Участие</td>
+      <td>Вес человека</td>
+    </tr>
+    <tr>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place1}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place2}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place3}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{participation}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{presence}"></td>
+    </tr>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+
+<form th:action="@{/weight-settings/update-weight-in-section-6}"
+      th:object="${weightsInSection6}"
+      method="post">
+  <table>
+    <tr>
+      <th colspan="7">Раздел 6</th>
+    </tr>
+    <tr>
+      <td>1 место</td>
+      <td>2 место</td>
+      <td>3 место</td>
+      <td>Участие</td>
+      <td>Вес человека</td>
+    </tr>
+    <tr>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place1}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place2}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{place3}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{participation}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{presence}"></td>
+    </tr>
+  </table>
+  <input type="submit" value="Сохранить">
+</form>
+
+<form th:action="@{/weight-settings/update-violation-types}"
+      th:object="${weightDiscipline}"
+      method="post">
+  <table>
+    <tr>
+      <th colspan="7">Вес дисциплины</th>
+    </tr>
+    <tr>
+      <td>Устное предупреждение</td>
+      <td>Выговор</td>
+      <td>Строгий выговор</td>
+    </tr>
+    <tr>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{verbalWarning}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{reprimand}"></td>
+      <td><input type="number"
+                 min="0"
+                 max="30"
+                 step="0.1"
+                 th:field="*{severeReprimand}"></td>
     </tr>
   </table>
   <input type="submit" value="Сохранить">
