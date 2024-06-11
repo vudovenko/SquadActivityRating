@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Результаты мероприятия</title>
+</head>
+<body>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
+<a th:href="@{/events/{eventId}(eventId=${eventId})}" class="btn btn-primary">Назад</a>
+<br>
+<br>
+<table>
+  <thead>
+  <tr>
+    <th><a>ФИО</a></th>
+    <th><a>Отряд</a></th>
+    <th th:if="${!event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
+                && !event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+      <a>Результат участия</a>
+    </th>
+    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
+                || event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+      <th><a>Начало участия</a></th>
+      <th><a>Конец участия</a></th>
+    </div>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="eventToSquadUser : ${eventToSquadUsers}">
+    <td>
+      <a th:text="${eventToSquadUser.getSquadUser().getFullName()}"></a>
+    </td>
+    <td>
+      <a th:text="${eventToSquadUser.getSquadUser().getSquad() != null
+              ? eventToSquadUser.getSquadUser().getSquad().getName()
+              : 'без отряда'}"></a>
+    </td>
+    <div th:if="${!event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
+                && !event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+      <td>
+        <a th:text="${eventToSquadUser.visitingResult.getVisitingResult()}"></a>
+      </td>
+    </div>
+    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
+                || event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+      <td>
+        <a th:text="${event.getFormattedDate(eventToSquadUser.visitingHours.getStartTime())}"></a>
+      </td>
+      <td>
+        <a th:text="${event.getFormattedDate(eventToSquadUser.visitingHours.getEndTime())}"></a>
+      </td>
+    </div>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -50,6 +50,10 @@ public class Event {
     private List<SquadUser> participants;
 
     public String getFormattedDate() {
+        return getFormattedDate(date);
+    }
+
+    public static String getFormattedDate(LocalDateTime date) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         return dateTimeFormatter.format(date);
     }

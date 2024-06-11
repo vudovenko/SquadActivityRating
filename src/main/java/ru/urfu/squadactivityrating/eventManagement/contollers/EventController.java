@@ -15,6 +15,7 @@ import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -207,6 +208,8 @@ public class EventController {
         Event event = eventService.getEventById(id);
         model.addAttribute("event", event);
         model.addAttribute("isParticipant", event.getParticipants().contains(securityUser.getSquadUser()));
+        boolean isItFinished = event.getDate().plus(event.getDuration()).isBefore(LocalDateTime.now());
+        model.addAttribute("isItFinished", isItFinished);
         return "eventManagement/event_card";
     }
 
