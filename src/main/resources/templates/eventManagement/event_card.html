@@ -30,7 +30,7 @@
   <br>
   <a th:href="@{/events/{id}/feedbacks(id=${event.id})}" class="btn btn-primary">Отзывы о мероприятии</a>
   <a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}" class="btn btn-primary"
-     th:if="${isParticipant}">Оставить отзыв</a>
+     th:if="${isParticipant && isItFinished}">Оставить отзыв</a>
   <br>
 </div>
 
