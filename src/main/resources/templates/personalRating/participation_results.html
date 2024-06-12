@@ -13,6 +13,7 @@
 <a th:href="@{/events/{eventId}(eventId=${eventId})}" class="btn btn-primary">Назад</a>
 <br>
 <br>
+<a th:text="${'Резульаты участия в мероприятии: ' + event.getName()}"></a>
 <table>
   <thead>
   <tr>
@@ -35,31 +36,45 @@
               : 'без отряда'}"></a>
     </td>
 
-    <div th:if="${eventToSquadUser.visitingResult != null}">
-      <td>
-        <a th:text="${eventToSquadUser.getVisitingResult().getVisitingResult()}"></a>
-      </td>
-      <td>
-        <a th:href="@{/personal-ratings/{eventToSquadUserId}/clear
+    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Спорт')
+                || event.getEventType().getEventTypeValue().typeName.equals('Творческая работа')
+                || event.getEventType().getEventTypeValue().typeName.equals('Участие в мероприятиях')
+                || event.getEventType().getEventTypeValue().typeName.equals('Участие в мероприятиях Штаба СО УрФУ')}">
+      <div th:if="${eventToSquadUser.visitingResult != null}">
+        <td>
+          <a th:text="${eventToSquadUser.getVisitingResult().getVisitingResult()}"></a>
+        </td>
+        <td>
+          <a th:href="@{/personal-ratings/{eventToSquadUserId}/clear
               (eventToSquadUserId=${eventToSquadUser.getId()})}"
-           class="btn btn-danger" th:text="Очистить"></a>
-      </td>
-    </div>
+             class="btn btn-danger" th:text="Очистить"></a>
+        </td>
+      </div>
 
-    <div th:if="${eventToSquadUser.getVisitingResult() == null}">
-      <form th:action="@{/personal-ratings/{eventToSquadUserId}/change
+      <div th:if="${eventToSquadUser.getVisitingResult() == null}">
+        <form th:action="@{/personal-ratings/{eventToSquadUserId}/change
               (eventToSquadUserId=${eventToSquadUser.getId()})}" method="post" th:object="${visitingResultsObject}">
-        <td>
-          <select name="visitingResults123" th:field="*{visitingResult}">
-            <option th:each="visitingRes : ${T(ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults).values()}"
-                    th:value="${visitingRes.name()}"
-                    th:text="${visitingRes.toString()}"></option>
-          </select>
-        </td>
-        <td>
-          <button type="submit" class="btn btn-primary" th:text="Обновить">Отправить</button>
-        </td>
-      </form>
+          <div th:if="${!event.isItOnlyParticipation}">
+            <td>
+
+              <select name="visitingResults123" th:field="*{visitingResult}">
+                <option th:each="visitingRes : ${T(ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults).values()}"
+                        th:value="${visitingRes.name()}"
+                        th:text="${visitingRes.toString()}"></option>
+              </select>
+            </td>
+          </div>
+          <div th:if="${event.isItOnlyParticipation}">
+            <td>
+              <a th:text="'Отсутствовал'"></a>
+            </td>
+          </div>
+          <td>
+            <button type="submit" class="btn btn-primary"
+                    th:text="${event.isItOnlyParticipation ? 'Отметить посещение' : 'Обновить'}"></button>
+          </td>
+        </form>
+      </div>
     </div>
   </tr>
   </tbody>

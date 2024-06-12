@@ -16,6 +16,7 @@ import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingHoursService;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -46,9 +47,15 @@ public class PersonalRatingController {
         } else if (eventTypes == EventTypes.SPORT
                 || eventTypes == EventTypes.CREATIVE_WORK) {
             visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PARTICIPATION);
+            eventToSquadUsers.sort(Comparator.comparing(eTSU -> eTSU.getVisitingResult() != null));
         } else { // (eventTypes == EventTypes.PARTICIPATION_IN_EVENTS
             // ||eventTypes == EventTypes.PARTICIPATION_IN_EVENTS_URFU){
-            visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PRESENCE);
+            if (event.getIsItOnlyParticipation()) {
+                visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PRESENCE);
+            } else {
+                visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PARTICIPATION);
+            }
+            eventToSquadUsers.sort(Comparator.comparing(eTSU -> eTSU.getVisitingResult() != null));
         }
         model.addAttribute("visitingResultsObject", visitingResultsDTO);
 
@@ -75,8 +82,13 @@ public class PersonalRatingController {
     public String getChangePersonalRatingPage(@PathVariable Long eventToSquadUserId,
                                               VisitingResultsDTO visitingResultsDTO) {
         EventToSquadUser eventToSquadUser = eventToSquadUserService.getById(eventToSquadUserId);
-        VisitingResult visitingResult
-                = visitingResultService.findByType(visitingResultsDTO.getVisitingResult());
+        VisitingResult visitingResult;
+        if (eventToSquadUser.getEvent().getIsItOnlyParticipation()) {
+            visitingResult = visitingResultService.findByType(VisitingResults.PRESENCE);
+        } else {
+            visitingResult
+                    = visitingResultService.findByType(visitingResultsDTO.getVisitingResult());
+        }
 
         eventToSquadUser.setVisitingResult(visitingResult);
         eventToSquadUserService.save(eventToSquadUser);
