@@ -123,7 +123,7 @@ values ('PLACE1', 3, 3, 3, 3),
        ('PLACE2', 2, 2, 2, 2),
        ('PLACE3', 1, 1, 1, 1),
        ('PARTICIPATION', 0.2, 0.2, 0.2, 0.2),
-       ('PRESENCE', 0.0, 0.0, 0.1, 0.1);
+       ('PRESENCE', 0.0, 0.0, 1.0, 1.0);
 -- todo внести другие тестовые данные для 3, 4, 7 и 8 типов мероприятий
 insert into event_to_squad_user (event_id, squad_user_id, visiting_result_id)
 values (1, 4, 1), (1, 5, 4), (1, 6, 4), (1, 8, 2), (1, 13, 3), -- 5
@@ -163,8 +163,8 @@ values (1, 10, 'Отличное мероприятие!'), (2, 8, 'Хороше
        (24, 3, 'Мне почему-то не понравилось :(');
 
 insert into personal_rating_coefficients (event_types, personal_rating_coefficient)
-values ('SPORT', 3.0), ('CREATIVE_WORK', 2.0), ('SOCIAL_WORK', 0.2), ('PRODUCTION_WORK', 0.3),
-       ('PARTICIPATION_IN_EVENTS', 3.0), ('PARTICIPATION_IN_EVENTS_URFU', 1.0), ('DISCIPLINE', 1.0);
+values ('SPORT', 19.0), ('CREATIVE_WORK', 23.0), ('SOCIAL_WORK', 10.0), ('PRODUCTION_WORK', 13.0),
+       ('PARTICIPATION_IN_EVENTS', 20.0), ('PARTICIPATION_IN_EVENTS_URFU', 26.0), ('DISCIPLINE', 1.0);
 
 insert into weight_rating_sections (event_types, weight_rating_section)
 values ('SPORT', 20), ('CREATIVE_WORK', 20), ('SOCIAL_WORK', 17), ('PRODUCTION_WORK', 20),
@@ -184,6 +184,6 @@ values (1, 4, '2022-06-01 12:30:00', 'Боец опоздал на 10 минут
        (1, 6, '2023-06-02 12:30:00', 'Боец опоздал на 11 минут', true),
        (2, 7, '2024-06-03 12:30:00', 'Боец потерял ключи от склада №10', true),
        (3, 8, '2021-06-04 12:30:00', 'Боец сломал барабаны', true),
-       (3, 9, '2022-06-04 12:30:00', 'Боец опоздал на 5 минут', false),
+       (1, 9, '2022-06-04 12:30:00', 'Боец опоздал на 5 минут', false),
        (2, 13, '2020-06-05 12:30:00', 'Боец потерял пропуск', false),
        (1, 15, '2022-07-06 12:30:00', 'Боец опоздал на встречу', true);

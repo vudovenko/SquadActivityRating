@@ -35,12 +35,15 @@
     <input type="text" id="eLocat" name="eLocat" placeholder="Екатеринбург, ул. Мира, 32"
            th:field="*{location}" required/>
   </div>
-  <div>
+  <div th:if="${event.date != null}">
     <label for="eDateold">Прошлая дата и время проведения мероприятия:</label>
-    <a id="eDateold" th:if="${event.date != null}" th:text="${event.formattedDate}"></a>
+    <a id="eDateold" th:text="${event.formattedDate}"></a>
   </div>
   <div>
-    <label for="eDateNew">Новая дата и время проведения мероприятия:</label>
+    <label for="eDateNew"
+           th:text="${event.date != null
+            ? 'Новая дата и время проведения мероприятия:'
+            : 'Дата и время проведения мероприятия'}">Новая дата и время проведения мероприятия:</label>
     <input type="datetime-local" id="eDateNew" name="eDateNew" placeholder="2024-07-19 11:00:00"
            th:field="*{date}" required/>
   </div>
@@ -97,7 +100,7 @@
   </div>
   <div><input type="submit"
               th:value="${event.id == null ? 'Создать мероприятие' : 'Обновить мероприятие'}"
-  class="btn btn-primary"/></div>
+              class="btn btn-primary"/></div>
 </form>
 </body>
 </html>
