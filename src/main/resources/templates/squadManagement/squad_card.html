@@ -8,11 +8,11 @@
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Карточка отряда</title>
 </head>
 <body>
 <div class="card-header">
-  <a class="btn btn-primary" th:href="@{/squads}">Назад</a>
+  <a class="btn btn-primary" th:href="@{/squads}">Все отряды</a>
   <a class="btn btn-primary" th:href="@{/squads/{id}/update(id=${squad.id})}">Редактировать профиль отряда</a>
   <a class="btn btn-primary" th:href="@{/squads/{id}/membership-applications(id=${squad.id})}">
     Заявки на вступление

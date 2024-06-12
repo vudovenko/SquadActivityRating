@@ -1,5 +1,7 @@
 package ru.urfu.squadactivityrating.squadRating.service;
 
+import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
 
 import java.util.List;
@@ -23,4 +25,8 @@ public interface ViolationToSquadUserService {
      * @return список связей между нарушениями и бойцами
      */
     List<ViolationToSquadUser> getAllByIsSolved(boolean isSolved);
+
+    List<ViolationToSquadUser> getAllUnsolvedViolationsBySquad(Squad squad);
+
+    List<ViolationToSquadUser> getAllUnsolvedViolationsBySquadUser(SquadUser squadUser);
 }

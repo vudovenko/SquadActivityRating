@@ -26,29 +26,7 @@
 <br>
 <table>
   <thead>
-  <tr>
-    <th>
-      <a>Название нарушения</a>
-    </th>
-    <th>
-      <a>ФИО</a>
-    </th>
-    <th>
-      <a>Отряд</a>
-    </th>
-    <th>
-      <a>Тип замечания</a>
-    </th>
-    <th>
-      <a>Дата и время</a>
-    </th>
-    <th>
-      <a>Комментарий</a>
-    </th>
-    <th>
-      <a>Отработано?</a>
-    </th>
-  </tr>
+  <div th:replace="~{squadRating/fragments/violationsListTableHeadRow :: violationsTableHeadFragment}"></div>
   </thead>
   <tbody>
   <div th:replace="~{squadRating/fragments/violationsList :: violationsListFragment(${notSolvedViolationsToSquadUsers})}"></div>

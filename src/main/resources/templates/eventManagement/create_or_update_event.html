@@ -7,7 +7,7 @@
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title th:text="${event.id == null ? 'Создание мероприятия' : 'Обновление мероприятия'}">Title</title>
   <link rel="stylesheet" href="/css/scrollable_list.css">
 </head>
 <body>
@@ -19,6 +19,7 @@
 <form th:attr="action=${event.id == null
       ? '/events' : '/events/' + event.id + '/update'}"
       method="post" th:object="${event}">
+  <input type="text" th:field="*{isItOnlyParticipation}" style="display:none;">
   <div>
     <label for="eName">Название мероприятия:</label>
     <input type="text" id="eName" name="eName" placeholder="Организация праздника"

@@ -68,3 +68,7 @@ br {
     margin: 0;
     padding: 0;
 }
+
+.table-container {
+    overflow-x: auto;
+}

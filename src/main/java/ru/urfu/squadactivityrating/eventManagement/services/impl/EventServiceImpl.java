@@ -58,13 +58,15 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event saveEvent(Event event,
                            Integer hoursDuration, Integer minutesDuration,
-                           String eventType, Long[] selectedFightersIds) {
+                           String eventType,
+                           List<Long> eventToSquadUserIdsToCreate) {
         event.setDuration(Duration.ofHours(hoursDuration).plusMinutes(minutesDuration));
         EventType eventTypeObj = new EventType();
         EventTypes eventTypes = EventTypes.valueOf(eventType);
         eventTypeObj.setEventTypeValue(eventTypes);
         event.setEventType(eventTypeObj);
-        List<SquadUser> selectedFighters = squadUserService.getUsersByIds(selectedFightersIds);
+        List<SquadUser> selectedFighters = squadUserService
+                .getUsersByIds(eventToSquadUserIdsToCreate.toArray(new Long[0]));
 
         Event eventEntity = saveEvent(event);
         selectedFighters.forEach(f -> {

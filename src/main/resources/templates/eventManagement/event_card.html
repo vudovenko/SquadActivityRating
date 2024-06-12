@@ -8,7 +8,7 @@
   <!-- Подключение скриптов Bootstrap (jQuery и Popper.js уже включены в Bootstrap) -->
   <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Карточка мероприятия</title>
 </head>
 <body>
 <div>
@@ -19,6 +19,10 @@
      th:attrappend="href=${event.id + (isParticipant
        ? '/unsubscribe' : '/subscribe')}"
      th:text="${isParticipant ? 'Отписаться от мероприятия' : 'Записаться на мероприятие'}" class="btn btn-primary"></a>
+  <a th:if="${isItFinished}"
+     th:href="@{/personal-ratings/{eventId}(eventId=${event.id})}"
+     th:text="'Результаты участия'"
+     class="btn btn-primary"></a>
   <a th:href="@{/events/{id}/delete(id=${event.id})}" class="btn btn-danger">
     Удалить
   </a>
@@ -26,7 +30,7 @@
   <br>
   <a th:href="@{/events/{id}/feedbacks(id=${event.id})}" class="btn btn-primary">Отзывы о мероприятии</a>
   <a th:href="@{/events/{id}/feedbacks/leave-feedback(id=${event.id})}" class="btn btn-primary"
-  th:if="${isParticipant}">Оставить отзыв</a>
+     th:if="${isParticipant && isItFinished}">Оставить отзыв</a>
   <br>
 </div>
 

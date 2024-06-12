@@ -11,8 +11,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString(exclude = {"applicationsForMembershipInSquads", "events"})
-@EqualsAndHashCode(exclude = {"id", "securityUser", "squad", "subordinateSquad", "applicationsForMembershipInSquads", "events"})
+@ToString(exclude = {"applicationsForMembershipInSquads", "events", "violationTypes"})
+@EqualsAndHashCode(exclude = {"id", "securityUser",
+        "squad", "subordinateSquad",
+        "applicationsForMembershipInSquads",
+        "events", "violationTypes"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

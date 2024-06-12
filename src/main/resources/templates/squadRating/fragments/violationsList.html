@@ -11,6 +11,9 @@
       <a th:text="${violationToSquadUser.getViolation().getName()}"></a>
     </td>
     <td>
+      <a th:text="${violationToSquadUser.getFormattedDate()}"></a>
+    </td>
+    <td>
       <a th:text="${violationToSquadUser.getViolator().getFullName()}"></a>
     </td>
     <td>
@@ -21,7 +24,8 @@
                       .getViolationType().getViolation().getResult()}"></a>
     </td>
     <td>
-      <a th:text="${violationToSquadUser.getFormattedDate()}"></a>
+      <a th:text="${violationToSquadUser.getViolation()
+                      .getViolationType().getWeight()}"></a>
     </td>
     <td>
       <a th:text="${violationToSquadUser.getComment()}"></a>

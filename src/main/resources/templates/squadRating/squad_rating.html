@@ -3,16 +3,19 @@
       xmlns:th="http://www.thymeleaf.org/"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <meta charset="UTF-8">
   <title>Рейтинг отрядов</title>
 </head>
 <body>
 <a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
+<br>
+<br>
 <table>
   <thead>
   <tr>
-    <th></th>
+    <th><a>Отряд</a></th>
     <th><a th:href="@{/squad-ratings(eventType='sport')}">Спорт</a></th>
     <th><a th:href="@{/squad-ratings(eventType='creative_work')}">Творческая работа</a></th>
     <th><a th:href="@{/squad-ratings(eventType='social_work')}">Социальная работа</a></th>
@@ -20,22 +23,27 @@
     <th><a th:href="@{/squad-ratings(eventType='participation_in_events')}">Участие в мероприятиях</a></th>
     <th><a th:href="@{/squad-ratings(eventType='participation_in_events_URFU')}">Участие в мероприятиях Штаба СО УрФУ</a></th>
     <th><a th:href="@{/violations}">Дисциплина</a></th>
+    <th><a>Итоговый балл</a></th>
+    <th><a>Итоговое место</a></th>
   </tr>
   </thead>
   <tbody>
-<!--  <tr th:each="fighter : ${fightersWishingToJoin}">-->
-<!--    <td><a th:text="${fighter.getFullName()}"></a></td>-->
-<!--    <td>-->
-<!--      <a th:href="@{/squads/{squadId}/membership-applications/approve/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
-<!--        Одобрить-->
-<!--      </a>-->
-<!--    </td>-->
-<!--    <td>-->
-<!--      <a th:href="@{/squads/{squadId}/membership-applications/refuse/{userId}(squadId=${squadId}, userId=${fighter.getId()})}">-->
-<!--        Отказать-->
-<!--      </a>-->
-<!--    </td>-->
-<!--  </tr>-->
+  <tr th:each="squad : ${squads}">
+    <td>
+      <a th:href="@{/squads/{id}(id=${squad.id})}" th:text="${squad.getName()}"></a>
+    </td>
+    <div th:each="eventTypesToScore : ${totalSectionResult.points().get(squad)}">
+      <td>
+        <a th:text="${eventTypesToScore.value}"></a>
+      </td>
+    </div>
+    <td>
+      <a th:text="${totalSectionResult.finalPoints().get(squad).finalPoints}"></a>
+    </td>
+    <td>
+      <a th:text="${totalSectionResult.finalPoints().get(squad).finalPlace}"></a>
+    </td>
+  </tr>
   </tbody>
 </table>
 </body>
