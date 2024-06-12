@@ -104,7 +104,7 @@ public class WeightSettingsController {
                 weightRatingSectionsDto.setWeightRatingSection4(weightRatingSections.getWeightRatingSection());
             } else if (weightRatingSections.getId() == 5) {
                 weightRatingSectionsDto.setWeightRatingSection5(weightRatingSections.getWeightRatingSection());
-            } else {
+            } else if (weightRatingSections.getId() == 6) {
                 weightRatingSectionsDto.setWeightRatingSection6(weightRatingSections.getWeightRatingSection());
             }
         }
