@@ -2,7 +2,7 @@ package ru.urfu.squadactivityrating.weightSettings.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoefficient;
+import ru.urfu.squadactivityrating.usersRating.personalRating.entities.PersonalRatingCoefficient;
 import ru.urfu.squadactivityrating.squadRating.entitites.WeightRatingSections;
 import ru.urfu.squadactivityrating.squadRating.repository.PersonalRatingCoefficientRepository;
 import ru.urfu.squadactivityrating.weightSettings.dto.WeightRatingSectionsDto;

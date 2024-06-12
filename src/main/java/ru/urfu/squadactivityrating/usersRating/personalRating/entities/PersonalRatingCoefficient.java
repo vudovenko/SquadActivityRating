@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.personalRating.entities;
+package ru.urfu.squadactivityrating.usersRating.personalRating.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

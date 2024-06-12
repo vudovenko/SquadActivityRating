@@ -1,4 +1,4 @@
-package ru.urfu.squadactivityrating.personalRating.dto;
+package ru.urfu.squadactivityrating.usersRating.personalRating.dto;
 
 import lombok.Builder;
 import lombok.Data;

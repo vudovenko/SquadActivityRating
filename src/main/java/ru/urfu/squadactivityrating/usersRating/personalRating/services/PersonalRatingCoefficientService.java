@@ -1,9 +1,9 @@
-package ru.urfu.squadactivityrating.squadRating.service;
+package ru.urfu.squadactivityrating.usersRating.personalRating.services;
 
-import ru.urfu.squadactivityrating.personalRating.dto.PersonalRatingCoefficientsDto;
+import ru.urfu.squadactivityrating.usersRating.personalRating.dto.PersonalRatingCoefficientsDto;
 
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
-import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoefficient;
+import ru.urfu.squadactivityrating.usersRating.personalRating.entities.PersonalRatingCoefficient;
 
 /**
  * Сервис для работы с коэффициентами личного рейтинга бойцов
@@ -11,5 +11,6 @@ import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoeffic
 public interface PersonalRatingCoefficientService {
 
     PersonalRatingCoefficient getByEventType(EventTypes eventTypes);
+
     void updatePersonalRatingCoefficients(PersonalRatingCoefficientsDto personalRatingCoefficientsDto);
 }

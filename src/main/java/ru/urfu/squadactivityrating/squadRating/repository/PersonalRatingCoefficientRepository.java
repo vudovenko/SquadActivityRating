@@ -2,8 +2,7 @@ package ru.urfu.squadactivityrating.squadRating.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
-import ru.urfu.squadactivityrating.personalRating.dto.PersonalRatingCoefficientsDto;
-import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoefficient;
+import ru.urfu.squadactivityrating.usersRating.personalRating.entities.PersonalRatingCoefficient;
 
 import java.util.Optional;
 

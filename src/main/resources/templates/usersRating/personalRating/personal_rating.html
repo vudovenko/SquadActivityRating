@@ -21,6 +21,7 @@
   <tr>
     <th>Дата</th>
     <th>Мероприятие</th>
+    <th>Тип мероприятия</th>
     <th>Баллы</th>
   </tr>
   </thead>
@@ -35,11 +36,22 @@
          th:text="${visitingToScore.firstValue.getEvent().getName()}"></a>
     </td>
     <td>
+      <a th:text="${visitingToScore.firstValue.getEvent().getEventType().getEventTypeValue().getTypeName()}"></a>
+    </td>
+    <td>
       <a th:text="${visitingToScore.secondValue}"></a>
     </td>
   </tr>
   </tbody>
 </table>
+<br>
+<a th:text="${'Нарушения: '}"></a>
+<div th:each="violation : ${squadUserViolations.getFirstValue()}">
+  <strong><a th:text="${violation.getViolation().getName()}"></a></strong>
+</div>
+<a th:text="${'Сумма штрафов: '}"></a>
+<strong><a th:text="${squadUserViolations.getSecondValue()}"></a></strong>
+<br>
 <br>
 <a th:text="${'Всего баллов: '}"></a>
 <strong><a th:text="${totalScore}"></a></strong>

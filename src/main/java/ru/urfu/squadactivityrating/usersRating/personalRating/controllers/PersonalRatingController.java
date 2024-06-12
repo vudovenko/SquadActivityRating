@@ -49,6 +49,8 @@ public class PersonalRatingController {
                 = personalRatingService.getTotalScore(visitingToScore, securityUser.getSquadUser());
         model.addAttribute("totalScore", totalScore);
         model.addAttribute("currentUser", securityUser.getSquadUser());
+        model.addAttribute("squadUserViolations",
+                personalRatingService.getSquadUserViolations(securityUser.getSquadUser()));
 
         return "usersRating/personalRating/personal_rating";
     }

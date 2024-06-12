@@ -6,11 +6,11 @@ import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
-import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoefficient;
+import ru.urfu.squadactivityrating.usersRating.personalRating.entities.PersonalRatingCoefficient;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
 import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
-import ru.urfu.squadactivityrating.squadRating.service.PersonalRatingCoefficientService;
+import ru.urfu.squadactivityrating.usersRating.personalRating.services.PersonalRatingCoefficientService;
 import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
 import ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl;
 import ru.urfu.squadactivityrating.usersRating.personalRating.services.PersonalRatingService;
@@ -46,12 +46,22 @@ public class PersonalRatingServiceImpl implements PersonalRatingService {
         for (Pair<EventToSquadUser, Double> eventToScore : eventsToScore) {
             sum += eventToScore.getSecondValue();
         }
+        Double amountPenalties = getSquadUserViolations(squadUser).getSecondValue();
+
+        return VisitingResultServiceImpl.round(sum - amountPenalties, 1);
+    }
+
+    @Override
+    public Pair<List<ViolationToSquadUser>, Double> getSquadUserViolations(SquadUser squadUser) {
         List<ViolationToSquadUser> userViolations
                 = violationToSquadUserService.getAllUnsolvedViolationsBySquadUser(squadUser);
-        Double amountPenalties = VisitingResultServiceImpl.round(
-                VisitingResultServiceImpl.getAmountPenalties(userViolations), 1);
+        Double amountPenalties =
+                VisitingResultServiceImpl.getAmountPenalties(userViolations);
+        amountPenalties *= personalRatingCoefficientService
+                .getByEventType(EventTypes.DISCIPLINE).getPersonalRatingCoefficient();
+        amountPenalties = VisitingResultServiceImpl.round(amountPenalties, 1);
 
-        return sum - amountPenalties;
+        return new Pair<>(userViolations, amountPenalties);
     }
 
     private Pair<SquadUser, List<Pair<EventToSquadUser, Double>>> getUserToResults(
@@ -91,6 +101,8 @@ public class PersonalRatingServiceImpl implements PersonalRatingService {
             score = VisitingResultServiceImpl.getWeightByType(
                     eventTypes,
                     eventToSquadUser.getVisitingResult());
+            score *= personalRatingCoefficientService.getByEventType(eventTypes)
+                    .getPersonalRatingCoefficient();
         }
 
         return VisitingResultServiceImpl.round(score, 1);
