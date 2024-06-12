@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div th:fragment="tableWithUsersRating(usersToResults)">
+  <table>
+    <thead class="thead-gen-rat">
+    <tr>
+      <th>Место</th>
+      <th>Пользователь</th>
+      <th>Сумма баллов</th>
+    </tr>
+    </thead>
+    <tbody class="tbody-gen-rat">
+    <tr th:each="placeToUserToScore : ${usersToResults}">
+      <td>
+        <a th:text="${placeToUserToScore.firstValue}"></a>
+      </td>
+      <td>
+        <a th:text="${placeToUserToScore.secondValue.firstValue.getFullName()}"></a>
+      </td>
+      <td>
+        <a th:text="${placeToUserToScore.secondValue.secondValue}"></a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
