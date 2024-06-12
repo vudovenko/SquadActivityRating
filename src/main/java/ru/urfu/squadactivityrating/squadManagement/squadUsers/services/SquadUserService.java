@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface SquadUserService {
 
+    List<SquadUser> getAllSquadUsers();
+
     SquadUser saveUser(SquadUser squadUser);
 
     List<SquadUser> getFreeCommanders();

@@ -72,3 +72,14 @@ br {
 .table-container {
     overflow-x: auto;
 }
+
+.tbody-gen-rat {
+    display: block; /* Изменяем display на block */
+    overflow-y: auto; /* Добавляем вертикальную полосу прокрутки */
+    height: 450px; /* Задаем высоту tbody */
+}
+
+.thead-gen-rat {
+    display: table; /* Возвращаем display в нормальное состояние для thead */
+    width: 100%; /* Задаем ширину thead */
+}

@@ -376,10 +376,10 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         return coefficient;
     }
 
-    private static void calculateFinalPlaces(
-            LinkedHashMap<Squad, FinalResultDTO> finalResult,
-            Comparator<Pair<Squad, FinalResultDTO>> comparator) {
-        List<Pair<Squad, FinalResultDTO>> finalResultsList
+    public static <T> void calculateFinalPlaces(
+            LinkedHashMap<T, FinalResultDTO> finalResult,
+            Comparator<Pair<T, FinalResultDTO>> comparator) {
+        List<Pair<T, FinalResultDTO>> finalResultsList
                 = finalResult.entrySet()
                 .stream()
                 .map(e -> new Pair<>(e.getKey(), e.getValue()))

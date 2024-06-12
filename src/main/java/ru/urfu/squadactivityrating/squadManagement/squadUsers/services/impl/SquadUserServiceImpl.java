@@ -16,6 +16,11 @@ public class SquadUserServiceImpl implements SquadUserService {
     private final SquadUserRepository squadUserRepository;
 
     @Override
+    public List<SquadUser> getAllSquadUsers() {
+        return squadUserRepository.findAll();
+    }
+
+    @Override
     public SquadUser saveUser(SquadUser squadUser) {
         return squadUserRepository.save(squadUser);
     }
