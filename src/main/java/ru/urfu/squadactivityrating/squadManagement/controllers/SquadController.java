@@ -8,6 +8,8 @@ import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.services.SquadService;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.services.SquadUserService;
+import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
+import ru.urfu.squadactivityrating.usersRating.generalRating.services.GeneralRatingService;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ public class SquadController {
 
     private final SquadService squadService;
     private final SquadUserService squadUserService;
+    private final GeneralRatingService generalRatingService;
 
     /**
      * Метод для отображения страницы списка отрядов
@@ -151,7 +154,12 @@ public class SquadController {
      */
     @GetMapping("/{id}")
     public String getSquadCard(@PathVariable Long id, Model model) {
-        model.addAttribute("squad", squadService.getSquadById(id));
+        Squad squad = squadService.getSquadById(id);
+        model.addAttribute("squad", squad);
+        List<SquadUser> allUsersInSquad = squadUserService.getAllBySquad(squad);
+        List<Pair<Integer, Pair<SquadUser, Double>>> squadUsersToTotalScores
+                = generalRatingService.getUsersToResults(allUsersInSquad);
+        model.addAttribute("squadUsersToTotalScores", squadUsersToTotalScores);
         return "squadManagement/squad_card";
     }
 }

@@ -19,9 +19,9 @@ public class GeneralRatingServiceImpl implements GeneralRatingService {
     private final PersonalRatingService personalRatingService;
 
     @Override
-    public List<Pair<Integer, Pair<SquadUser, Double>>> getUsersToResults() {
+    public List<Pair<Integer, Pair<SquadUser, Double>>> getUsersToResults(List<SquadUser> usersToScores) {
         Map<SquadUser, Double> usersToTotalScores
-                = getAllUsersToTotalScores(squadUserService.getAllSquadUsers());
+                = getAllUsersToTotalScores(usersToScores);
         List<Pair<Integer, Pair<SquadUser, Double>>> usersToTotalScoresWithPlaces
                 = getUsersToTotalScoresWithPlaces(usersToTotalScores);
 

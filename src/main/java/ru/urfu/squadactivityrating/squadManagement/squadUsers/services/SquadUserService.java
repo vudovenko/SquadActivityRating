@@ -1,5 +1,6 @@
 package ru.urfu.squadactivityrating.squadManagement.squadUsers.services;
 
+import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface SquadUserService {
     List<SquadUser> getSquadFighters(Long squadId);
 
     List<SquadUser> getFreeFighters();
+
+    List<SquadUser> getAllBySquad(Squad squad);
 }

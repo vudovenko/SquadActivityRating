@@ -3,6 +3,7 @@ package ru.urfu.squadactivityrating.squadManagement.squadUsers.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import ru.urfu.squadactivityrating.squadManagement.entities.Squad;
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 
 import java.util.List;
@@ -50,4 +51,6 @@ public interface SquadUserRepository extends JpaRepository<SquadUser, Long> {
             and squ.squad is null
             """)
     List<SquadUser> findBySquadIdNullAndRole(UserRole role);
+
+    List<SquadUser> findAllBySquad(Squad squad);
 }

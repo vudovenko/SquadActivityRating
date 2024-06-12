@@ -52,9 +52,8 @@
 
 <div class="squad-fighters">
   <div th:text="'Участники отряда:'"></div>
-  <div th:each="user, stat : ${squad.users}"
-       th:text="${stat.count} + ') '
-       + ${user.getFullName()}"></div>
+  <div th:replace="~{usersRating/fragments/tableWithUsersRating
+                  :: tableWithUsersRating(${squadUsersToTotalScores})}"></div>
 </div>
 </body>
 </html>

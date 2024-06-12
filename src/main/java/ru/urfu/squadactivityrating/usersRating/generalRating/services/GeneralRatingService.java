@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GeneralRatingService {
 
-    List<Pair<Integer, Pair<SquadUser, Double>>> getUsersToResults();
+    List<Pair<Integer, Pair<SquadUser, Double>>> getUsersToResults(List<SquadUser> usersToScores);
 }
