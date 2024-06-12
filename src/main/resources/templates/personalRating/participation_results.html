@@ -13,7 +13,18 @@
 <a th:href="@{/events/{eventId}(eventId=${eventId})}" class="btn btn-primary">Назад</a>
 <br>
 <br>
-<a th:text="${'Резульаты участия в мероприятии: ' + event.getName()}"></a>
+<a th:text="${'Название мероприятия: '}"></a>
+<strong><a th:text="${event.getName()}"></a></strong>
+<br>
+<a th:text="${'Тип мероприятия: '}"></a>
+<strong><a th:text="${event.getEventType().getEventTypeValue().getTypeName()}"></a></strong>
+<br>
+<a th:text="${'Начало мероприятия:'}"></a>
+<strong><a th:text="${event.getFormattedDate(event.getDate())}"></a></strong>
+<br>
+<a th:text="${'Конец мероприятия:'}"></a>
+<strong><a th:text="${event.getFormattedDate(event.getDate().plus(event.getDuration()))}"></a></strong>
+<br>
 <table>
   <thead>
   <tr>
@@ -23,6 +34,11 @@
                 && !event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
       <a>Результат участия</a>
     </th>
+    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
+                || event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+      <th><a>Начало работы</a></th>
+      <th><a>Конец работы</a></th>
+    </div>
   </tr>
   </thead>
   <tbody>
@@ -35,6 +51,39 @@
               ? eventToSquadUser.getSquadUser().getSquad().getName()
               : 'без отряда'}"></a>
     </td>
+
+    <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Производственная работа')
+                || event.getEventType().getEventTypeValue().typeName.equals('Социальная работа')}">
+      <div th:if="${eventToSquadUser.visitingHours != null}">
+        <td>
+          <a th:text="${event.getFormattedDate(eventToSquadUser.getVisitingHours().getStartTime())}"></a>
+        </td>
+        <td>
+          <a th:text="${event.getFormattedDate(eventToSquadUser.getVisitingHours().getEndTime())}"></a>
+        </td>
+        <td>
+          <a th:href="@{/personal-ratings/{eventToSquadUserId}/clear
+              (eventToSquadUserId=${eventToSquadUser.getId()})}"
+             class="btn btn-danger" th:text="Очистить"></a>
+        </td>
+      </div>
+
+      <div th:if="${eventToSquadUser.getVisitingHours() == null}">
+        <form th:action="@{/personal-ratings/{eventToSquadUserId}/change
+              (eventToSquadUserId=${eventToSquadUser.getId()})}" method="post" th:object="${visitingResultsObject}">
+          <td>
+            <input type="datetime-local" name="dateStart" th:field="*{startTime}"/>
+          </td>
+          <td>
+            <input type="datetime-local" name="dateEnd" th:field="*{endTime}"/>
+          </td>
+          <td>
+            <button type="submit" class="btn btn-primary"
+                    th:text="${'Отметить посещение'}"></button>
+          </td>
+        </form>
+      </div>
+    </div>
 
     <div th:if="${event.getEventType().getEventTypeValue().typeName.equals('Спорт')
                 || event.getEventType().getEventTypeValue().typeName.equals('Творческая работа')

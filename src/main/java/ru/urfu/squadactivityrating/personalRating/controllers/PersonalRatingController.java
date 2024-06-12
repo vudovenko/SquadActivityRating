@@ -29,6 +29,7 @@ public class PersonalRatingController {
     private final VisitingResultService visitingResultService;
     private final VisitingHoursService visitingHoursService;
 
+    // todo рефакторинг + перенести большую часть кода в сервис
     @GetMapping("/{eventId}")
     String getParticipationResults(@PathVariable Long eventId, Model model) {
         List<EventToSquadUser> eventToSquadUsers = eventToSquadUserService.getByEventId(eventId);
@@ -44,6 +45,7 @@ public class PersonalRatingController {
                     event.getDate(),
                     event.getDate().plus(event.getDuration())
             );
+            eventToSquadUsers.sort(Comparator.comparing(eTSU -> eTSU.getVisitingHours() != null));
         } else if (eventTypes == EventTypes.SPORT
                 || eventTypes == EventTypes.CREATIVE_WORK) {
             visitingResultsDTO = new VisitingResultsDTO(VisitingResults.PARTICIPATION);
@@ -82,15 +84,26 @@ public class PersonalRatingController {
     public String changePersonalRating(@PathVariable Long eventToSquadUserId,
                                        VisitingResultsDTO visitingResultsDTO) {
         EventToSquadUser eventToSquadUser = eventToSquadUserService.getById(eventToSquadUserId);
-        VisitingResult visitingResult;
-        if (eventToSquadUser.getEvent().getIsItOnlyParticipation()) {
-            visitingResult = visitingResultService.findByType(VisitingResults.PRESENCE);
-        } else {
-            visitingResult
-                    = visitingResultService.findByType(visitingResultsDTO.getVisitingResult());
-        }
+        EventTypes eventTypes = eventToSquadUser.getEvent().getEventType().getEventTypeValue();
+        if (eventTypes != EventTypes.SOCIAL_WORK
+                && eventTypes != EventTypes.PRODUCTION_WORK) {
+            VisitingResult visitingResult;
+            if (eventToSquadUser.getEvent().getIsItOnlyParticipation()) {
+                visitingResult = visitingResultService.findByType(VisitingResults.PRESENCE);
+            } else {
+                visitingResult
+                        = visitingResultService.findByType(visitingResultsDTO.getVisitingResult());
+            }
 
-        eventToSquadUser.setVisitingResult(visitingResult);
+            eventToSquadUser.setVisitingResult(visitingResult);
+        } else {
+            VisitingHours visitingHours = new VisitingHours();
+            visitingHours.setStartTime(visitingResultsDTO.getStartTime());
+            visitingHours.setEndTime(visitingResultsDTO.getEndTime());
+            visitingHours.setEventToSquadUser(eventToSquadUser);
+            visitingHours = visitingHoursService.saveVisitingHours(visitingHours);
+            eventToSquadUser.setVisitingHours(visitingHours);
+        }
         eventToSquadUserService.save(eventToSquadUser);
 
         return "redirect:/personal-ratings/" + eventToSquadUser.getEvent().getId();

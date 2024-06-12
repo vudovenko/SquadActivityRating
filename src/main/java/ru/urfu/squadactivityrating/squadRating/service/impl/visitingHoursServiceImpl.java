@@ -13,6 +13,11 @@ public class visitingHoursServiceImpl implements VisitingHoursService {
     private final VisitingHoursRepository visitingHoursRepository;
 
     @Override
+    public VisitingHours saveVisitingHours(VisitingHours visitingHours) {
+        return visitingHoursRepository.save(visitingHours);
+    }
+
+    @Override
     public void deleteVisitingHours(VisitingHours visitingHours) {
         visitingHoursRepository.delete(visitingHours);
     }

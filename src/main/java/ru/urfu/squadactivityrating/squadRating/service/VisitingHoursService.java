@@ -18,5 +18,7 @@ import java.util.List;
  */
 public interface VisitingHoursService {
 
+    VisitingHours saveVisitingHours(VisitingHours visitingHours);
+
     void deleteVisitingHours(VisitingHours visitingHours);
 }
