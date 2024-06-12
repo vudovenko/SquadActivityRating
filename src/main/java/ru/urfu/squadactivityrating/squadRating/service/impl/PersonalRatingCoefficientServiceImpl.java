@@ -3,7 +3,6 @@ package ru.urfu.squadactivityrating.squadRating.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
-import ru.urfu.squadactivityrating.squadRating.entitites.PersonalRatingCoefficient;
 import ru.urfu.squadactivityrating.personalRating.dto.PersonalRatingCoefficientsDto;
 import ru.urfu.squadactivityrating.personalRating.entities.PersonalRatingCoefficient;
 import ru.urfu.squadactivityrating.squadRating.repository.PersonalRatingCoefficientRepository;
@@ -12,7 +11,6 @@ import ru.urfu.squadactivityrating.squadRating.service.PersonalRatingCoefficient
 import java.util.Optional;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

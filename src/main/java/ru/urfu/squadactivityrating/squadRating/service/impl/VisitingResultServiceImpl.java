@@ -2,6 +2,7 @@ package ru.urfu.squadactivityrating.squadRating.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import ru.urfu.squadactivityrating.eventManagement.entities.Event;
 import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
@@ -13,7 +14,6 @@ import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.FinalResultDTO;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
-import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
 import ru.urfu.squadactivityrating.squadRating.repository.VisitingResultRepository;

@@ -167,8 +167,8 @@ values ('SPORT', 3.0), ('CREATIVE_WORK', 2.0), ('SOCIAL_WORK', 0.2), ('PRODUCTIO
        ('PARTICIPATION_IN_EVENTS', 3.0), ('PARTICIPATION_IN_EVENTS_URFU', 1.0), ('DISCIPLINE', 1.0);
 
 insert into weight_rating_sections (event_types, weight_rating_section)
-values ('SPORT', 20), ('CREATIVE_WORK', 20), ('SOCIAL_WORK', 11), ('PRODUCTION_WORK', 20),
-       ('PARTICIPATION_IN_EVENTS', 5), ('PARTICIPATION_IN_EVENTS_URFU', 13), ('AGITSEKTOR', 11);
+values ('SPORT', 20), ('CREATIVE_WORK', 20), ('SOCIAL_WORK', 17), ('PRODUCTION_WORK', 20),
+       ('PARTICIPATION_IN_EVENTS', 10), ('PARTICIPATION_IN_EVENTS_URFU', 13), ('AGITSEKTOR', 0);
 
 
 insert into violation_type (violation, weight)
