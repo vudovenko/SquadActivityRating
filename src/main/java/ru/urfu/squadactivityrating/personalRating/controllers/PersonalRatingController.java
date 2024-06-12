@@ -79,8 +79,8 @@ public class PersonalRatingController {
     }
 
     @PostMapping("/{eventToSquadUserId}/change")
-    public String getChangePersonalRatingPage(@PathVariable Long eventToSquadUserId,
-                                              VisitingResultsDTO visitingResultsDTO) {
+    public String changePersonalRating(@PathVariable Long eventToSquadUserId,
+                                       VisitingResultsDTO visitingResultsDTO) {
         EventToSquadUser eventToSquadUser = eventToSquadUserService.getById(eventToSquadUserId);
         VisitingResult visitingResult;
         if (eventToSquadUser.getEvent().getIsItOnlyParticipation()) {
