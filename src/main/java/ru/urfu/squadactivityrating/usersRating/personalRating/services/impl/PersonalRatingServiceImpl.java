@@ -9,7 +9,9 @@ import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserServ
 import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
 import ru.urfu.squadactivityrating.squadRating.entitites.PersonalRatingCoefficient;
 import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
+import ru.urfu.squadactivityrating.squadRating.entitites.links.ViolationToSquadUser;
 import ru.urfu.squadactivityrating.squadRating.service.PersonalRatingCoefficientService;
+import ru.urfu.squadactivityrating.squadRating.service.ViolationToSquadUserService;
 import ru.urfu.squadactivityrating.squadRating.service.impl.VisitingResultServiceImpl;
 import ru.urfu.squadactivityrating.usersRating.personalRating.services.PersonalRatingService;
 
@@ -24,6 +26,7 @@ import java.util.List;
 public class PersonalRatingServiceImpl implements PersonalRatingService {
 
     private final EventToSquadUserService eventToSquadUserService;
+    private final ViolationToSquadUserService violationToSquadUserService;
     private final PersonalRatingCoefficientService personalRatingCoefficientService;
 
     @Override
@@ -37,14 +40,18 @@ public class PersonalRatingServiceImpl implements PersonalRatingService {
     }
 
     @Override
-    public Double getTotalScore(List<Pair<EventToSquadUser, Double>> eventsToScore) {
+    public Double getTotalScore(List<Pair<EventToSquadUser, Double>> eventsToScore, SquadUser squadUser) {
         Double sum = 0.0;
 
         for (Pair<EventToSquadUser, Double> eventToScore : eventsToScore) {
             sum += eventToScore.getSecondValue();
         }
+        List<ViolationToSquadUser> userViolations
+                = violationToSquadUserService.getAllUnsolvedViolationsBySquadUser(squadUser);
+        Double amountPenalties = VisitingResultServiceImpl.round(
+                VisitingResultServiceImpl.getAmountPenalties(userViolations), 1);
 
-        return sum;
+        return sum - amountPenalties;
     }
 
     private Pair<SquadUser, List<Pair<EventToSquadUser, Double>>> getUserToResults(

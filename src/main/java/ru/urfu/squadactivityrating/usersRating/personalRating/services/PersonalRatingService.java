@@ -10,5 +10,5 @@ public interface PersonalRatingService {
 
     Pair<SquadUser, List<Pair<EventToSquadUser, Double>>> getUserToResults(SquadUser squadUser);
 
-    Double getTotalScore(List<Pair<EventToSquadUser, Double>> eventsToScore);
+    Double getTotalScore(List<Pair<EventToSquadUser, Double>> eventsToScore, SquadUser squadUser);
 }

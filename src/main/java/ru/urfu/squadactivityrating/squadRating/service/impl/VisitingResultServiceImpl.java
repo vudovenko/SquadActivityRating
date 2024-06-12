@@ -438,7 +438,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
         );
     }
 
-    private Double getAmountPenalties(List<ViolationToSquadUser> violationsToSquadUser) {
+    public static Double getAmountPenalties(List<ViolationToSquadUser> violationsToSquadUser) {
         Double amountPenalties = 0.0;
         for (ViolationToSquadUser violationToSquadUser : violationsToSquadUser) {
             Double penalty = violationToSquadUser

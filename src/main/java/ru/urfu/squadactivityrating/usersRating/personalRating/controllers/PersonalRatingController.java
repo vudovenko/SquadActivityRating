@@ -45,7 +45,8 @@ public class PersonalRatingController {
         visitingToScore.sort(Comparator.comparing(pair -> pair.getFirstValue().getEvent().getDate()));
         Collections.reverse(visitingToScore);
         model.addAttribute("userToResults", userToResults);
-        Double totalScore = personalRatingService.getTotalScore(visitingToScore);
+        Double totalScore
+                = personalRatingService.getTotalScore(visitingToScore, securityUser.getSquadUser());
         model.addAttribute("totalScore", totalScore);
         model.addAttribute("currentUser", securityUser.getSquadUser());
 
