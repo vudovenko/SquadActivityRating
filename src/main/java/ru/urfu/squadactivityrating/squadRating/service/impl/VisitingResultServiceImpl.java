@@ -470,7 +470,7 @@ public class VisitingResultServiceImpl implements VisitingResultService {
      * @param visitingResult результат посещения
      * @return балл за результат участия в мероприятии
      */
-    private Double getWeightByType(EventTypes eventTypes, VisitingResult visitingResult) {
+    public static Double getWeightByType(EventTypes eventTypes, VisitingResult visitingResult) {
 
         return switch (eventTypes) {
             case SPORT -> visitingResult.getWeightInSection1();

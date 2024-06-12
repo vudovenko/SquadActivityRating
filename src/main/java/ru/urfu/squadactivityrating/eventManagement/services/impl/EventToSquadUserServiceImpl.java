@@ -45,6 +45,11 @@ public class EventToSquadUserServiceImpl implements EventToSquadUserService {
     }
 
     @Override
+    public List<EventToSquadUser> getBySquadUserId(Long id) {
+        return eventToSquadUserRepository.findBySquadUserId(id);
+    }
+
+    @Override
     public List<EventToSquadUser> getAllEventsToSquadUsersWhereVisitingResultNotNull() {
         return eventToSquadUserRepository.findAllByVisitingResultNotNull();
     }

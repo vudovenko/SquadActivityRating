@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org/"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <link rel="stylesheet" href="/webjars/bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <title>Личный рейтинг</title>
+</head>
+<body>
+<br>
+<a th:href="@{/}" class="btn btn-primary">Вернуться на главную страницу</a>
+<br>
+<br>
+<a th:text="${'Рейтинг пользователя: '}"></a>
+<strong><a th:text="${currentUser.getFullName()}"></a></strong>
+<br>
+<table>
+  <thead>
+  <tr>
+    <th>Дата</th>
+    <th>Мероприятие</th>
+    <th>Баллы</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="visitingToScore : ${userToResults.getSecondValue()}">
+    <td>
+      <a th:text="${visitingToScore.firstValue.getEvent().getFormattedDate(
+            visitingToScore.firstValue.getEvent().getDate())}"></a>
+    </td>
+    <td>
+      <a th:href="@{/events/{eventId}(eventId=${visitingToScore.firstValue.getEvent().getId()})}"
+         th:text="${visitingToScore.firstValue.getEvent().getName()}"></a>
+    </td>
+    <td>
+      <a th:text="${visitingToScore.secondValue}"></a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<a th:text="${'Всего баллов: '}"></a>
+<strong><a th:text="${totalScore}"></a></strong>
+</body>
+</html>

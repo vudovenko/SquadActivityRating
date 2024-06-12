@@ -22,6 +22,8 @@ public interface EventToSquadUserService {
      */
     List<EventToSquadUser> getByEventId(Long id);
 
+    List<EventToSquadUser> getBySquadUserId(Long id);
+
     /**
      * Метод получения всех посещений, у которых есть результат участия
      *

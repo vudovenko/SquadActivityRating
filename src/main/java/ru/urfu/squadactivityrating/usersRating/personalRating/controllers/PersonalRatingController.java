@@ -1,6 +1,7 @@
-package ru.urfu.squadactivityrating.personalRating.controllers;
+package ru.urfu.squadactivityrating.usersRating.personalRating.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,13 +10,19 @@ import ru.urfu.squadactivityrating.eventManagement.entities.enums.EventTypes;
 import ru.urfu.squadactivityrating.eventManagement.entities.links.EventToSquadUser;
 import ru.urfu.squadactivityrating.eventManagement.services.EventService;
 import ru.urfu.squadactivityrating.eventManagement.services.EventToSquadUserService;
-import ru.urfu.squadactivityrating.personalRating.dto.VisitingResultsDTO;
+import ru.urfu.squadactivityrating.security.securityUsers.entities.SecurityUser;
+import ru.urfu.squadactivityrating.squadManagement.squadUsers.entities.SquadUser;
+import ru.urfu.squadactivityrating.squadRating.entitites.dto.Pair;
+import ru.urfu.squadactivityrating.usersRating.personalRating.dto.VisitingResultsDTO;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingHours;
 import ru.urfu.squadactivityrating.squadRating.entitites.VisitingResult;
 import ru.urfu.squadactivityrating.squadRating.entitites.enums.VisitingResults;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingHoursService;
 import ru.urfu.squadactivityrating.squadRating.service.VisitingResultService;
+import ru.urfu.squadactivityrating.usersRating.personalRating.services.PersonalRatingService;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -28,6 +35,22 @@ public class PersonalRatingController {
     private final EventService eventService;
     private final VisitingResultService visitingResultService;
     private final VisitingHoursService visitingHoursService;
+    private final PersonalRatingService personalRatingService;
+
+    @GetMapping
+    String getPersonalRatingsPage(@AuthenticationPrincipal SecurityUser securityUser, Model model) {
+        Pair<SquadUser, List<Pair<EventToSquadUser, Double>>> userToResults
+                = personalRatingService.getUserToResults(securityUser.getSquadUser());
+        List<Pair<EventToSquadUser, Double>> visitingToScore = userToResults.getSecondValue();
+        visitingToScore.sort(Comparator.comparing(pair -> pair.getFirstValue().getEvent().getDate()));
+        Collections.reverse(visitingToScore);
+        model.addAttribute("userToResults", userToResults);
+        Double totalScore = personalRatingService.getTotalScore(visitingToScore);
+        model.addAttribute("totalScore", totalScore);
+        model.addAttribute("currentUser", securityUser.getSquadUser());
+
+        return "usersRating/personalRating/personal_rating";
+    }
 
     // todo рефакторинг + перенести большую часть кода в сервис
     @GetMapping("/{eventId}")
@@ -61,7 +84,7 @@ public class PersonalRatingController {
         }
         model.addAttribute("visitingResultsObject", visitingResultsDTO);
 
-        return "personalRating/participation_results";
+        return "usersRating/generalRating/participation_results";
     }
 
     @GetMapping("/{eventToSquadUserId}/clear")
@@ -97,12 +120,16 @@ public class PersonalRatingController {
 
             eventToSquadUser.setVisitingResult(visitingResult);
         } else {
-            VisitingHours visitingHours = new VisitingHours();
-            visitingHours.setStartTime(visitingResultsDTO.getStartTime());
-            visitingHours.setEndTime(visitingResultsDTO.getEndTime());
-            visitingHours.setEventToSquadUser(eventToSquadUser);
-            visitingHours = visitingHoursService.saveVisitingHours(visitingHours);
-            eventToSquadUser.setVisitingHours(visitingHours);
+            LocalDateTime startTime = visitingResultsDTO.getStartTime();
+            LocalDateTime endTime = visitingResultsDTO.getEndTime();
+            if (startTime.isBefore(endTime)) {
+                VisitingHours visitingHours = new VisitingHours();
+                visitingHours.setStartTime(startTime);
+                visitingHours.setEndTime(endTime);
+                visitingHours.setEventToSquadUser(eventToSquadUser);
+                visitingHours = visitingHoursService.saveVisitingHours(visitingHours);
+                eventToSquadUser.setVisitingHours(visitingHours);
+            }
         }
         eventToSquadUserService.save(eventToSquadUser);
 
